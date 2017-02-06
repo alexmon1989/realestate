@@ -94,3 +94,10 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Начальные данные
+/home/fixtures/agencies.json
+/home/fixtures/houses.json
+/home/fixtures/auth.json
+/home/fixtures/cities.json
+/home/fixtures/agents.json
