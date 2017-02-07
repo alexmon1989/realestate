@@ -7,7 +7,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-
 class City(models.Model):
     city_id = models.AutoField(primary_key=True)
     city_name = models.CharField(unique=True, max_length=255)

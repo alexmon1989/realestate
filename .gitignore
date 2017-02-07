@@ -101,3 +101,6 @@ ENV/
 /home/fixtures/auth.json
 /home/fixtures/cities.json
 /home/fixtures/agents.json
+/.bowerrc
+/bower_components/
+/static/AdminLTE/

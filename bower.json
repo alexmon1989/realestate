@@ -1,0 +1,20 @@
+{
+  "name": "realestate",
+  "homepage": "https://github.com/alexmon1989/realestate",
+  "authors": [
+    "alexmon1989 <alex.mon1989@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "AdminLTE": "adminlte#^2.3.11"
+  }
+}
