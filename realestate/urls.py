@@ -16,10 +16,18 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.conf import settings
 
 urlpatterns = [
+    url(r'^select2/', include('django_select2.urls')),
     url(r'^accounts/login/$', auth_views.login, name='login'),
     url(r'^accounts/logout/$', auth_views.logout, name='logout'),
     url(r'^accounts/', include('accounts.urls')),
     url(r'^admin/', admin.site.urls),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap3 %}
+{% load account_extras %}
+
+{% block content-h1 %}
+    Edit Filter
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
+        <li class="active">Edit filter</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Editing your filter</h3>
+        </div>
+        <div class="box-body">
+            <form action="" method="post" class="form">
+                <div class="form-group" style="max-height: 615px; overflow-y: scroll">
+                    <label class="control-label" for="id_suburbs">Area selection</label>
+                    <select name="suburbs" id="id_suburbs" multiple="multiple">
+                        {% for choice in form.suburbs.field.choices %}
+                            {% get_full_suburb_path choice.0 as full_path %}
+                            <option {% if choice.0|stringformat:"i" in form.suburbs.value %}selected="selected"{% endif %} value="{{ choice.0 }}" data-section="{{ full_path|safe }}">{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {% bootstrap_form form exclude='suburbs' %}
+
+                {% csrf_token %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                    {% bootstrap_icon "ok" %} Save
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+{% endblock %}
+
+{% block styles %}
+    {{ form.media.css }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.6/select2-bootstrap.min.css">
+    <style>
+        .select2 { width: 100% !important; }
+    </style>
+    <link rel="stylesheet" href="{% static "AdminLTE/plugins/tree-multiselect/dist/jquery.tree-multiselect.min.css" %}">
+{% endblock %}
+
+{% block scripts %}
+    {{ form.media.js }}
+    <script src="{% static "AdminLTE/plugins/tree-multiselect/dist/jquery.tree-multiselect.min.js" %}"></script>
+    <script src="{% static "accounts/js/filter-form.js" %}"></script>
+{% endblock %}

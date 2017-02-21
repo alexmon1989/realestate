@@ -104,3 +104,4 @@ ENV/
 /.bowerrc
 /bower_components/
 /static/AdminLTE/
+/cache/

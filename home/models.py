@@ -7,11 +7,26 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
+
+class Region(models.Model):
+    name = models.CharField(unique=True, max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'region'
+        verbose_name = 'Region'
+        verbose_name_plural = 'Regions'
+
+    def __str__(self):
+        return self.name
+
+
 class City(models.Model):
     city_id = models.AutoField(primary_key=True)
     city_name = models.CharField(unique=True, max_length=255)
     capital_growth = models.IntegerField(blank=True, null=True)
     council_link = models.TextField(blank=True, null=True)
+    region = models.ForeignKey('Region', models.CASCADE)
 
     class Meta:
         managed = False
@@ -23,23 +38,60 @@ class City(models.Model):
         return self.city_name
 
 
+class Suburb(models.Model):
+    city = models.ForeignKey(City, models.CASCADE)
+    name = models.CharField(unique=True, max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'suburb'
+        verbose_name = 'Suburb'
+        verbose_name_plural = 'Suburbs'
+
+    def __str__(self):
+        return self.name
+
+
+class PricingMethod(models.Model):
+    name = models.CharField(unique=True, max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'pricing_method'
+        verbose_name = 'Pricing method'
+        verbose_name_plural = 'Pricing methods'
+
+    def __str__(self):
+        return self.name
+
+
+class PropertyType(models.Model):
+    name = models.CharField(unique=True, max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'property_type'
+        verbose_name = 'Property type'
+        verbose_name_plural = 'Property types'
+
+    def __str__(self):
+        return self.name
+
+
 class House(models.Model):
     house_id = models.AutoField(primary_key=True)
     street_name = models.CharField(max_length=255)
     street_number = models.CharField(max_length=255)
-    suburb = models.CharField(max_length=255)
-    region = models.CharField(max_length=255)
-    city = models.ForeignKey(City, models.DO_NOTHING)
+    suburb = models.ForeignKey('Suburb', models.CASCADE)
     bedrooms = models.IntegerField(blank=True, null=True)
     bathrooms = models.IntegerField(blank=True, null=True)
-    ensuite = models.IntegerField(blank=True, null=True)
+    ensuite = models.BooleanField()
     land = models.FloatField(blank=True, null=True)
     floor = models.IntegerField(blank=True, null=True)
     car_spaces = models.IntegerField(blank=True, null=True)
-    property_type = models.IntegerField()
+    property_type = models.ForeignKey('PropertyType', models.CASCADE)
     price = models.IntegerField(blank=True, null=True)
-    price_type = models.IntegerField()
-    open_homes = models.CharField(max_length=1024, blank=True, null=True)
+    price_type = models.ForeignKey('PricingMethod', models.CASCADE)
     auction_time = models.DateTimeField(blank=True, null=True)
     description = models.CharField(max_length=8192, blank=True, null=True)
     government_value = models.IntegerField(blank=True, null=True)
@@ -61,14 +113,23 @@ class House(models.Model):
         unique_together = (('street_name',
                             'street_number',
                             'suburb',
-                            'region',
-                            'city',
                             'bedrooms',
                             'bathrooms',
                             'price'),)
 
     def __str__(self):
         return '{}, {}, {}'.format(self.city, self.street_name, self.street_number)
+
+
+class OpenHomes(models.Model):
+    house = models.ForeignKey(House, models.CASCADE)
+    date_from = models.DateTimeField()
+    date_to = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'open_homes'
+        unique_together = (('house', 'date_from', 'date_to'),)
 
 
 class Agency(models.Model):

@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load bootstrap3 %}
+{% load account_extras %}
+{% load django_tables2 %}
 
 {% block content-h1 %}
     Profile
@@ -24,8 +27,8 @@
                     <li class="{% if request.GET.active_tab == 'user-data' or not request.GET.active_tab %}active{% endif %}">
                         <a href="#tab_user_data" data-toggle="tab">Profile data</a>
                     </li>
-                    <li class="{% if request.GET.active_tab == 'search-settings' %}active{% endif %}">
-                        <a href="#tab_search_settings" data-toggle="tab">Search settings</a>
+                    <li class="{% if request.GET.active_tab == 'filters' %}active{% endif %}">
+                        <a href="#tab_filters" data-toggle="tab">Houses filters</a>
                     </li>
                     <li class="{% if request.GET.active_tab == 'change-password' %}active{% endif %}">
                         <a href="#tab_change_password" data-toggle="tab">Change password</a>
@@ -44,8 +47,10 @@
                         </form>
                     </div>
 
-                    <div class="tab-pane {% if request.GET.active_tab == 'search-settings' %}active{% endif %}" id="tab_search_settings">
-                        123
+                    <div class="tab-pane {% if request.GET.active_tab == 'filters' %}active{% endif %}" id="tab_filters">
+                        <p><a class="btn btn-primary" href="{% url 'accounts:create_filter' %}"><i class="fa fa-plus" aria-hidden="true"></i> Create filter</a></p>
+                        <br>
+                        {% render_table filters_table %}
                     </div>
 
                     <div class="tab-pane {% if request.GET.active_tab == 'change-password' %}active{% endif %}" id="tab_change_password">
@@ -70,4 +75,8 @@
         <!-- /.box-footer-->
     </div>
     <!-- /.box -->
+{% endblock %}
+
+{% block styles %}
+<link href="{% static 'django_tables2/bootstrap.css' %}" rel="stylesheet" />
 {% endblock %}
