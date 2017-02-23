@@ -16,7 +16,7 @@ from decorators import group_required
 from .forms import UserForm, HousesFilterForm
 
 from .models import HousesFilter
-from home.models import House, Suburb, PropertyType
+from home.models import Suburb, PropertyType
 
 from .tables import FiltersTable
 

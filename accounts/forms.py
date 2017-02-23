@@ -284,9 +284,10 @@ class HousesFilterForm(forms.Form):
 
     ensuite = forms.BooleanField(label='Ensuite', initial=False, required=False)
 
-    show_title_photo = forms.BooleanField(label='Show title photo', required=False)
     listings_date_created = forms.CharField(label='Show listings younger than', required=True, initial=date.today())
 
+    show_title_photo = forms.BooleanField(label='Show title photo', required=False)
+    
     active = forms.BooleanField(label='Is active?', initial=False, required=False)
 
     def __init__(self, *args, **kwargs):
