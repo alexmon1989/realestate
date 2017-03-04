@@ -123,7 +123,7 @@ class House(models.Model):
                             'price'),)
 
     def __str__(self):
-        return '{}, {}, {}'.format(self.suburb.city, self.street_name, self.street_number)
+        return '{}, {}, {}'.format(self.suburb.city, self.suburb, self.street_name, self.street_number)
 
     @staticmethod
     def get_new_houses(filters, excluded_pks):
