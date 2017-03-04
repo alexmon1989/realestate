@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load render_table from django_tables2 %}
+
+{% block content-h1 %}
+    Liked houses
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>Listings</li>
+        <li class="active">New</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Liked houses list</h3>
+        </div>
+        <div class="box-body">
+            <p><strong>Total:</strong> {{ total }}</p>
+            {% render_table table %}
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+{% endblock %}
+
+{% block styles %}
+<link href="{% static 'django_tables2/bootstrap.css' %}" rel="stylesheet" />
+<style>
+    table img {
+        max-width: 100px;
+        max-height: 100px;
+    }
+</style>
+{% endblock %}

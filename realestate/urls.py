@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^accounts/login/$', auth_views.login, name='login'),
     url(r'^accounts/logout/$', auth_views.logout, name='logout'),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^listings/', include('listings.urls')),
     url(r'^admin/', admin.site.urls),
 ]
 

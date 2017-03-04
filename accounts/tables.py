@@ -9,7 +9,7 @@ class ActionColumn(tables.Column):
         return format_html('<div class="btn-group">'
                            '<a class="btn btn-primary" href="{}"><i class="fa fa-pencil" aria-hidden="true"></i></a>'
                            '<a class="btn btn-danger" href="{}"><i class="fa fa-trash" aria-hidden="true"></i></a>'
-                           '</div',
+                           '</div>',
                            reverse('accounts:edit_filter', args=(value,)),
                            reverse('accounts:delete_filter', args=(value,)))
 

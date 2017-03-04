@@ -21,21 +21,32 @@
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                 </a>
             </li>
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-list"></i>
-                    <span>Listings</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> New</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Liked</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Disliked</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Still thinking</a></li>
-                </ul>
-            </li>
+
+            {% with 'new_listing liked_listing disliked_listing still_thinking_listing show_new_listing show_liked_listing show_disliked_listing show_still_thinking_listing' as url_name_list %}
+                <li class="treeview {% if request.resolver_match.url_name in url_name_list %}active{% endif %}">
+                    <a href="#">
+                        <i class="fa fa-list"></i>
+                        <span>Listings</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{% if request.resolver_match.url_name == "new_listing" or request.resolver_match.url_name == "show_new_listing" %}active{% endif %}">
+                            <a href="{% url 'listings:new_listing' %}"><i class="fa fa-circle-o"></i> New</a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == "liked_listing" or request.resolver_match.url_name == "show_liked_listing" %}active{% endif %}">
+                            <a href="{% url 'listings:liked_listing' %}"><i class="fa fa-circle-o"></i> Liked</a></li>
+                        <li class="{% if request.resolver_match.url_name == "disliked_listing" or request.resolver_match.url_name == "show_disliked_listing" %}active{% endif %}">
+                            <a href="{% url 'listings:disliked_listing' %}"><i class="fa fa-circle-o"></i> Disliked</a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == "still_thinking_listing" or request.resolver_match.url_name == "show_still_thinking_listing" %}active{% endif %}">
+                            <a href="{% url 'listings:still_thinking_listing' %}"><i class="fa fa-circle-o"></i> Still thinking</a>
+                        </li>
+                    </ul>
+                </li>
+            {% endwith %}
+
             <li class="{% if request.resolver_match.url_name == "search" %}active{% endif %}">
                 <a href="#">
                     <i class="fa fa-search"></i> <span>Search</span>

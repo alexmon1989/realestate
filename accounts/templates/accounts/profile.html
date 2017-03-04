@@ -48,6 +48,16 @@
                     </div>
 
                     <div class="tab-pane {% if request.GET.active_tab == 'filters' %}active{% endif %}" id="tab_filters">
+                        <div class="checkbox">
+                            <label>
+                                <input
+                                        type="checkbox"
+                                        id="show_title_photo"
+                                        value="1"
+                                        {% if request.user.profile.show_photos_filters %}checked="checked"{% endif %}
+                                > Show title photo
+                            </label>
+                        </div>
                         <p><a class="btn btn-primary" href="{% url 'accounts:create_filter' %}"><i class="fa fa-plus" aria-hidden="true"></i> Create filter</a></p>
                         <br>
                         {% render_table filters_table %}
@@ -79,4 +89,15 @@
 
 {% block styles %}
 <link href="{% static 'django_tables2/bootstrap.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $("#show_title_photo").change(function () {
+            $.post( "{% url 'accounts:change_show_title_photo' %}", { value: + $("#show_title_photo").is(':checked') })
+                    .fail(function() {
+                        alert( "Error saving data!" );
+                    });
+        });
+    </script>
 {% endblock %}

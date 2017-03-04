@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^profile/filters/create/$', views.create_filter, name='create_filter'),
     url(r'^profile/filters/edit/(?P<pk>[0-9]+)/$', views.edit_filter, name='edit_filter'),
     url(r'^profile/filters/delete/(?P<pk>[0-9]+)/$', views.FilterDeleteView.as_view(), name='delete_filter'),
+    url(r'^profile/change-show-title-photo/$', views.change_show_title_photo, name='change_show_title_photo'),
 ]

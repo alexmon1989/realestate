@@ -3,11 +3,13 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import DeleteView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils.decorators import method_decorator
+from django.http import JsonResponse
 
 import json
 
@@ -62,6 +64,7 @@ def create_filter(request):
         form = HousesFilterForm(request.POST)
         if form.is_valid():
             new_filter = HousesFilter(filter_data_json=json.dumps(dict(request.POST)), user_id=request.user.pk)
+            new_filter.active = bool(request.POST.get('active', False))
             new_filter.save()
             messages.success(request, 'The new filter has been successfully created.')
             return redirect('{}?active_tab=filters'.format(reverse('accounts:profile')))
@@ -80,6 +83,7 @@ def edit_filter(request, pk):
         form = HousesFilterForm(request.POST)
         if form.is_valid():
             house_filter.filter_data_json = json.dumps(dict(request.POST))
+            house_filter.active = bool(request.POST.get('active', False))
             house_filter.save()
             messages.success(request, 'The filter has been successfully updated.')
             return redirect(reverse('accounts:edit_filter', args=(pk,)))
@@ -153,3 +157,15 @@ def change_password(request):
         'form_change_password': form,
         'form_user_filter_settings': HousesFilterForm(request.user),
     })
+
+
+@require_POST
+@login_required
+@group_required('Users')
+@csrf_exempt
+def change_show_title_photo(request):
+    """Changes show_title_photo field of Profile model."""
+    request.user.profile.show_photos_filters = request.POST.get('value', False)
+    request.user.save()
+
+    return JsonResponse({'success': True})

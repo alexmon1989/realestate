@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "AdminLTE": "adminlte#^2.3.11",
-    "tree-multiselect": "^2.1.3"
+    "tree-multiselect": "^2.1.3",
+    "lightbox2": "lightbox#^2.9.0"
   }
 }
