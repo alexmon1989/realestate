@@ -19,3 +19,11 @@ def get_full_suburb_path(suburb_id):
         cache.set('suburb_paths', suburb_paths)
 
     return suburb_paths[suburb_id]
+
+
+@register.inclusion_tag('accounts/fonts_sizes.html', takes_context=True)
+def font_sizes(context):
+    """Returns js-code for change font size."""
+    return {
+        'ratio': context['request'].user.profile.font_ratio
+    }

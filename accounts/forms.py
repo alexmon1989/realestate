@@ -6,6 +6,7 @@ from django_select2.forms import Select2Widget, Select2MultipleWidget
 from datetime import date
 
 from home.models import Suburb, PricingMethod, PropertyType
+from .models import Profile
 
 
 class UserForm(ModelForm):
@@ -15,6 +16,15 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email')
+
+
+class SettingsForm(ModelForm):
+    """Form for settings."""
+    email = forms.CharField(max_length=75, required=True)
+
+    class Meta:
+        model = Profile
+        exclude = ()
 
 
 class HousesFilterForm(forms.Form):

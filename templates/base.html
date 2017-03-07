@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load account_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -127,7 +128,10 @@
 <!-- AdminLTE App -->
 <script src="{% static "AdminLTE/dist/js/app.min.js" %}"></script>
 <!-- Custom js -->
-<script src="{% static "AdminLTE/dist/js/custom.js" %}"></script>
+<script src="{% static "accounts/js/change-font-size.js" %}"></script>
+
+{% font_sizes %}
+
 {% block scripts %}{% endblock %}
 </body>
 </html>

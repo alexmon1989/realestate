@@ -169,3 +169,21 @@ def change_show_title_photo(request):
     request.user.save()
 
     return JsonResponse({'success': True})
+
+
+@require_POST
+@login_required
+@group_required('Users')
+@csrf_exempt
+def change_font_size(request):
+    """Changes font size ration in profile data."""
+    current_ratio = request.user.profile.font_ratio
+    if request.POST.get('action') == 'increase':
+        current_ratio += 0.1
+    else:
+        current_ratio -= 0.1
+
+    request.user.profile.font_ratio = current_ratio
+    request.user.profile.save()
+
+    return JsonResponse({'success': True, 'ratio': round(current_ratio, 1)})

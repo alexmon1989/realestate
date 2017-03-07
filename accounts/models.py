@@ -17,6 +17,7 @@ class Profile(models.Model):
     """Profile model for extending User model fields."""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     show_photos_filters = models.BooleanField('Show title photo', default=False)
+    font_ratio = models.FloatField('Font size', default=1)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
