@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = '123'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django_select2',
     'debug_toolbar',
     'django_tables2',
+    'listings',
+    'search',
 ]
 
 MIDDLEWARE = [
@@ -147,7 +149,7 @@ INTERNAL_IPS = ['127.0.0.1']
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': 'your/path',
+        'LOCATION': 'cache',
         'TIMEOUT': 300,
     }
 }

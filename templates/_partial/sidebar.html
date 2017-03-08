@@ -54,8 +54,8 @@
                 </li>
             {% endwith %}
 
-            <li class="{% if request.resolver_match.url_name == "search" %}active{% endif %}">
-                <a href="#">
+            <li class="{% if request.resolver_match.url_name == "search_index" %}active{% endif %}">
+                <a href="{% url 'search:search_index' %}">
                     <i class="fa fa-search"></i> <span>Search</span>
                 </a>
             </li>

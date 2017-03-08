@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap3 %}
+{% load account_extras %}
+{% load render_table from django_tables2 %}
+
+{% block content-h1 %}
+    Search
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Search</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Search</h3>
+        </div>
+        <div class="box-body">
+            <form action="{% url 'search:search_index' %}" method="get" class="form">
+                <div class="form-group" style="max-height: 250px; overflow-y: scroll">
+                    <label class="control-label" for="id_suburbs">Area selection</label>
+                    <select name="suburbs" id="id_suburbs" multiple="multiple">
+                        {% for choice in form.suburbs.field.choices %}
+                            {% get_full_suburb_path choice.0 as full_path %}
+                            <option {% if choice.0 in form.suburbs.value %}selected="selected"{% endif %} value="{{ choice.0 }}" data-section="{{ full_path|safe }}">{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <hr>
+
+                <div class="row form-horizontal">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.price_from layout='horizontal' %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.price_to layout='horizontal' %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.bedrooms_from layout='horizontal' %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.bedrooms_to layout='horizontal' %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.bathrooms_from layout='horizontal' %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.bathrooms_to layout='horizontal' %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.landarea_from layout='horizontal' %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.landarea_to layout='horizontal' %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.floorarea_from layout='horizontal' %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.floorarea_to layout='horizontal' %}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        {% bootstrap_field form.pricing_methods layout='horizontal' %}
+                        {% bootstrap_field form.property_type layout='horizontal' %}
+                        {% bootstrap_field form.show_only_open_homes layout='horizontal' %}
+                        {% bootstrap_field form.show_only_properties_with_address layout='horizontal' %}
+                        {% bootstrap_field form.keywords layout='horizontal' %}
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary btn-lg">
+                        {% bootstrap_icon "ok" %} Search
+                        </button>
+                    {% endbuttons %}
+                </div>
+            </form>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Results</h3>
+        </div>
+
+        <div class="box-body">
+            <p><strong>Total:</strong> {{ total }}</p>
+            {% render_table table %}
+        </div>
+
+        <div class="box-footer">
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+    {{ form.media.css }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.6/select2-bootstrap.min.css">
+    <style>
+        .select2 { width: 100% !important; }
+    </style>
+    <link rel="stylesheet" href="{% static "AdminLTE/plugins/tree-multiselect/dist/jquery.tree-multiselect.min.css" %}">
+
+    <link href="{% static 'django_tables2/bootstrap.css' %}" rel="stylesheet" />
+    <style>
+        table img {
+            max-width:100px;
+            max-height: 100px;
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    {{ form.media.js }}
+    <script src="{% static "AdminLTE/plugins/tree-multiselect/dist/jquery.tree-multiselect.min.js" %}"></script>
+    <script src="{% static "accounts/js/filter-form.js" %}"></script>
+{% endblock %}
