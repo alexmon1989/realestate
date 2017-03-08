@@ -222,11 +222,11 @@ class House(models.Model):
             description__contains=filters['keywords'],
         )
         if filters.get('suburbs'):
-            houses = houses.filter(suburb__in=filters['suburbs'])
+            houses = houses.filter(suburb__in=filters.getlist('suburbs'))
         if filters.get('pricing_methods'):
-            houses = houses.filter(price_type__in=filters['pricing_methods'])
+            houses = houses.filter(price_type__in=filters.getlist('pricing_methods'))
         if filters.get('property_type'):
-            houses = houses.filter(property_type__in=filters['property_type'])
+            houses = houses.filter(property_type__in=filters.getlist('property_type'))
         if filters.get('show_only_properties_with_address'):
             houses = houses.filter(
                 street_name__isnull=False,

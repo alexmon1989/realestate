@@ -28,7 +28,7 @@
                     <select name="suburbs" id="id_suburbs" multiple="multiple">
                         {% for choice in form.suburbs.field.choices %}
                             {% get_full_suburb_path choice.0 as full_path %}
-                            <option {% if choice.0 in form.suburbs.value %}selected="selected"{% endif %} value="{{ choice.0 }}" data-section="{{ full_path|safe }}">{{ choice.1 }}</option>
+                            <option {% if choice.0|stringformat:"i" in form.suburbs.value %}selected="selected"{% endif %} value="{{ choice.0 }}" data-section="{{ full_path|safe }}">{{ choice.1 }}</option>
                         {% endfor %}
                     </select>
                 </div>
