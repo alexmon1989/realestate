@@ -17,8 +17,10 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.conf import settings
+from home.views import dashboard
 
 urlpatterns = [
+    url(r'^$', dashboard, name='dashboard'),
     url(r'^select2/', include('django_select2.urls')),
     url(r'^accounts/login/$', auth_views.login, name='login'),
     url(r'^accounts/logout/$', auth_views.logout, name='logout'),

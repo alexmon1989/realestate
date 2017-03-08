@@ -7,7 +7,7 @@
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Home</a></li>
         <li>Listings</li>
         {% if request.resolver_match.url_name == "show_new_listing" %}
             <li><a href="{% url "listings:new_listing" %}">New</a></li>

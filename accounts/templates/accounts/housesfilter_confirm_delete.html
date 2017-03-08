@@ -6,7 +6,7 @@
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Home</a></li>
         <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
         <li class="active">Deleting filter</li>
     </ol>

@@ -23,8 +23,8 @@
         <!-- sidebar menu -->
         <ul class="sidebar-menu">
             <li class="header">MAIN NAVIGATION</li>
-            <li>
-                <a href="#">
+            <li class="{% if request.resolver_match.url_name == "dashboard" %}active{% endif %}">
+                <a href="{% url 'dashboard' %}">
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                 </a>
             </li>
