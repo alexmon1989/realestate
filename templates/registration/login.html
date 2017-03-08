@@ -54,7 +54,7 @@
                     </div>
                 {% endif %}
 
-                <form method="post" action="{% url 'login' %}">
+                <form method="post">
                     {% csrf_token %}
                     <div class="form-group has-feedback">
                         {% bootstrap_field form.username show_label=False %}
