@@ -106,3 +106,4 @@ ENV/
 /static/
 /cache/
 /home/static/AdminLTE/
+/uwsgi.ini
