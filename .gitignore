@@ -103,5 +103,6 @@ ENV/
 /home/fixtures/agents.json
 /.bowerrc
 /bower_components/
-/static/AdminLTE/
+/static/
 /cache/
+/home/static/AdminLTE/
