@@ -41,7 +41,7 @@ def profile(request):
             'property_type': ', '.join([property_type.name
                                         for property_type
                                         in PropertyType.objects.filter(pk__in=filter_data_json['property_type'])]),
-            'active': filter_data_json['active'][0],
+            'active': f.active,
             'created_at': f.created_at,
             'updated_at': f.updated_at,
             'actions': f.id,
