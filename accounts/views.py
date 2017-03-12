@@ -78,7 +78,7 @@ def create_filter(request):
 @group_required('Users')
 def edit_filter(request, pk):
     """Edits user filter."""
-    house_filter = get_object_or_404(HousesFilter, pk=pk)
+    house_filter = get_object_or_404(HousesFilter.objects.filter(user=request.user), pk=pk)
     if request.method == 'POST':
         form = HousesFilterForm(request.POST)
         if form.is_valid():
