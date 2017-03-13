@@ -64,7 +64,7 @@ class NewListingsTable(tables.Table):
     city = tables.Column(accessor='suburb__city__city_name')
     suburb = tables.Column(accessor='suburb__name')
     actions = NewListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
-    create_date = tables.Column(accessor='listing_create_date', verbose_name='Create date')
+    create_date = tables.Column(accessor='listing_create_date', verbose_name='Listed On')
 
     class Meta:
         template = 'django_tables2/bootstrap.html'
@@ -154,7 +154,7 @@ class LikedListingsTable(tables.Table):
     land = tables.Column(accessor='house__land')
     floor = tables.Column(accessor='house__floor')
     price = tables.Column(accessor='house__price')
-    create_date = tables.Column(accessor='house__listing_create_date')
+    create_date = tables.Column(accessor='house__listing_create_date', verbose_name='Listed On')
     actions = LikedListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
 
     class Meta:
