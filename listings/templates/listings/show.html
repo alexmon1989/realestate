@@ -91,14 +91,12 @@
 
             <h3>Price</h3>
             <dl class="dl-horizontal">
-                <dt>Price type</dt>
-                <dd>{{ house.price_type }}</dd>
                 <dt>Price</dt>
-                <dd>{{ house.price }}</dd>
+                <dd>{{ house.price|default:"" }} {{ house.price_type }}</dd>
                 <dt>Government value</dt>
-                <dd>{{ house.government_value }}</dd>
+                <dd>{{ house.government_value|default:"-" }}</dd>
                 <dt>Government to price</dt>
-                <dd>{{ house.government_to_price }}</dd>
+                <dd>{{ house.government_to_price|default:"-" }}</dd>
                 <dt>Government rates</dt>
                 <dd>{{ house.government_rates|default:"-" }}</dd>
             </dl>
