@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load bootstrap3 %}
-{% load account_extras %}
 
 {% block content-h1 %}
     Edit Filter
@@ -22,26 +20,7 @@
             <h3 class="box-title">Editing your filter</h3>
         </div>
         <div class="box-body">
-            <form action="" method="post" class="form">
-                <div class="form-group" style="max-height: 615px; overflow-y: scroll">
-                    <label class="control-label" for="id_suburbs">Area selection</label>
-                    <select name="suburbs" id="id_suburbs" multiple="multiple">
-                        {% for choice in form.suburbs.field.choices %}
-                            {% get_full_suburb_path choice.0 as full_path %}
-                            <option {% if choice.0|stringformat:"i" in form.suburbs.value %}selected="selected"{% endif %} value="{{ choice.0 }}" data-section="{{ full_path|safe }}">{{ choice.1 }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                {% bootstrap_form form exclude='suburbs' %}
-
-                {% csrf_token %}
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary">
-                    {% bootstrap_icon "ok" %} Save
-                    </button>
-                {% endbuttons %}
-            </form>
+            {% include 'accounts/_partial/filters_form.html' %}
         </div>
         <!-- /.box-body -->
         <div class="box-footer">

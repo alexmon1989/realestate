@@ -1,0 +1,39 @@
+{% load bootstrap3 %}
+{% load account_extras %}
+
+<form action="" method="post" class="form" id="filter-form">
+    <div class="form-group" style="max-height: 615px; overflow-y: scroll">
+        <label class="control-label" for="id_suburbs">Area selection</label>
+        <select name="suburbs" id="id_suburbs" multiple="multiple">
+            {% for choice in form.suburbs.field.choices %}
+                {% get_full_suburb_path choice.0 as full_path %}
+                <option {% if choice.0|stringformat:"i" in form.suburbs.value %}selected="selected"{% endif %} value="{{ choice.0 }}" data-section="{{ full_path|safe }}">{{ choice.1 }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {% bootstrap_form form exclude='suburbs' %}
+
+    {% csrf_token %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+        {% bootstrap_icon "ok" %} Save
+        </button>
+        <button type="reset" class="btn btn-warning" id="reset-filter-form">
+        {% bootstrap_icon "remove-circle" %} Reset
+        </button>
+    {% endbuttons %}
+</form>
+
+<script>
+    $("#reset-filter-form").click(function (e) {
+        e.preventDefault();
+        $('#filter-form').trigger('reset');
+        $('#filter-form select').trigger('change');
+        $('.tree-multiselect').remove();
+        $('#id_suburbs').treeMultiselect({
+          enableSelectAll: true,
+          startCollapsed: true
+        });
+    });
+</script>
