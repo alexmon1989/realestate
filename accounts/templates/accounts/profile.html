@@ -99,5 +99,25 @@
                         alert( "Error saving data!" );
                     });
         });
+
+        $('body').on('click', 'td.disabled a', function(e) {
+            e.preventDefault();
+            var $this = $(this).parent();
+            var oldHTML = $this.html();
+            $this.html('Updating...');
+            var id = $this.siblings().first(".id").html();
+            $.post( '/accounts/profile/filters/toggle-disabled/' + id + '/' )
+                .fail(function() {
+                    $this.html(oldHTML);
+                    alert( "Error sending data!" );
+                })
+                .success(function(data) {
+                    var html = '<a href="#"><span class="false">✘</span></a>';
+                    if (data.disabled == true) {
+                        var html = '<a href="#"><span class="true">✔</span></a>';
+                    }
+                    $this.html(html);
+                });
+        });
     </script>
 {% endblock %}

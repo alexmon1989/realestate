@@ -14,6 +14,14 @@ class ActionColumn(tables.Column):
                            reverse('accounts:delete_filter', args=(value,)))
 
 
+class DisabledColumn(tables.Column):
+    """Column type for disabled field."""
+    def render(self, value):
+        if value:
+            return format_html('<a href="#"><span class="true">✔</span></a>')
+        return format_html('<a href="#"><span class="false">✘</span></a>')
+
+
 class FiltersTable(tables.Table):
     """Table for user's filters."""
     id = tables.Column(orderable=False)
@@ -24,7 +32,7 @@ class FiltersTable(tables.Table):
     landarea_from = tables.Column(orderable=False)
     landarea_to = tables.Column(orderable=False)
     property_type = tables.Column(orderable=False)
-    disabled = tables.BooleanColumn(orderable=False)
+    disabled = DisabledColumn(orderable=False)
     created_at = tables.DateTimeColumn(orderable=False)
     updated_at = tables.DateTimeColumn(orderable=False)
     actions = ActionColumn(orderable=False)

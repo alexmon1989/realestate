@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^profile/filters/delete/(?P<pk>[0-9]+)/$', views.FilterDeleteView.as_view(), name='delete_filter'),
     url(r'^profile/change-show-title-photo/$', views.change_show_title_photo, name='change_show_title_photo'),
     url(r'^profile/change-font-size/$', views.change_font_size, name='change_font_size'),
+    url(r'^profile/filters/toggle-disabled/(?P<pk>[0-9]+)/$', views.toggle_disabled, name='toggle_disabled'),
 ]

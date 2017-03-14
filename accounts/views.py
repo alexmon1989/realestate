@@ -194,3 +194,16 @@ def change_font_size(request):
     request.user.profile.save()
 
     return JsonResponse({'success': True, 'ratio': round(current_ratio, 1)})
+
+
+@require_POST
+@login_required
+@group_required('Users')
+@csrf_exempt
+def toggle_disabled(request, pk):
+    """Toggles disabled property of filter object and returns JSON."""
+    house_filter = get_object_or_404(HousesFilter.objects.filter(user=request.user), pk=pk)
+    house_filter.disabled = not house_filter.disabled
+    house_filter.save()
+
+    return JsonResponse({'success': True, 'disabled': int(house_filter.disabled)})
