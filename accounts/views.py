@@ -88,8 +88,12 @@ def edit_filter(request, pk):
             house_filter.disabled = bool(request.POST.get('disabled', False))
             house_filter.name = request.POST.get('name')
             house_filter.save()
-            messages.success(request, 'The filter has been successfully updated.')
-            return redirect(reverse('accounts:edit_filter', args=(pk,)))
+            if house_filter.name:
+                message = 'The filter "{}" has been successfully updated.'.format(house_filter.name)
+            else:
+                message = 'The filter #{} has been successfully updated.'.format(house_filter.pk)
+            messages.success(request, message)
+            return redirect('{}?active_tab=filters'.format(reverse('accounts:profile')))
     else:
         filter_data_json = json.loads(house_filter.filter_data_json)
         house_filter_dict = {}

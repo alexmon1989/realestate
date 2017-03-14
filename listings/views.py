@@ -178,8 +178,8 @@ def show_liked_listing(request, pk):
         form = HouseUserDataForm(request.POST, instance=house_user_data)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your data has been saved.')
-            return redirect(reverse('listings:show_liked_listing', args=(pk,)))
+            messages.success(request, 'Your data for house #{} has been saved.'.format(pk))
+            return redirect(reverse('listings:liked_listing'))
     else:
         form = HouseUserDataForm(instance=house_user_data)
 
