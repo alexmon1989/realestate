@@ -58,7 +58,7 @@ class HouseUserData(models.Model):
                                   blank=True,
                                   null=True,
                                   validators=[MinValueValidator(0)])
-    repairs_maintenance = models.FloatField('Repairs & Maintenance',
+    repairs_maintenance = models.FloatField('Annual Repairs/Maintenance',
                                             blank=True,
                                             null=True,
                                             validators=[MinValueValidator(0)])
