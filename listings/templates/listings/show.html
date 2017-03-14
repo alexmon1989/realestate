@@ -129,6 +129,7 @@
                         <button type="submit" class="btn btn-primary">
                         {% bootstrap_icon "ok" %} Save
                         </button>
+                        <a href="{% url 'listings:liked_listing' %}" class="btn btn-warning">{% bootstrap_icon "floppy-remove" %} Cancel</a>
                     {% endbuttons %}
                 </form>
             {% endif %}

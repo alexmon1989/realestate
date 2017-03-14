@@ -22,6 +22,7 @@
         <button type="reset" class="btn btn-warning" id="reset-filter-form">
         {% bootstrap_icon "remove-circle" %} Reset
         </button>
+        <a href="{% url 'accounts:profile' %}?active_tab=filters" class="btn btn-success">{% bootstrap_icon "floppy-remove" %} Cancel</a>
     {% endbuttons %}
 </form>
 
