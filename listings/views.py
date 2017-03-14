@@ -47,7 +47,10 @@ def new_listings(request):
 def liked_listings(request):
     """Shows page with liked listings."""
     houses = MarkedHouse.objects.extra(
-        select={"address": "CONCAT_WS(' ', house.street_number, house.street_name)"}
+        select={
+            "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
+            "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)"
+        }
     ).values(
         'house_id',
         'house__suburb__name',
@@ -60,7 +63,9 @@ def liked_listings(request):
         'house__price',
         'house__listing_create_date',
         'house__photos',
-        'address'
+        'address',
+        'house__property_type__name',
+        'property_type'
     ).filter(user=request.user, mark_id=1)
 
     # Generating table
@@ -81,7 +86,10 @@ def liked_listings(request):
 def disliked_listings(request):
     """Shows page with disliked listings."""
     houses = MarkedHouse.objects.extra(
-        select={"address": "CONCAT_WS(' ', house.street_number, house.street_name)"}
+        select={
+            "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
+            "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)"
+        }
     ).values(
         'house_id',
         'house__suburb__name',
@@ -94,7 +102,9 @@ def disliked_listings(request):
         'house__price',
         'house__listing_create_date',
         'house__photos',
-        'address'
+        'address',
+        'house__property_type__name',
+        'property_type'
     ).filter(user=request.user, mark_id=2)
 
     # Generating table
@@ -115,7 +125,10 @@ def disliked_listings(request):
 def still_thinking_listings(request):
     """Shows page with still thinking listings."""
     houses = MarkedHouse.objects.extra(
-        select={"address": "CONCAT_WS(' ', house.street_number, house.street_name)"}
+        select={
+            "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
+            "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)"
+        }
     ).values(
         'house_id',
         'house__suburb__name',
@@ -128,7 +141,9 @@ def still_thinking_listings(request):
         'house__price',
         'house__listing_create_date',
         'house__photos',
-        'address'
+        'address',
+        'house__property_type__name',
+        'property_type'
     ).filter(user=request.user, mark_id=3)
 
     # Generating table

@@ -134,7 +134,10 @@ class House(models.Model):
         for f in filters:
             filter_data = json.loads(f.filter_data_json)
             houses = House.objects.extra(
-                select={"address": "CONCAT_WS(' ', house.street_number, house.street_name)"}
+                select={
+                    "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
+                    "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)"
+                }
             ).values(
                 'house_id',
                 'suburb__name',
@@ -147,7 +150,9 @@ class House(models.Model):
                 'price',
                 'listing_create_date',
                 'photos',
-                'address'
+                'address',
+                'property_type',
+                'property_type__name'
             ).filter(
                 suburb__in=filter_data['suburbs'],
                 price__range=(filter_data['price_from'][0], filter_data['price_to'][0]),
@@ -190,7 +195,6 @@ class House(models.Model):
             else:
                 queryset = houses
 
-        # return houses queryset
         if queryset:
             return queryset.distinct()
         return []
@@ -199,7 +203,10 @@ class House(models.Model):
     def search(filters):
         """Search houses by filters."""
         houses = House.objects.extra(
-            select={"address": "CONCAT_WS(' ', house.street_number, house.street_name)"}
+            select={
+                "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
+                "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)"
+            }
         ).values(
             'house_id',
             'suburb__name',
@@ -212,7 +219,9 @@ class House(models.Model):
             'price',
             'listing_create_date',
             'photos',
-            'address'
+            'address',
+            'property_type',
+            'property_type__name'
         ).filter(
             price__range=(filters['price_from'], filters['price_to']),
             bedrooms__range=(filters['bedrooms_from'], filters['bedrooms_to']),

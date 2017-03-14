@@ -1,4 +1,5 @@
 import django_tables2 as tables
+from django_tables2 import A
 from django.utils.html import format_html
 from django.urls import reverse
 
@@ -47,21 +48,13 @@ class NewListingsTableActionColumn(tables.Column):
         )
 
 
-class DetailsNewListingsColumn(tables.Column):
-    """Column type with house id as link to house's page."""
-    def render(self, value):
-        return format_html(
-            '<a href="{}">{}</a>',
-            reverse('listings:show_new_listing', args=(value,)),
-            value
-        )
-
-
 class NewListingsTable(tables.Table):
-    house_id = DetailsNewListingsColumn(accessor='house_id')
-    address = tables.Column(accessor='address')
+    address = tables.LinkColumn('listings:show_new_listing',
+                                args=[A('house_id')],
+                                accessor='address')
     region = tables.Column(accessor='suburb__city__region__name')
     city = tables.Column(accessor='suburb__city__city_name')
+    property_type = tables.Column(accessor='property_type')
     suburb = tables.Column(accessor='suburb__name')
     actions = NewListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
     create_date = tables.Column(accessor='listing_create_date', verbose_name='Listed On')
@@ -70,7 +63,6 @@ class NewListingsTable(tables.Table):
         template = 'django_tables2/bootstrap.html'
         model = House
         fields = (
-            'house_id',
             'address',
             'land',
             'floor',
@@ -78,13 +70,11 @@ class NewListingsTable(tables.Table):
             'create_date',
         )
         sequence = (
-            'house_id',
             'address',
             'suburb',
             'city',
             'region',
-            'land',
-            'floor',
+            'property_type',
             'price',
             'create_date',
             'actions'
@@ -99,37 +89,23 @@ class NewListingsTableWithPhoto(NewListingsTable):
         template = 'django_tables2/bootstrap.html'
         model = House
         fields = (
-            'house_id',
             'address',
-            'land',
-            'floor',
+            'property_type',
             'price',
             'create_date'
         )
         sequence = (
-            'house_id',
             'address',
             'suburb',
             'city',
             'region',
-            'land',
-            'floor',
+            'property_type',
             'price',
             'photo',
             'create_date',
             'actions'
         )
         attrs = {'class': 'table table-bordered table-striped table-hover'}
-
-
-class DetailsLikedListingsColumn(tables.Column):
-    """Column type with house id as link to house's page."""
-    def render(self, value):
-        return format_html(
-            '<a href="{}">{}</a>',
-            reverse('listings:show_liked_listing', args=(value,)),
-            value
-        )
 
 
 class LikedListingsTableActionColumn(tables.Column):
@@ -146,13 +122,13 @@ class LikedListingsTableActionColumn(tables.Column):
 
 
 class LikedListingsTable(tables.Table):
-    house_id = DetailsLikedListingsColumn(accessor='house_id')
     region = tables.Column(accessor='house__suburb__city__region__name')
     city = tables.Column(accessor='house__suburb__city__city_name')
     suburb = tables.Column(accessor='house__suburb__name')
-    address = tables.Column(accessor='address')
-    land = tables.Column(accessor='house__land')
-    floor = tables.Column(accessor='house__floor')
+    address = tables.LinkColumn('listings:show_liked_listing',
+                                args=[A('house_id')],
+                                accessor='address')
+    property_type = tables.Column(accessor='property_type')
     price = tables.Column(accessor='house__price')
     create_date = tables.Column(accessor='house__listing_create_date', verbose_name='Listed On')
     actions = LikedListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
@@ -160,17 +136,13 @@ class LikedListingsTable(tables.Table):
     class Meta:
         template = 'django_tables2/bootstrap.html'
         model = House
-        fields = (
-            'house_id',
-        )
+        fields = ()
         sequence = (
-            'house_id',
             'address',
             'suburb',
             'city',
             'region',
-            'land',
-            'floor',
+            'property_type',
             'price',
             'create_date',
             'actions'
@@ -184,33 +156,19 @@ class LikedListingsTableWithPhoto(LikedListingsTable):
     class Meta:
         template = 'django_tables2/bootstrap.html'
         model = House
-        fields = (
-            'house_id',
-        )
+        fields = ()
         sequence = (
-            'house_id',
             'address',
             'suburb',
             'city',
             'region',
-            'land',
-            'floor',
+            'property_type',
             'price',
             'photo',
             'create_date',
             'actions'
         )
         attrs = {'class': 'table table-bordered table-striped table-hover'}
-
-
-class DetailsDislikedListingsColumn(tables.Column):
-    """Column type with house id as link to house's page."""
-    def render(self, value):
-        return format_html(
-            '<a href="{}">{}</a>',
-            reverse('listings:show_disliked_listing', args=(value,)),
-            value
-        )
 
 
 class DislikedListingsTableActionColumn(tables.Column):
@@ -228,7 +186,9 @@ class DislikedListingsTableActionColumn(tables.Column):
 
 
 class DislikedListingsTable(LikedListingsTable):
-    house_id = DetailsDislikedListingsColumn(accessor='house_id')
+    address = tables.LinkColumn('listings:show_disliked_listing',
+                                args=[A('house_id')],
+                                accessor='address')
     actions = DislikedListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
 
     class Meta(LikedListingsTable.Meta):
@@ -236,7 +196,9 @@ class DislikedListingsTable(LikedListingsTable):
 
 
 class DislikedListingsTableWithPhoto(LikedListingsTableWithPhoto):
-    house_id = DetailsDislikedListingsColumn(accessor='house_id')
+    address = tables.LinkColumn('listings:show_disliked_listing',
+                                args=[A('house_id')],
+                                accessor='address')
     actions = DislikedListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
 
     class Meta(LikedListingsTableWithPhoto.Meta):
@@ -257,18 +219,10 @@ class StillThinkingListingsTableActionColumn(tables.Column):
         )
 
 
-class DetailsStillThinkingListingsColumn(tables.Column):
-    """Column type with house id as link to house's page."""
-    def render(self, value):
-        return format_html(
-            '<a href="{}">{}</a>',
-            reverse('listings:show_still_thinking_listing', args=(value,)),
-            value
-        )
-
-
 class StillThinkingListingsTable(LikedListingsTable):
-    house_id = DetailsStillThinkingListingsColumn(accessor='house_id')
+    address = tables.LinkColumn('listings:show_still_thinking_listing',
+                                args=[A('house_id')],
+                                accessor='address')
     actions = StillThinkingListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
 
     class Meta(LikedListingsTable.Meta):
@@ -276,7 +230,9 @@ class StillThinkingListingsTable(LikedListingsTable):
 
 
 class StillThinkingListingsTableWithPhoto(LikedListingsTableWithPhoto):
-    house_id = DetailsStillThinkingListingsColumn(accessor='house_id')
+    address = tables.LinkColumn('listings:show_still_thinking_listing',
+                                args=[A('house_id')],
+                                accessor='address')
     actions = StillThinkingListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
 
     class Meta(LikedListingsTableWithPhoto.Meta):
