@@ -17,6 +17,7 @@ class ActionColumn(tables.Column):
 class FiltersTable(tables.Table):
     """Table for user's filters."""
     id = tables.Column(orderable=False)
+    name = tables.Column(orderable=False, verbose_name='Filter Name')
     suburbs = tables.Column(orderable=False)
     price_from = tables.Column(orderable=False)
     price_to = tables.Column(orderable=False)

@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 class HousesFilter(models.Model):
     """House filter model."""
+    name = models.CharField('Filter Name', max_length=255, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     filter_data_json = models.TextField('Filter Data', blank=True, null=True)
     active = models.BooleanField('Is active', default=False)

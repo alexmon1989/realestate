@@ -29,6 +29,7 @@ class SettingsForm(ModelForm):
 
 class HousesFilterForm(forms.Form):
     """Form for user filter settings."""
+    name = forms.CharField(label='Filter Name')
     suburbs = forms.MultipleChoiceField(label='Area selection',
                                         required=True)
     PRICE_FROM_CHOICES = (

@@ -33,6 +33,7 @@ def profile(request):
         filter_data_json = json.loads(f.filter_data_json)
         filters_data.append({
             'id': f.id,
+            'name': f.name,
             'suburbs': ', '.join([suburb.name for suburb in Suburb.objects.filter(pk__in=filter_data_json['suburbs'])]),
             'price_from': filter_data_json['price_from'][0],
             'price_to': filter_data_json['price_to'][0],
@@ -65,6 +66,7 @@ def create_filter(request):
         if form.is_valid():
             new_filter = HousesFilter(filter_data_json=json.dumps(dict(request.POST)), user_id=request.user.pk)
             new_filter.active = bool(request.POST.get('active', False))
+            new_filter.name = request.POST.get('name')
             new_filter.save()
             messages.success(request, 'The new filter has been successfully created.')
             return redirect('{}?active_tab=filters'.format(reverse('accounts:profile')))
@@ -84,6 +86,7 @@ def edit_filter(request, pk):
         if form.is_valid():
             house_filter.filter_data_json = json.dumps(dict(request.POST))
             house_filter.active = bool(request.POST.get('active', False))
+            house_filter.name = request.POST.get('name')
             house_filter.save()
             messages.success(request, 'The filter has been successfully updated.')
             return redirect(reverse('accounts:edit_filter', args=(pk,)))
