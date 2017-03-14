@@ -42,7 +42,7 @@ def profile(request):
             'property_type': ', '.join([property_type.name
                                         for property_type
                                         in PropertyType.objects.filter(pk__in=filter_data_json['property_type'])]),
-            'active': f.active,
+            'disabled': f.disabled,
             'created_at': f.created_at,
             'updated_at': f.updated_at,
             'actions': f.id,
@@ -65,7 +65,7 @@ def create_filter(request):
         form = HousesFilterForm(request.POST)
         if form.is_valid():
             new_filter = HousesFilter(filter_data_json=json.dumps(dict(request.POST)), user_id=request.user.pk)
-            new_filter.active = bool(request.POST.get('active', False))
+            new_filter.disabled = bool(request.POST.get('disabled', False))
             new_filter.name = request.POST.get('name')
             new_filter.save()
             messages.success(request, 'The new filter has been successfully created.')
@@ -85,7 +85,7 @@ def edit_filter(request, pk):
         form = HousesFilterForm(request.POST)
         if form.is_valid():
             house_filter.filter_data_json = json.dumps(dict(request.POST))
-            house_filter.active = bool(request.POST.get('active', False))
+            house_filter.disabled = bool(request.POST.get('disabled', False))
             house_filter.name = request.POST.get('name')
             house_filter.save()
             messages.success(request, 'The filter has been successfully updated.')

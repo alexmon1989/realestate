@@ -24,7 +24,7 @@ class FiltersTable(tables.Table):
     landarea_from = tables.Column(orderable=False)
     landarea_to = tables.Column(orderable=False)
     property_type = tables.Column(orderable=False)
-    active = tables.BooleanColumn(orderable=False)
+    disabled = tables.BooleanColumn(orderable=False)
     created_at = tables.DateTimeColumn(orderable=False)
     updated_at = tables.DateTimeColumn(orderable=False)
     actions = ActionColumn(orderable=False)

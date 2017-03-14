@@ -9,7 +9,7 @@ class HousesFilter(models.Model):
     name = models.CharField('Filter Name', max_length=255, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     filter_data_json = models.TextField('Filter Data', blank=True, null=True)
-    active = models.BooleanField('Is active', default=False)
+    disabled = models.BooleanField('Disabled', default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

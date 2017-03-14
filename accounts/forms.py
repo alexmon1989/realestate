@@ -297,7 +297,7 @@ class HousesFilterForm(forms.Form):
 
     listings_date_created = forms.CharField(label='Show listings younger than', required=True, initial=date.today())
     
-    active = forms.BooleanField(label='Is active?', initial=False, required=False)
+    disabled = forms.BooleanField(label='Disabled', initial=False, required=False)
 
     def __init__(self, *args, **kwargs):
         suburbs = [(suburb['id'], suburb['name'])

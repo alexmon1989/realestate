@@ -22,7 +22,7 @@ from .forms import HouseUserDataForm
 def new_listings(request):
     """Shows page with new listings."""
     # user's houses filters
-    filters = request.user.housesfilter_set.filter(active=True).all()
+    filters = request.user.housesfilter_set.filter(disabled=False).all()
 
     # get new houses queryset
     excluded_pks = [h.house_id for h in MarkedHouse.objects.filter(user=request.user).only('house_id')]
