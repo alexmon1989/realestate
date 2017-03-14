@@ -23,6 +23,7 @@
                 {% csrf_token %}
                 <p>Are you sure you want to delete "{{ object }}"?</p>
                 <input class="btn btn-primary" type="submit" value="Confirm" />
+                <a href="{% url 'accounts:profile' %}?active_tab=filters" class="btn btn-warning">Cancel</a>
             </form>
         </div>
         <!-- /.box-body -->
