@@ -35,7 +35,7 @@
     <![endif]-->
     {% block styles %}{% endblock %}
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini {% if request.COOKIES.sidebar_size == 'mini' %}sidebar-collapse{% endif %}">
 <!-- Site wrapper -->
 <div class="wrapper">
 
@@ -125,10 +125,13 @@
 <script src="{% static "AdminLTE/plugins/datepicker/bootstrap-datepicker.js" %}"></script>
 <!-- Lightbox 2 -->
 <script src="{% static "AdminLTE/plugins/lightbox2/dist/js/lightbox.min.js" %}"></script>
+<!-- Js-Cookie -->
+<script src="{% static "AdminLTE/plugins/js-cookie/src/js.cookie.js" %}"></script>
 <!-- AdminLTE App -->
 <script src="{% static "AdminLTE/dist/js/app.min.js" %}"></script>
 <!-- Custom js -->
 <script src="{% static "accounts/js/change-font-size.js" %}"></script>
+<script src="{% static "home/js/sidebar-size.js" %}"></script>
 
 {% font_sizes %}
 
