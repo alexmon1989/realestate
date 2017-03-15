@@ -52,11 +52,11 @@ class NewListingsTable(tables.Table):
     address = tables.LinkColumn('listings:show_new_listing',
                                 args=[A('house_id')],
                                 accessor='address')
-    region = tables.Column(accessor='region_name')
-    city = tables.Column(accessor='city_name')
+    region = tables.Column(accessor='region_name', verbose_name='Region')
+    city = tables.Column(accessor='city_name', verbose_name='City')
     property_type = tables.Column(accessor='property_type_full', verbose_name='Property Type')
     price = tables.Column(accessor='price_with_price_type', verbose_name='Price', order_by='price')
-    suburb = tables.Column(accessor='suburb_name')
+    suburb = tables.Column(accessor='suburb_name', verbose_name='Suburb')
     actions = NewListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
     create_date = tables.Column(accessor='listing_create_date', verbose_name='Listed On')
 
