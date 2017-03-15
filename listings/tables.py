@@ -3,7 +3,7 @@ from django_tables2 import A
 from django.utils.html import format_html
 from django.urls import reverse
 
-from home.models import House
+from home.models import House, VHousesForTables
 
 import random
 import string
@@ -28,7 +28,7 @@ class PhotoColumn(tables.Column):
                     photos[i],
                     random_str
                 )
-                i = i + 1
+                i += 1
             return html
         return ''
 
@@ -52,20 +52,20 @@ class NewListingsTable(tables.Table):
     address = tables.LinkColumn('listings:show_new_listing',
                                 args=[A('house_id')],
                                 accessor='address')
-    region = tables.Column(accessor='suburb__city__region__name')
-    city = tables.Column(accessor='suburb__city__city_name')
-    property_type = tables.Column(accessor='property_type')
-    suburb = tables.Column(accessor='suburb__name')
+    region = tables.Column(accessor='region_name')
+    city = tables.Column(accessor='city_name')
+    property_type = tables.Column(accessor='property_type_full', verbose_name='Property Type')
+    price = tables.Column(accessor='price_with_price_type', verbose_name='Price', order_by='price')
+    suburb = tables.Column(accessor='suburb_name')
     actions = NewListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
     create_date = tables.Column(accessor='listing_create_date', verbose_name='Listed On')
 
     class Meta:
         template = 'django_tables2/bootstrap.html'
-        model = House
+        model = VHousesForTables
         fields = (
             'address',
-            'land',
-            'floor',
+            'property_type',
             'price',
             'create_date',
         )
@@ -87,7 +87,7 @@ class NewListingsTableWithPhoto(NewListingsTable):
 
     class Meta:
         template = 'django_tables2/bootstrap.html'
-        model = House
+        model = VHousesForTables
         fields = (
             'address',
             'property_type',
@@ -129,7 +129,7 @@ class LikedListingsTable(tables.Table):
                                 args=[A('house_id')],
                                 accessor='address')
     property_type = tables.Column(accessor='property_type')
-    price = tables.Column(accessor='house__price')
+    price = tables.Column(accessor='price_with_price_type', verbose_name='Price', order_by='price')
     create_date = tables.Column(accessor='house__listing_create_date', verbose_name='Listed On')
     actions = LikedListingsTableActionColumn(orderable=False, accessor='house_id', verbose_name='Actions')
 

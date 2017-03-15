@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django_tables2 import RequestConfig
 from .forms import SearchForm
-from home.models import House
+from home.models import VHousesForTables
 from listings.tables import NewListingsTableWithPhoto
 
 from decorators import group_required
@@ -16,7 +16,7 @@ def index(request):
 
     if request.GET:
         form = SearchForm(request.GET)
-        houses = House.search(request.GET)
+        houses = VHousesForTables.search(request.GET)
     else:
         form = SearchForm()
 

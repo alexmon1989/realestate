@@ -5,7 +5,7 @@ from django.contrib import messages
 
 from django_tables2 import RequestConfig
 
-from home.models import House
+from home.models import House, VHousesForTables
 from .models import MarkedHouse
 
 from .tables import (NewListingsTable, NewListingsTableWithPhoto, LikedListingsTable, LikedListingsTableWithPhoto,
@@ -26,7 +26,8 @@ def new_listings(request):
 
     # get new houses queryset
     excluded_pks = [h.house_id for h in MarkedHouse.objects.filter(user=request.user).only('house_id')]
-    houses = House.get_new_houses(filters, excluded_pks)
+    houses = VHousesForTables.get_new_houses(filters, excluded_pks)
+    print(houses)
 
     # Generating table
     if request.user.profile.show_photos_filters:
@@ -49,7 +50,10 @@ def liked_listings(request):
     houses = MarkedHouse.objects.extra(
         select={
             "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
-            "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)"
+            "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)",
+            "price_with_price_type": "CONCAT_WS(' ', "
+                                     "CASE WHEN house.price <> 0 THEN house.price END, "
+                                     "pricing_method.name)",
         }
     ).values(
         'house_id',
@@ -65,7 +69,9 @@ def liked_listings(request):
         'house__photos',
         'address',
         'house__property_type__name',
-        'property_type'
+        'property_type',
+        'house__price_type__name',
+        'price_with_price_type'
     ).filter(user=request.user, mark_id=1)
 
     # Generating table
@@ -88,7 +94,10 @@ def disliked_listings(request):
     houses = MarkedHouse.objects.extra(
         select={
             "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
-            "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)"
+            "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)",
+            "price_with_price_type": "CONCAT_WS(' ', "
+                                     "CASE WHEN house.price <> 0 THEN house.price END, "
+                                     "pricing_method.name)",
         }
     ).values(
         'house_id',
@@ -104,7 +113,9 @@ def disliked_listings(request):
         'house__photos',
         'address',
         'house__property_type__name',
-        'property_type'
+        'property_type',
+        'house__price_type__name',
+        'price_with_price_type'
     ).filter(user=request.user, mark_id=2)
 
     # Generating table
@@ -127,7 +138,10 @@ def still_thinking_listings(request):
     houses = MarkedHouse.objects.extra(
         select={
             "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
-            "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)"
+            "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)",
+            "price_with_price_type": "CONCAT_WS(' ', "
+                                     "CASE WHEN house.price <> 0 THEN house.price END, "
+                                     "pricing_method.name)",
         }
     ).values(
         'house_id',
@@ -143,7 +157,9 @@ def still_thinking_listings(request):
         'house__photos',
         'address',
         'house__property_type__name',
-        'property_type'
+        'property_type',
+        'house__price_type__name',
+        'price_with_price_type'
     ).filter(user=request.user, mark_id=3)
 
     # Generating table
