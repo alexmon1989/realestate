@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.core.cache import cache
 
 from datetime import datetime
 import json
@@ -123,7 +124,22 @@ class House(models.Model):
                             'price'),)
 
     def __str__(self):
-        return '{}, {}, {}'.format(self.suburb.city, self.suburb, self.street_name, self.street_number)
+        """String view of house object"""
+        house = House.objects.values(
+            'street_number',
+            'street_name',
+            'suburb__name',
+            'suburb__city__city_name',
+            'suburb__city__region__name'
+        ).get(house_id=self.house_id)
+
+        return '{} {}, {}, {}, {}'.format(
+            house['street_number'],
+            house['street_name'],
+            house['suburb__name'],
+            house['suburb__city__city_name'],
+            house['suburb__city__region__name']
+        )
 
     @staticmethod
     def search(filters):
