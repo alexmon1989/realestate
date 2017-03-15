@@ -6,7 +6,6 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-from django.core.cache import cache
 
 from datetime import datetime
 import json
@@ -14,7 +13,7 @@ import pytz
 
 
 class Region(models.Model):
-    name = models.CharField(unique=True, max_length=255)
+    name = models.CharField('Region name', unique=True, max_length=255)
 
     class Meta:
         managed = False
@@ -28,7 +27,7 @@ class Region(models.Model):
 
 class City(models.Model):
     city_id = models.AutoField(primary_key=True)
-    city_name = models.CharField(unique=True, max_length=255)
+    city_name = models.CharField('City name', unique=True, max_length=255)
     capital_growth = models.IntegerField(blank=True, null=True)
     council_link = models.TextField(blank=True, null=True)
     region = models.ForeignKey('Region', models.CASCADE)
@@ -140,6 +139,36 @@ class House(models.Model):
             house['suburb__city__city_name'],
             house['suburb__city__region__name']
         )
+
+    def get_address(self):
+        """Returns address of house."""
+        address = '{} {}'.format(self.street_number, self.street_name)
+        if address == ' ':
+            return None
+        return address
+    get_address.short_description = 'Address'
+
+    def get_city(self):
+        """Returns city of house."""
+        return self.suburb.city
+    get_city.short_description = 'City'
+
+    def get_region(self):
+        """Returns region of house."""
+        return self.suburb.city.region
+    get_region.short_description = 'Region'
+
+    def get_property_type(self):
+        """Returns property type with bedrooms of house."""
+        return '{} bedrooms {}'.format(self.bedrooms, self.property_type)
+    get_property_type.short_description = 'Property Type'
+
+    def get_price(self):
+        """Returns price with price method of house."""
+        if self.price:
+            return '{} {}'.format(self.price, self.price_type)
+        return self.price_type
+    get_price.short_description = 'Price'
 
     @staticmethod
     def search(filters):
@@ -359,14 +388,14 @@ class VHousesForTables(models.Model):
 
 class Agency(models.Model):
     agency_id = models.AutoField(primary_key=True)
-    agency_name = models.TextField(unique=True, max_length=512)
+    agency_name = models.CharField(unique=True, max_length=255)
     city = models.ForeignKey('City', models.DO_NOTHING)
-    email = models.TextField(blank=True, null=True)
-    work_phone = models.TextField(blank=True, null=True)
+    email = models.CharField(blank=True, null=True, max_length=255)
+    work_phone = models.CharField(blank=True, null=True, max_length=255)
     houses = models.ManyToManyField(House, db_table='agencyhouse')
 
     def __str__(self):
-        return '{} ({})'.format(self.agency_name, self.city)
+        return self.agency_name
 
     class Meta:
         managed = False
@@ -377,11 +406,11 @@ class Agency(models.Model):
 
 class Agent(models.Model):
     agent_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=256)
-    mobile_phone = models.TextField(blank=True, null=True)
-    ddi_phone = models.TextField(blank=True, null=True)
-    work_phone = models.TextField(blank=True, null=True)
-    email = models.TextField(blank=True, null=True)
+    name = models.CharField(max_length=255)
+    mobile_phone = models.CharField(blank=True, null=True, max_length=255)
+    ddi_phone = models.CharField(blank=True, null=True, max_length=255)
+    work_phone = models.CharField(blank=True, null=True, max_length=255)
+    email = models.CharField(blank=True, null=True, max_length=255)
     agency = models.ForeignKey(Agency, models.DO_NOTHING)
     houses = models.ManyToManyField(House, db_table='agenthouse')
 
