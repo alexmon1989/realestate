@@ -219,6 +219,12 @@ class SearchForm(forms.Form):
     show_only_open_homes = forms.BooleanField(label='Show only open homes', required=False)
     show_only_properties_with_address = forms.BooleanField(label='Show only properties with an address', required=False)
     keywords = forms.CharField(label='Keywords', required=False)
+    listings_age_days = forms.IntegerField(
+        label='Listings age (days), not more',
+        required=True,
+        initial=14,
+        min_value=0
+    )
 
     def __init__(self, *args, **kwargs):
         suburbs = [(suburb['id'], suburb['name'])

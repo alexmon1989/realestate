@@ -170,65 +170,6 @@ class House(models.Model):
         return self.price_type
     get_price.short_description = 'Price'
 
-    @staticmethod
-    def search(filters):
-        """Search houses by filters."""
-        houses = House.objects.extra(
-            select={
-                "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
-                "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)",
-                "price_with_price_type": "CONCAT_WS(' ', "
-                                         "CASE WHEN house.price <> 0 THEN house.price END, "
-                                         "pricing_method.name)",
-            }
-        ).values(
-            'house_id',
-            'suburb__name',
-            'suburb__city__city_name',
-            'suburb__city__region__name',
-            'street_name',
-            'street_number',
-            'land',
-            'floor',
-            'price',
-            'listing_create_date',
-            'photos',
-            'address',
-            'property_type',
-            'property_type__name',
-            'price_type__name',
-            'price_with_price_type'
-        ).filter(
-            price__range=(filters['price_from'], filters['price_to']),
-            bedrooms__range=(filters['bedrooms_from'], filters['bedrooms_to']),
-            bathrooms__range=(filters['bathrooms_from'], filters['bathrooms_to']),
-            land__range=(filters['landarea_from'], filters['landarea_to']),
-            floor__range=(filters['floorarea_from'], filters['floorarea_to']),
-            description__contains=filters['keywords'],
-        )
-        if filters.get('suburbs'):
-            houses = houses.filter(suburb__in=filters.getlist('suburbs'))
-        if filters.get('pricing_methods'):
-            houses = houses.filter(price_type__in=filters.getlist('pricing_methods'))
-        if filters.get('property_type'):
-            houses = houses.filter(property_type__in=filters.getlist('property_type'))
-        if filters.get('show_only_properties_with_address'):
-            houses = houses.filter(
-                street_name__isnull=False,
-                street_number__isnull=False
-            ).exclude(
-                street_name='',
-                street_number=''
-            )
-        if filters.get('show_only_open_homes'):
-            now = datetime.now()
-            houses = houses.filter(
-                openhomes__date_from__gte=datetime(now.year, now.month, now.day, tzinfo=pytz.UTC),
-                openhomes__date_to__lte=datetime(now.year, now.month, now.day, 23, 59, 59, tzinfo=pytz.UTC),
-            )
-
-        return houses
-
 
 class OpenHomes(models.Model):
     house = models.ForeignKey(House, models.CASCADE)
@@ -364,6 +305,10 @@ class VHousesForTables(models.Model):
             land__range=(filters['landarea_from'], filters['landarea_to']),
             floor__range=(filters['floorarea_from'], filters['floorarea_to']),
             description__contains=filters['keywords'],
+            listing_create_date__range=[
+                date.today() + timedelta(days=-int(filters['listings_age_days'])),
+                date.today()
+            ],
         )
         if filters.get('suburbs'):
             houses = houses.filter(suburb_id__in=filters.getlist('suburbs'))
