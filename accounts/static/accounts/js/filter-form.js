@@ -5,12 +5,6 @@ $(function(){
     // treeMultiselect for suburbs
     $("#id_suburbs").treeMultiselect({ enableSelectAll: true, startCollapsed: true });
 
-    //Date picker
-    $('#id_listings_date_created').datepicker({
-        autoclose: true,
-        format: 'yyyy-mm-dd'
-    });
-
     $("#pricing-methods-select-all").click(function (e) {
         e.preventDefault();
         $("#id_pricing_methods > option").prop("selected", "selected");

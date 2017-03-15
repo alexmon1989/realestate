@@ -27,7 +27,6 @@ def new_listings(request):
     # get new houses queryset
     excluded_pks = [h.house_id for h in MarkedHouse.objects.filter(user=request.user).only('house_id')]
     houses = VHousesForTables.get_new_houses(filters, excluded_pks)
-    print(houses)
 
     # Generating table
     if request.user.profile.show_photos_filters:

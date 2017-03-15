@@ -7,7 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-from datetime import datetime
+from datetime import datetime, date, timedelta
 import json
 import pytz
 
@@ -311,7 +311,10 @@ class VHousesForTables(models.Model):
                 property_type__in=filter_data['property_type'],
                 description__contains=filter_data['keywords'][0],
                 car_spaces__range=(filter_data['carspace_from'][0], filter_data['carspace_to'][0]),
-                listing_create_date__gte=filter_data['listings_date_created'][0],
+                listing_create_date__range=[
+                    date.today() + timedelta(days=-int(filter_data['listings_age_days'][0])),
+                    date.today()
+                ],
             ).exclude(
                 house_id__in=excluded_pks
             )

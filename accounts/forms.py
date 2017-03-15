@@ -3,8 +3,6 @@ from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django_select2.forms import Select2Widget, Select2MultipleWidget
 
-from datetime import date
-
 from home.models import Suburb, PricingMethod, PropertyType
 from .models import Profile
 
@@ -286,7 +284,12 @@ class HousesFilterForm(forms.Form):
 
     ensuite = forms.BooleanField(label='Ensuite', initial=False, required=False)
 
-    listings_date_created = forms.CharField(label='Show listings younger than', required=True, initial=date.today())
+    listings_age_days = forms.IntegerField(
+        label='Listings age (days), not more',
+        required=True,
+        initial=14,
+        min_value=0
+    )
     
     disabled = forms.BooleanField(label='Disabled', initial=False, required=False)
 
