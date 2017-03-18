@@ -331,7 +331,7 @@ class VHousesForTables(models.Model):
                 open_homes_to__gte=datetime(now.year, now.month, now.day, 23, 59, 59, tzinfo=pytz.UTC),
             )
 
-        return houses
+        return houses.distinct()
 
 
 class Agency(models.Model):
