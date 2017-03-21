@@ -238,7 +238,6 @@ class VHousesForTables(models.Model):
             ).filter(
                 suburb__in=filter_data['suburbs'],
                 price__range=(filter_data['price_from'][0], filter_data['price_to'][0]),
-                price_type__in=filter_data['pricing_methods'],
                 government_value__range=(
                     filter_data['government_value_from'][0], filter_data['government_value_to'][0]
                 ),
@@ -249,7 +248,6 @@ class VHousesForTables(models.Model):
                 bathrooms__range=(filter_data['bathrooms_from'][0], filter_data['bathrooms_to'][0]),
                 land__range=(filter_data['landarea_from'][0], filter_data['landarea_to'][0]),
                 floor__range=(filter_data['floorarea_from'][0], filter_data['floorarea_to'][0]),
-                property_type__in=filter_data['property_type'],
                 description__contains=filter_data['keywords'][0],
                 car_spaces__range=(filter_data['carspace_from'][0], filter_data['carspace_to'][0]),
                 listing_create_date__range=[
@@ -259,6 +257,10 @@ class VHousesForTables(models.Model):
             ).exclude(
                 house_id__in=excluded_pks
             )
+            if filter_data.get('pricing_methods'):
+                houses = houses.filter(price_type__in=filter_data['pricing_methods'])
+            if filter_data.get('property_type'):
+                houses = houses.filter(property_type__in=filter_data['property_type'],)
             if filter_data.get('show_only_properties_with_address'):
                 houses = houses.filter(
                     street_name__isnull=False,

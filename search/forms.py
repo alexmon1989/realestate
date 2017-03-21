@@ -74,7 +74,9 @@ class SearchForm(forms.Form):
     pricing_methods = forms.MultipleChoiceField(label='Pricing methods',
                                                 required=False,
                                                 choices=PRICING_METHODS_CHOICES,
-                                                widget=Select2MultipleWidget,
+                                                widget=Select2MultipleWidget(
+                                                    attrs={'data-placeholder': 'All pricing methods'}
+                                                ),
                                                 help_text='<a id="pricing-methods-select-all" href="#">Select all</a>')
 
     BEDROOMS_FROM_CHOICES = (
@@ -209,13 +211,40 @@ class SearchForm(forms.Form):
                                      initial=999999999,
                                      widget=Select2Widget)
 
-    PROPERTY_TYPE_CHOICES = ((property_type.id, property_type.name)
-                             for property_type in PropertyType.objects.order_by('name'))
+    PROPERTY_TYPE_CHOICES = [
+        ("Residential", [
+            (2, 'House'),
+            (1, 'Apartment'),
+            (11, 'Studio'),
+            (4, 'Townhouse'),
+            (5, 'Unit'),
+        ]),
+        ("Other", [
+            (8, 'Home & Income'),
+            (7, 'Lifestyle Property'),
+            (6, 'Lifestyle Section'),
+            (12, 'Section'),
+            (14, 'Retirement Living'),
+            (15, 'Carpark'),
+            (16, 'Boat shed'),
+            (13, 'Multiple Properties'),
+            (17, 'Rentals House'),
+            (10, 'Rural Lifestyle Property'),
+            (9, 'Rural Lifestyle Section'),
+            (12, 'Section')
+        ])
+    ]
     property_type = forms.MultipleChoiceField(label='Property type',
-                                              required=False,
                                               choices=PROPERTY_TYPE_CHOICES,
-                                              widget=Select2MultipleWidget,
-                                              help_text='<a id="property-type-select-all" href="#">Select all</a>')
+                                              required=False,
+                                              widget=Select2MultipleWidget(
+                                                  attrs={'data-placeholder': 'All property types'}
+                                              ),
+                                              help_text='<a id="property-type-select-residential" href="#">'
+                                                        'Select Residential types</a><br>'
+                                                        '<a id="property-type-select-other" href="#">'
+                                                        'Select Other types</a><br>'
+                                                        '<a id="property-type-select-all" href="#">Select all</a>')
     show_only_open_homes = forms.BooleanField(label='Show only open homes', required=False)
     show_only_properties_with_address = forms.BooleanField(label='Show only properties with an address', required=False)
     keywords = forms.CharField(label='Keywords', required=False)

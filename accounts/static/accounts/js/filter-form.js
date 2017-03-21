@@ -13,7 +13,19 @@ $(function(){
 
     $("#property-type-select-all").click(function (e) {
         e.preventDefault();
-        $("#id_property_type > option").prop("selected", "selected");
+        $("#id_property_type option").prop("selected", "selected");
+        $("#id_property_type").trigger("change");
+    });
+
+    $("#property-type-select-residential").click(function (e) {
+        e.preventDefault();
+        $("#id_property_type > optgroup").first().find("option").prop("selected", "selected");
+        $("#id_property_type").trigger("change");
+    });
+
+    $("#property-type-select-other").click(function (e) {
+        e.preventDefault();
+        $("#id_property_type > optgroup").last().find("option").prop("selected", "selected");
         $("#id_property_type").trigger("change");
     });
 });

@@ -41,7 +41,7 @@ def profile(request):
             'landarea_to': filter_data_json['landarea_to'][0],
             'property_type': ', '.join([property_type.name
                                         for property_type
-                                        in PropertyType.objects.filter(pk__in=filter_data_json['property_type'])]),
+                                        in PropertyType.objects.filter(pk__in=filter_data_json.get('property_type', []))]),
             'disabled': f.disabled,
             'created_at': f.created_at,
             'updated_at': f.updated_at,

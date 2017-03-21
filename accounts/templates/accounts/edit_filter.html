@@ -36,6 +36,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.6/select2-bootstrap.min.css">
     <style>
         .select2 { width: 100% !important; }
+        .select2-container--bootstrap .select2-search__field::-webkit-input-placeholder {
+          color: #555;
+        }
+        .select2-container--bootstrap .select2-search__field::-moz-placeholder {
+          color: #555;
+        }
+        .select2-container--bootstrap .select2-search__field:-ms-input-placeholder {
+          color: #555;
+        }
+        .select2-container--bootstrap .select2-search__field:-moz-placeholder {
+          color: #555;
+        }
+        .select2-container--bootstrap .select2-results__group {
+            font-size: 16px;
+        }
     </style>
     <link rel="stylesheet" href="{% static "AdminLTE/plugins/tree-multiselect/dist/jquery.tree-multiselect.min.css" %}">
 {% endblock %}
