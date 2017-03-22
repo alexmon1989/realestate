@@ -216,12 +216,12 @@ class VHousesForTables(models.Model):
         db_table = 'v_houses_for_tables'
 
     @staticmethod
-    def get_new_houses(filters, excluded_pks):
+    def get_new_houses(filter_data, excluded_pks):
         """Returns queryset with new houses by user's filters."""
         queryset = None
 
         # getting querysets for each filter and merge them in one queryset
-        for f in filters:
+        for f in filter_data:
             filter_data = json.loads(f.filter_data_json)
             houses = VHousesForTables.objects.values(
                 'house_id',
@@ -237,30 +237,76 @@ class VHousesForTables(models.Model):
                 'property_type_full',
             ).filter(
                 suburb__in=filter_data['suburbs'],
-                price__range=(filter_data['price_from'][0], filter_data['price_to'][0]),
-                government_value__range=(
-                    filter_data['government_value_from'][0], filter_data['government_value_to'][0]
-                ),
-                government_to_price__range=(
-                    filter_data['government_value_to_price_from'][0], filter_data['government_value_to_price_to'][0]
-                ),
-                bedrooms__range=(filter_data['bedrooms_from'][0], filter_data['bedrooms_to'][0]),
-                bathrooms__range=(filter_data['bathrooms_from'][0], filter_data['bathrooms_to'][0]),
-                land__range=(filter_data['landarea_from'][0], filter_data['landarea_to'][0]),
-                floor__range=(filter_data['floorarea_from'][0], filter_data['floorarea_to'][0]),
-                description__contains=filter_data['keywords'][0],
-                car_spaces__range=(filter_data['carspace_from'][0], filter_data['carspace_to'][0]),
                 listing_create_date__range=[
-                    date.today() + timedelta(days=-int(filter_data['listings_age_days'][0])),
+                    date.today() - timedelta(days=int(filter_data['listings_age_days'][0])),
                     date.today()
                 ],
             ).exclude(
                 house_id__in=excluded_pks
             )
-            if filter_data.get('pricing_methods'):
+
+            if filter_data.get('price_from') and filter_data['price_from'][0]:
+                houses = houses.filter(price__gte=filter_data['price_from'][0])
+            if (filter_data.get('price_to') and
+                    filter_data['price_to'][0] and
+                    int(filter_data['price_to'][0]) != 999999999):
+                houses = houses.filter(price__lte=filter_data['price_to'][0])
+
+            if filter_data.get('government_value_from') and filter_data['government_value_from'][0]:
+                houses = houses.filter(government_value__gte=filter_data['government_value_from'][0])
+            if (filter_data.get('government_value_to') and
+                    filter_data['government_value_to'][0] and
+                    int(filter_data['government_value_to'][0]) != 999999999):
+                houses = houses.filter(government_value__lte=filter_data['government_value_to'][0])
+
+            if filter_data.get('government_value_to_price_from') and filter_data['government_value_to_price_from'][0]:
+                houses = houses.filter(government_to_price__gte=filter_data['government_value_to_price_from'][0])
+            if (filter_data.get('government_value_to_price_to') and
+                    filter_data['government_value_to_price_to'][0] and
+                    float(filter_data['government_value_to_price_to'][0]) != 999):
+                houses = houses.filter(government_to_price__lte=filter_data['government_value_to_price_to'][0])
+
+            if filter_data.get('bedrooms_from') and filter_data['bedrooms_from'][0]:
+                houses = houses.filter(bedrooms__gte=filter_data['bedrooms_from'][0])
+            if (filter_data.get('bedrooms_to') and
+                    filter_data['bedrooms_to'][0] and
+                    int(filter_data['bedrooms_to'][0]) != 999):
+                houses = houses.filter(bedrooms__lte=filter_data['bedrooms_to'][0])
+
+            if filter_data.get('bathrooms_from') and filter_data['bathrooms_from'][0]:
+                houses = houses.filter(bathrooms__gte=filter_data['bathrooms_from'][0])
+            if (filter_data.get('bathrooms_to') and
+                    filter_data['bathrooms_to'][0] and
+                    int(filter_data['bathrooms_to'][0]) != 999):
+                houses = houses.filter(bathrooms__lte=filter_data['bathrooms_to'][0])
+
+            if filter_data.get('landarea_from') and filter_data['landarea_from'][0]:
+                houses = houses.filter(land__gte=filter_data['landarea_from'][0])
+            if (filter_data.get('landarea_to') and
+                    filter_data['landarea_to'][0] and
+                    int(filter_data['landarea_to'][0]) != 999999999):
+                houses = houses.filter(land__lte=filter_data['landarea_to'][0])
+
+            if filter_data.get('floorarea_from') and filter_data['floorarea_from'][0]:
+                houses = houses.filter(floor__gte=filter_data['floorarea_from'][0])
+            if (filter_data.get('floorarea_to') and
+                    filter_data['floorarea_to'][0] and
+                    int(filter_data['floorarea_to'][0]) != 999999999):
+                houses = houses.filter(floor__lte=filter_data['floorarea_to'][0])
+
+            if filter_data.get('pricing_methods') and filter_data['pricing_methods'][0]:
                 houses = houses.filter(price_type__in=filter_data['pricing_methods'])
-            if filter_data.get('property_type'):
-                houses = houses.filter(property_type__in=filter_data['property_type'],)
+
+            if filter_data.get('property_type') and filter_data['property_type'][0]:
+                houses = houses.filter(property_type__in=filter_data['property_type'])
+
+            if filter_data.get('carspace_from') and filter_data['carspace_from'][0]:
+                houses = houses.filter(car_spaces__gte=filter_data['carspace_from'][0])
+            if (filter_data.get('carspace_to') and
+                    filter_data['carspace_to'][0] and
+                    int(filter_data['carspace_to'][0]) != 999):
+                houses = houses.filter(car_spaces__lte=filter_data['carspace_to'][0])
+
             if filter_data.get('show_only_properties_with_address'):
                 houses = houses.filter(
                     street_name__isnull=False,
@@ -269,14 +315,20 @@ class VHousesForTables(models.Model):
                     street_name='',
                     street_number=''
                 )
+
             if filter_data.get('ensuite'):
                 houses = houses.filter(ensuite=True)
+
             if filter_data.get('show_only_open_homes'):
                 now = datetime.now()
                 houses = houses.filter(
                     open_homes_from__gte=datetime(now.year, now.month, now.day, tzinfo=pytz.UTC),
                     open_homes_to__lte=datetime(now.year, now.month, now.day, 23, 59, 59, tzinfo=pytz.UTC),
                 )
+
+            if filter_data.get('keywords') and filter_data['keywords'][0]:
+                houses = houses.filter(description__contains=filter_data['keywords'][0])
+
             if queryset:
                 queryset = queryset | houses
             else:
@@ -301,23 +353,45 @@ class VHousesForTables(models.Model):
             'property_type_full',
             'price_with_price_type'
         ).filter(
-            price__range=(filters['price_from'], filters['price_to']),
-            bedrooms__range=(filters['bedrooms_from'], filters['bedrooms_to']),
-            bathrooms__range=(filters['bathrooms_from'], filters['bathrooms_to']),
-            land__range=(filters['landarea_from'], filters['landarea_to']),
-            floor__range=(filters['floorarea_from'], filters['floorarea_to']),
-            description__contains=filters['keywords'],
             listing_create_date__range=[
-                date.today() + timedelta(days=-int(filters['listings_age_days'])),
+                date.today() - timedelta(days=int(filters['listings_age_days'])),
                 date.today()
             ],
         )
+        if filters.get('price_from'):
+            houses = houses.filter(price__gte=filters['price_from'])
+        if filters.get('price_to') and int(filters['price_to']) != 999999999:
+            houses = houses.filter(price__lte=filters['price_to'])
+
+        if filters.get('bedrooms_from'):
+            houses = houses.filter(bedrooms__gte=filters['bedrooms_from'])
+        if filters.get('bedrooms_to') and int(filters['bedrooms_to']) != 999:
+            houses = houses.filter(bedrooms__lte=filters['bedrooms_to'])
+
+        if filters.get('bathrooms_from'):
+            houses = houses.filter(bathrooms__gte=filters['bathrooms_from'])
+        if filters.get('bathrooms_to') and int(filters['bathrooms_to']) != 999:
+            houses = houses.filter(bathrooms__lte=filters['bathrooms_to'])
+
+        if filters.get('landarea_from'):
+            houses = houses.filter(land__gte=filters['landarea_from'])
+        if filters.get('landarea_to') and int(filters['landarea_to']) != 999999999:
+            houses = houses.filter(land__lte=filters['landarea_to'])
+
+        if filters.get('floorarea_from'):
+            houses = houses.filter(floor__gte=filters['floorarea_from'])
+        if filters.get('floorarea_to') and int(filters['floorarea_to']) != 999999999:
+            houses = houses.filter(floor__lte=filters['floorarea_to'])
+            
         if filters.get('suburbs'):
             houses = houses.filter(suburb_id__in=filters.getlist('suburbs'))
+
         if filters.get('pricing_methods'):
             houses = houses.filter(price_type_id__in=filters.getlist('pricing_methods'))
+
         if filters.get('property_type'):
             houses = houses.filter(property_type_id__in=filters.getlist('property_type'))
+
         if filters.get('show_only_properties_with_address'):
             houses = houses.filter(
                 street_name__isnull=False,
@@ -332,6 +406,8 @@ class VHousesForTables(models.Model):
                 open_homes_from__gte=datetime(now.year, now.month, now.day, tzinfo=pytz.UTC),
                 open_homes_to__gte=datetime(now.year, now.month, now.day, 23, 59, 59, tzinfo=pytz.UTC),
             )
+        if filters.get('keywords'):
+            houses = houses.filter(description__contains=filters['keywords'])
 
         return houses.distinct()
 

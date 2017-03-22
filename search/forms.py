@@ -9,6 +9,7 @@ class SearchForm(forms.Form):
     suburbs = forms.MultipleChoiceField(label='Area selection',
                                         required=False)
     PRICE_FROM_CHOICES = (
+        (None, 'Any'),
         (0, '$0'),
         (25000, '$25,000'),
         (50000, '$50,000'),
@@ -31,6 +32,7 @@ class SearchForm(forms.Form):
         (1600000, '$1,6m'),
     )
     PRICE_TO_CHOICES = (
+        (None, 'Any'),
         (0, '$0'),
         (25000, '$25,000'),
         (50000, '$50,000'),
@@ -60,14 +62,11 @@ class SearchForm(forms.Form):
     )
     price_from = forms.ChoiceField(label='Price from',
                                    required=False,
-                                   initial=0,
-                                   choices=PRICE_FROM_CHOICES,
-                                   widget=Select2Widget)
+                                   choices=PRICE_FROM_CHOICES)
     price_to = forms.ChoiceField(label='Price to',
                                  required=False,
                                  choices=PRICE_TO_CHOICES,
-                                 initial=999999999,
-                                 widget=Select2Widget)
+                                 initial=999999999)
 
     PRICING_METHODS_CHOICES = ((pricing_method.id, pricing_method.name)
                                for pricing_method in PricingMethod.objects.order_by('name'))
@@ -80,6 +79,7 @@ class SearchForm(forms.Form):
                                                 help_text='<a id="pricing-methods-select-all" href="#">Select all</a>')
 
     BEDROOMS_FROM_CHOICES = (
+        (None, 'Any'),
         (1, '1'),
         (2, '2'),
         (3, '3'),
@@ -88,11 +88,10 @@ class SearchForm(forms.Form):
     )
     bedrooms_from = forms.ChoiceField(label='Bedrooms from',
                                       required=False,
-                                      initial=1,
-                                      choices=BEDROOMS_FROM_CHOICES,
-                                      widget=Select2Widget)
+                                      choices=BEDROOMS_FROM_CHOICES)
 
     BEDROOMS_TO_CHOICES = (
+        (None, 'Any'),
         (1, '1'),
         (2, '2'),
         (3, '3'),
@@ -103,19 +102,17 @@ class SearchForm(forms.Form):
     bedrooms_to = forms.ChoiceField(label='Bedrooms to',
                                     required=False,
                                     choices=BEDROOMS_TO_CHOICES,
-                                    initial=999,
-                                    widget=Select2Widget)
+                                    initial=999)
 
     BATHROOMS_FROM_CHOICES = (
+        (None, 'Any'),
         (1, '1'),
         (2, '2'),
         (3, '3'),
     )
     bathrooms_from = forms.ChoiceField(label='Bathrooms from',
                                        required=False,
-                                       initial=1,
-                                       choices=BATHROOMS_FROM_CHOICES,
-                                       widget=Select2Widget)
+                                       choices=BATHROOMS_FROM_CHOICES)
     BATHROOMS_TO_CHOICES = (
         (1, '1'),
         (2, '2'),
@@ -125,10 +122,10 @@ class SearchForm(forms.Form):
     bathrooms_to = forms.ChoiceField(label='Bathrooms to',
                                      required=False,
                                      choices=BATHROOMS_TO_CHOICES,
-                                     initial=999,
-                                     widget=Select2Widget)
+                                     initial=999)
 
     LANDAREA_FROM_CHOICES = (
+        (None, 'Any'),
         (0, '0 m²'),
         (100, '100 m²'),
         (200, '200 m²'),
@@ -148,10 +145,9 @@ class SearchForm(forms.Form):
     )
     landarea_from = forms.ChoiceField(label='Landarea from',
                                       required=False,
-                                      choices=LANDAREA_FROM_CHOICES,
-                                      initial=0,
-                                      widget=Select2Widget)
+                                      choices=LANDAREA_FROM_CHOICES)
     LANDAREA_TO_CHOICES = (
+        (None, 'Any'),
         (0, '0 m²'),
         (100, '100 m²'),
         (200, '200 m²'),
@@ -172,10 +168,10 @@ class SearchForm(forms.Form):
     landarea_to = forms.ChoiceField(label='Landarea to',
                                     required=False,
                                     choices=LANDAREA_TO_CHOICES,
-                                    initial=999999999,
-                                    widget=Select2Widget)
+                                    initial=999999999)
 
     FLOORAREA_FROM_CHOICES = (
+        (None, 'Any'),
         (0, '0 m²'),
         (20, '20 m²'),
         (40, '40 m²'),
@@ -189,11 +185,10 @@ class SearchForm(forms.Form):
     )
     floorarea_from = forms.ChoiceField(label='Floorarea from',
                                        required=False,
-                                       choices=FLOORAREA_FROM_CHOICES,
-                                       initial=0,
-                                       widget=Select2Widget)
+                                       choices=FLOORAREA_FROM_CHOICES)
 
     FLOORAREA_TO_CHOICES = (
+        (None, 'Any'),
         (0, '0 m²'),
         (20, '20 m²'),
         (40, '40 m²'),
@@ -208,8 +203,7 @@ class SearchForm(forms.Form):
     floorarea_to = forms.ChoiceField(label='Floorarea to',
                                      required=False,
                                      choices=FLOORAREA_TO_CHOICES,
-                                     initial=999999999,
-                                     widget=Select2Widget)
+                                     initial=999999999)
 
     PROPERTY_TYPE_CHOICES = [
         ("Residential", [
