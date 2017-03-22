@@ -382,7 +382,7 @@ class VHousesForTables(models.Model):
             houses = houses.filter(floor__gte=filters['floorarea_from'])
         if filters.get('floorarea_to') and int(filters['floorarea_to']) != 999999999:
             houses = houses.filter(floor__lte=filters['floorarea_to'])
-            
+
         if filters.get('suburbs'):
             houses = houses.filter(suburb_id__in=filters.getlist('suburbs'))
 

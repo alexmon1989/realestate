@@ -104,18 +104,18 @@
             <div class="row">
                 <div class="col-md-12 text-center">
                     {% if request.resolver_match.url_name == "show_new_listing" %}
-                        <a href="{% url "listings:mark_as_liked" house.pk %}" class="btn btn-primary btn-lg"><i class="fa fa-thumbs-o-up"></i> Like</a>
-                        <a href="{% url "listings:mark_as_disliked" house.pk %}" class="btn btn-danger btn-lg"><i class="fa fa-thumbs-o-down"></i> Dislike</a>
-                        <a href="{% url "listings:mark_as_still_thinking" house.pk %}" class="btn btn-warning btn-lg"><i class="fa fa-hourglass"></i> Still thinking</a>
+                        <a href="{% url "listings:mark_as_liked" house.pk %}?return_url={% url "listings:new_listing" %}" class="btn btn-primary btn-lg"><i class="fa fa-thumbs-o-up"></i> Like</a>
+                        <a href="{% url "listings:mark_as_disliked" house.pk %}?return_url={% url "listings:new_listing" %}" class="btn btn-danger btn-lg"><i class="fa fa-thumbs-o-down"></i> Dislike</a>
+                        <a href="{% url "listings:mark_as_still_thinking" house.pk %}?return_url={% url "listings:new_listing" %}" class="btn btn-warning btn-lg"><i class="fa fa-hourglass"></i> Still thinking</a>
                     {% elif request.resolver_match.url_name == "show_liked_listing" %}
-                        <a href="{% url "listings:mark_as_disliked" house.pk %}" class="btn btn-danger btn-lg"><i class="fa fa-thumbs-o-down"></i> Dislike</a>
-                        <a href="{% url "listings:mark_as_still_thinking" house.pk %}" class="btn btn-warning btn-lg"><i class="fa fa-hourglass"></i> Still thinking</a>
+                        <a href="{% url "listings:mark_as_disliked" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-danger btn-lg"><i class="fa fa-thumbs-o-down"></i> Dislike</a>
+                        <a href="{% url "listings:mark_as_still_thinking" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-warning btn-lg"><i class="fa fa-hourglass"></i> Still thinking</a>
                     {% elif request.resolver_match.url_name == "show_disliked_listing" %}
-                        <a href="{% url "listings:mark_as_liked" house.pk %}" class="btn btn-primary btn-lg"><i class="fa fa-thumbs-o-up"></i> Like</a>
-                        <a href="{% url "listings:mark_as_still_thinking" house.pk %}" class="btn btn-warning btn-lg"><i class="fa fa-hourglass"></i> Still thinking</a>
+                        <a href="{% url "listings:mark_as_liked" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:disliked_listing' %}{% endif %}" class="btn btn-primary btn-lg"><i class="fa fa-thumbs-o-up"></i> Like</a>
+                        <a href="{% url "listings:mark_as_still_thinking" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:disliked_listing' %}{% endif %}" class="btn btn-warning btn-lg"><i class="fa fa-hourglass"></i> Still thinking</a>
                     {% elif request.resolver_match.url_name == "show_still_thinking_listing" %}
-                        <a href="{% url "listings:mark_as_liked" house.pk %}" class="btn btn-primary btn-lg"><i class="fa fa-thumbs-o-up"></i> Like</a>
-                        <a href="{% url "listings:mark_as_disliked" house.pk %}" class="btn btn-danger btn-lg"><i class="fa fa-thumbs-o-down"></i> Dislike</a>
+                        <a href="{% url "listings:mark_as_liked" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:still_thinking_listing' %}{% endif %}" class="btn btn-primary btn-lg"><i class="fa fa-thumbs-o-up"></i> Like</a>
+                        <a href="{% url "listings:mark_as_disliked" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:still_thinking_listing' %}{% endif %}" class="btn btn-danger btn-lg"><i class="fa fa-thumbs-o-down"></i> Dislike</a>
                     {% endif %}
                 </div>
             </div>
@@ -123,13 +123,14 @@
             {% if request.resolver_match.url_name == "show_liked_listing" %}
                 <h3>My data</h3>
                 <form method="post">
+                    <input type="hidden" name="return_url" value="{{ request.GET.return_url }}">
                     {% bootstrap_form form %}
                     {% csrf_token %}
                     {% buttons %}
                         <button type="submit" class="btn btn-primary">
                         {% bootstrap_icon "ok" %} Save
                         </button>
-                        <a href="{% url 'listings:liked_listing' %}" class="btn btn-warning">{% bootstrap_icon "floppy-remove" %} Cancel</a>
+                        <a href="{% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-warning">{% bootstrap_icon "floppy-remove" %} Cancel</a>
                     {% endbuttons %}
                 </form>
             {% endif %}

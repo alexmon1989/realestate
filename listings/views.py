@@ -209,7 +209,10 @@ def show_liked_listing(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Your data for house #{} has been saved.'.format(pk))
-            return redirect(reverse('listings:liked_listing'))
+            return_url = reverse('listings:liked_listing')
+            if request.GET.get('return_url'):
+                return_url = request.GET['return_url']
+            return redirect(return_url)
     else:
         form = HouseUserDataForm(instance=house_user_data)
 
@@ -254,7 +257,14 @@ def mark_as_liked(request, pk):
     marked_house.save()
     messages.success(request, 'House has been added to "Liked" list.')
 
-    return redirect(reverse('listings:show_liked_listing', args=(pk,)))
+    return_url = reverse('listings:new_listing')
+    if request.GET.get('return_url'):
+        return_url = request.GET['return_url']
+
+    return redirect('{}?return_url={}'.format(
+        reverse('listings:show_liked_listing', args=(pk,)),
+        return_url
+    ))
 
 
 @login_required
@@ -268,7 +278,11 @@ def mark_as_disliked(request, pk):
     marked_house.save()
     messages.success(request, 'House has been added to "Disliked" list.')
 
-    return redirect(reverse('listings:show_disliked_listing', args=(pk,)))
+    return_url = reverse('listings:new_listing')
+    if request.GET.get('return_url'):
+        return_url = request.GET['return_url']
+
+    return redirect(return_url)
 
 
 @login_required
@@ -282,4 +296,8 @@ def mark_as_still_thinking(request, pk):
     marked_house.save()
     messages.success(request, 'House has been added to "Still thinking" list.')
 
-    return redirect(reverse('listings:show_still_thinking_listing', args=(pk,)))
+    return_url = reverse('listings:new_listing')
+    if request.GET.get('return_url'):
+        return_url = request.GET['return_url']
+
+    return redirect(return_url)
