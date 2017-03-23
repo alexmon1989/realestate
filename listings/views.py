@@ -48,7 +48,9 @@ def liked_listings(request):
     """Shows page with liked listings."""
     houses = MarkedHouse.objects.extra(
         select={
-            "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
+            "address": "CASE WHEN (house.street_number <> '' AND house.street_name <> '') "
+                       "THEN CONCAT_WS(' ', house.street_number, house.street_name) "
+                       "ELSE 'Address not specified' END",
             "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)",
             "price_with_price_type": "CONCAT_WS(' ', "
                                      "CASE WHEN house.price <> 0 THEN house.price END, "
@@ -92,7 +94,9 @@ def disliked_listings(request):
     """Shows page with disliked listings."""
     houses = MarkedHouse.objects.extra(
         select={
-            "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
+            "address": "CASE WHEN (house.street_number <> '' AND house.street_name <> '') "
+                       "THEN CONCAT_WS(' ', house.street_number, house.street_name) "
+                       "ELSE 'Address not specified' END",
             "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)",
             "price_with_price_type": "CONCAT_WS(' ', "
                                      "CASE WHEN house.price <> 0 THEN house.price END, "
@@ -136,7 +140,9 @@ def still_thinking_listings(request):
     """Shows page with still thinking listings."""
     houses = MarkedHouse.objects.extra(
         select={
-            "address": "CONCAT_WS(' ', house.street_number, house.street_name)",
+            "address": "CASE WHEN (house.street_number <> '' AND house.street_name <> '') "
+                       "THEN CONCAT_WS(' ', house.street_number, house.street_name) "
+                       "ELSE 'Address not specified' END",
             "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)",
             "price_with_price_type": "CONCAT_WS(' ', "
                                      "CASE WHEN house.price <> 0 THEN house.price END, "
