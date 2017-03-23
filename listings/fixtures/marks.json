@@ -1,0 +1,1 @@
+[{"model": "listings.mark", "pk": 1, "fields": {"title": "Liked"}}, {"model": "listings.mark", "pk": 2, "fields": {"title": "Disliked"}}, {"model": "listings.mark", "pk": 3, "fields": {"title": "Still thinking"}}]
