@@ -38,7 +38,7 @@ def new_listings(request):
 
     return render(request, 'listings/new.html', {
         'table': table,
-        'total': len(houses)
+        'total': len(table.rows)
     })
 
 
@@ -82,7 +82,7 @@ def liked_listings(request):
 
     return render(request, 'listings/liked.html', {
         'table': table,
-        'total': len(houses)
+        'total': len(table.rows)
     })
 
 
@@ -126,7 +126,7 @@ def disliked_listings(request):
 
     return render(request, 'listings/disliked.html', {
         'table': table,
-        'total': len(houses)
+        'total': len(table.rows)
     })
 
 
@@ -170,7 +170,7 @@ def still_thinking_listings(request):
 
     return render(request, 'listings/still_thinking.html', {
         'table': table,
-        'total': len(houses)
+        'total': len(table.rows)
     })
 
 

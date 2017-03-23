@@ -26,5 +26,5 @@ def index(request):
     return render(request, 'search/index.html', {
         'form': form,
         'table': table,
-        'total': len(houses)
+        'total': len(table.rows)
     })
