@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap3 %}
+{% load account_extras %}
+{% load django_tables2 %}
+
+{% block content-h1 %}
+    Profile
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Profile</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Edit profile data</h3>
+        </div>
+        <div class="box-body">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="{% if request.GET.active_tab == 'user-data' or not request.GET.active_tab %}active{% endif %}">
+                        <a href="#tab_user_data" data-toggle="tab">Profile data</a>
+                    </li>
+                    <li class="{% if request.GET.active_tab == 'filters' %}active{% endif %}">
+                        <a href="#tab_filters" data-toggle="tab">Houses filters</a>
+                    </li>
+                    <li class="{% if request.GET.active_tab == 'change-password' %}active{% endif %}">
+                        <a href="#tab_change_password" data-toggle="tab">Change password</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane {% if request.GET.active_tab == 'user-data' or not request.GET.active_tab %}active{% endif %}" id="tab_user_data">
+                        <form action="{% url 'accounts:save_user_data' %}?active_tab=user-data" method="post" class="form">
+                            {% bootstrap_form form_user_data %}
+                            {% csrf_token %}
+                            {% buttons %}
+                                <button type="submit" class="btn btn-primary">
+                                {% bootstrap_icon "ok" %} Save
+                                </button>
+                            {% endbuttons %}
+                        </form>
+                    </div>
+
+                    <div class="tab-pane {% if request.GET.active_tab == 'filters' %}active{% endif %}" id="tab_filters">
+                        <div class="checkbox">
+                            <label>
+                                <input
+                                        type="checkbox"
+                                        id="show_title_photo"
+                                        value="1"
+                                        {% if request.user.profile.show_photos_filters %}checked="checked"{% endif %}
+                                > Show title photo
+                            </label>
+                        </div>
+                        <p><a class="btn btn-primary" href="{% url 'accounts:create_filter' %}"><i class="fa fa-plus" aria-hidden="true"></i> Create filter</a></p>
+                        <br>
+                        {% render_table filters_table %}
+                    </div>
+
+                    <div class="tab-pane {% if request.GET.active_tab == 'change-password' %}active{% endif %}" id="tab_change_password">
+                        <form action="{% url 'accounts:change_password' %}?active_tab=change-password" method="post" class="form">
+                            {% bootstrap_form form_change_password %}
+                            {% csrf_token %}
+                            {% buttons %}
+                                <button type="submit" class="btn btn-primary">
+                                {% bootstrap_icon "ok" %} Save
+                                </button>
+                            {% endbuttons %}
+                        </form>
+                    </div>
+                </div>
+                <!-- /.tab-content -->
+            </div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+{% endblock %}
+
+{% block styles %}
+<link href="{% static 'django_tables2/bootstrap.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $("#show_title_photo").change(function () {
+            $.post( "{% url 'accounts:change_show_title_photo' %}", { value: + $("#show_title_photo").is(':checked') })
+                    .fail(function() {
+                        alert( "Error saving data!" );
+                    });
+        });
+
+        $('body').on('click', 'td.disabled a', function(e) {
+            e.preventDefault();
+            var $this = $(this).parent();
+            var oldHTML = $this.html();
+            $this.html('Updating...');
+            var id = $this.siblings().first(".id").html();
+            $.post( '/accounts/profile/filters/toggle-disabled/' + id + '/' )
+                .fail(function() {
+                    $this.html(oldHTML);
+                    alert( "Error sending data!" );
+                })
+                .success(function(data) {
+                    var html = '<a href="#"><span class="false">✘</span></a>';
+                    if (data.disabled == true) {
+                        var html = '<a href="#"><span class="true">✔</span></a>';
+                    }
+                    $this.html(html);
+                });
+        });
+    </script>
+{% endblock %}

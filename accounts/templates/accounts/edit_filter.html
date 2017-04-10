@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content-h1 %}
+    Edit Filter
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
+        <li class="active">Edit filter</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Editing your filter</h3>
+        </div>
+        <div class="box-body">
+            {% include 'accounts/_partial/filters_form.html' %}
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+{% endblock %}
+
+{% block styles %}
+    {{ form.media.css }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.6/select2-bootstrap.min.css">
+    <style>
+        .select2 { width: 100% !important; }
+        .select2-container--bootstrap .select2-search__field::-webkit-input-placeholder {
+          color: #555;
+        }
+        .select2-container--bootstrap .select2-search__field::-moz-placeholder {
+          color: #555;
+        }
+        .select2-container--bootstrap .select2-search__field:-ms-input-placeholder {
+          color: #555;
+        }
+        .select2-container--bootstrap .select2-search__field:-moz-placeholder {
+          color: #555;
+        }
+        .select2-container--bootstrap .select2-results__group {
+            font-size: 16px;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static "AdminLTE/plugins/tree-multiselect/dist/jquery.tree-multiselect.min.css" %}">
+{% endblock %}
+
+{% block scripts %}
+    {{ form.media.js }}
+    <script src="{% static "AdminLTE/plugins/tree-multiselect/dist/jquery.tree-multiselect.min.js" %}"></script>
+    <script src="{% static "accounts/js/filter-form.js" %}"></script>
+{% endblock %}

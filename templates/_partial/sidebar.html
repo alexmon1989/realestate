@@ -1,0 +1,80 @@
+{% load staticfiles %}
+<aside class="main-sidebar" xmlns="http://www.w3.org/1999/html">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="{% static "AdminLTE/dist/img/avatar5.png" %}" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p>{{ request.user.username }}</p>
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+        </div>
+
+        <div>
+            <p style="padding-left: 10px; color: #fff">Font size:&nbsp;
+                <a href="#" id="increase-font"><i class="fa fa-plus" aria-hidden="true"></i></a>&nbsp;
+                <a href="#" id="decrease-font"><i class="fa fa-minus" aria-hidden="true"></i></a>
+            </p>
+        </div>
+
+        <!-- sidebar menu -->
+        <ul class="sidebar-menu">
+            <li class="header">MAIN NAVIGATION</li>
+            <li class="{% if request.resolver_match.url_name == "dashboard" %}active{% endif %}">
+                <a href="{% url 'dashboard' %}">
+                    <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                </a>
+            </li>
+
+            {% with 'new_listing liked_listing disliked_listing still_thinking_listing show_new_listing show_liked_listing show_disliked_listing show_still_thinking_listing' as url_name_list %}
+                <li class="treeview {% if request.resolver_match.url_name in url_name_list %}active{% endif %}">
+                    <a href="#">
+                        <i class="fa fa-list"></i>
+                        <span>Listings</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{% if request.resolver_match.url_name == "new_listing" or request.resolver_match.url_name == "show_new_listing" %}active{% endif %}">
+                            <a href="{% url 'listings:new_listing' %}"><i class="fa fa-circle-o"></i> New</a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == "liked_listing" or request.resolver_match.url_name == "show_liked_listing" %}active{% endif %}">
+                            <a href="{% url 'listings:liked_listing' %}"><i class="fa fa-circle-o"></i> Liked</a></li>
+                        <li class="{% if request.resolver_match.url_name == "disliked_listing" or request.resolver_match.url_name == "show_disliked_listing" %}active{% endif %}">
+                            <a href="{% url 'listings:disliked_listing' %}"><i class="fa fa-circle-o"></i> Disliked</a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == "still_thinking_listing" or request.resolver_match.url_name == "show_still_thinking_listing" %}active{% endif %}">
+                            <a href="{% url 'listings:still_thinking_listing' %}"><i class="fa fa-circle-o"></i> Still thinking</a>
+                        </li>
+                    </ul>
+                </li>
+            {% endwith %}
+
+            <li class="{% if request.resolver_match.url_name == "search_index" %}active{% endif %}">
+                <a href="{% url 'search:search_index' %}">
+                    <i class="fa fa-search"></i> <span>Search</span>
+                </a>
+            </li>
+
+            {% with 'profile create_filter edit_filter delete_filter' as url_name_list %}
+                <li class="{% if request.resolver_match.url_name in url_name_list %}active{% endif %}">
+                    <a href="{% url 'accounts:profile' %}">
+                        <i class="fa fa-user"></i> <span>Profile</span>
+                    </a>
+                </li>
+            {% endwith %}
+
+            <li class="header"></li>
+            <li>
+                <a href="{% url 'logout' %}">
+                    <i class="fa fa-sign-out"></i> <span>Sign out</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

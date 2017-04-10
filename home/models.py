@@ -7,11 +7,30 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
+from datetime import datetime, date, timedelta
+import json
+import pytz
+
+
+class Region(models.Model):
+    name = models.CharField('Region name', unique=True, max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'region'
+        verbose_name = 'Region'
+        verbose_name_plural = 'Regions'
+
+    def __str__(self):
+        return self.name
+
+
 class City(models.Model):
     city_id = models.AutoField(primary_key=True)
-    city_name = models.CharField(unique=True, max_length=255)
+    city_name = models.CharField('City name', unique=True, max_length=255)
     capital_growth = models.IntegerField(blank=True, null=True)
     council_link = models.TextField(blank=True, null=True)
+    region = models.ForeignKey('Region', models.CASCADE)
 
     class Meta:
         managed = False
@@ -23,34 +42,72 @@ class City(models.Model):
         return self.city_name
 
 
+class Suburb(models.Model):
+    city = models.ForeignKey(City, models.CASCADE)
+    name = models.CharField(unique=True, max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'suburb'
+        verbose_name = 'Suburb'
+        verbose_name_plural = 'Suburbs'
+
+    def __str__(self):
+        return self.name
+
+
+class PricingMethod(models.Model):
+    name = models.CharField(unique=True, max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'pricing_method'
+        verbose_name = 'Pricing method'
+        verbose_name_plural = 'Pricing methods'
+
+    def __str__(self):
+        return self.name
+
+
+class PropertyType(models.Model):
+    name = models.CharField(unique=True, max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'property_type'
+        verbose_name = 'Property type'
+        verbose_name_plural = 'Property types'
+
+    def __str__(self):
+        return self.name
+
+
 class House(models.Model):
     house_id = models.AutoField(primary_key=True)
     street_name = models.CharField(max_length=255)
     street_number = models.CharField(max_length=255)
-    suburb = models.CharField(max_length=255)
-    region = models.CharField(max_length=255)
-    city = models.ForeignKey(City, models.DO_NOTHING)
+    suburb = models.ForeignKey('Suburb', models.CASCADE)
     bedrooms = models.IntegerField(blank=True, null=True)
     bathrooms = models.IntegerField(blank=True, null=True)
-    ensuite = models.IntegerField(blank=True, null=True)
-    land = models.FloatField(blank=True, null=True)
-    floor = models.IntegerField(blank=True, null=True)
+    ensuite = models.BooleanField()
+    land = models.FloatField('Land area', blank=True, null=True)
+    floor = models.IntegerField('Floor area', blank=True, null=True)
     car_spaces = models.IntegerField(blank=True, null=True)
-    property_type = models.IntegerField()
+    property_type = models.ForeignKey('PropertyType', models.CASCADE)
     price = models.IntegerField(blank=True, null=True)
-    price_type = models.IntegerField()
-    open_homes = models.CharField(max_length=1024, blank=True, null=True)
+    price_type = models.ForeignKey('PricingMethod', models.CASCADE)
     auction_time = models.DateTimeField(blank=True, null=True)
     description = models.CharField(max_length=8192, blank=True, null=True)
     government_value = models.IntegerField(blank=True, null=True)
     government_rates = models.IntegerField(blank=True, null=True)
+    government_to_price = models.DecimalField(max_digits=10, decimal_places=5, blank=True, null=True)
     photos = models.CharField(max_length=16384, blank=True, null=True)
     url = models.TextField(blank=True, null=True)
     source_id = models.IntegerField(blank=True, null=True)
     additional_data = models.CharField(max_length=2048, blank=True, null=True)
     property_id = models.CharField(max_length=16, blank=True, null=True)
     listing_create_date = models.DateField(blank=True, null=True)
-    create_time = models.DateTimeField()
+    create_time = models.DateTimeField('Created at')
     agency_link = models.CharField(max_length=1024, blank=True, null=True)
 
     class Meta:
@@ -61,26 +118,310 @@ class House(models.Model):
         unique_together = (('street_name',
                             'street_number',
                             'suburb',
-                            'region',
-                            'city',
                             'bedrooms',
                             'bathrooms',
                             'price'),)
 
     def __str__(self):
-        return '{}, {}, {}'.format(self.city, self.street_name, self.street_number)
+        """String view of house object"""
+        house = House.objects.values(
+            'street_number',
+            'street_name',
+            'suburb__name',
+            'suburb__city__city_name',
+            'suburb__city__region__name'
+        ).get(house_id=self.house_id)
+
+        return '{} {}, {}, {}, {}'.format(
+            house['street_number'],
+            house['street_name'],
+            house['suburb__name'],
+            house['suburb__city__city_name'],
+            house['suburb__city__region__name']
+        )
+
+    def get_address(self):
+        """Returns address of house."""
+        address = '{} {}'.format(self.street_number, self.street_name)
+        if address == ' ':
+            return None
+        return address
+    get_address.short_description = 'Address'
+
+    def get_city(self):
+        """Returns city of house."""
+        return self.suburb.city
+    get_city.short_description = 'City'
+
+    def get_region(self):
+        """Returns region of house."""
+        return self.suburb.city.region
+    get_region.short_description = 'Region'
+
+    def get_property_type(self):
+        """Returns property type with bedrooms of house."""
+        return '{} bedrooms {}'.format(self.bedrooms, self.property_type)
+    get_property_type.short_description = 'Property Type'
+
+    def get_price(self):
+        """Returns price with price method of house."""
+        if self.price:
+            return '{} {}'.format(self.price, self.price_type)
+        return self.price_type
+    get_price.short_description = 'Price'
+
+
+class OpenHomes(models.Model):
+    house = models.ForeignKey(House, models.CASCADE)
+    date_from = models.DateTimeField()
+    date_to = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'open_homes'
+        unique_together = (('house', 'date_from', 'date_to'),)
+
+
+class VHousesForTables(models.Model):
+    """Model for v_houses_for_tables view."""
+    house_id = models.BigIntegerField(primary_key=True)
+    suburb_name = models.CharField(max_length=255)
+    suburb = models.ForeignKey('Suburb', models.DO_NOTHING)
+    city_name = models.CharField(max_length=255)
+    region_name = models.CharField(max_length=255)
+    street_name = models.CharField(max_length=255)
+    street_number = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    price = models.IntegerField()
+    price_type = models.ForeignKey('PricingMethod', models.DO_NOTHING)
+    price_with_price_type = models.CharField(max_length=255)
+    government_value = models.IntegerField()
+    government_to_price = models.DecimalField(max_digits=10, decimal_places=5)
+    bedrooms = models.IntegerField()
+    bathrooms = models.IntegerField()
+    land = models.FloatField()
+    floor = models.IntegerField()
+    property_type = models.ForeignKey('PropertyType', models.DO_NOTHING)
+    property_type_full = models.CharField(max_length=255)
+    description = models.CharField(max_length=8192)
+    car_spaces = models.IntegerField()
+    ensuite = models.BooleanField()
+    listing_create_date = models.DateField()
+    photos = models.CharField(max_length=16384, blank=True, null=True)
+    open_homes_from = models.DateTimeField()
+    open_homes_to = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'v_houses_for_tables'
+
+    @staticmethod
+    def get_new_houses(filter_data, excluded_pks):
+        """Returns queryset with new houses by user's filters."""
+        queryset = None
+
+        # getting querysets for each filter and merge them in one queryset
+        for f in filter_data:
+            filter_data = json.loads(f.filter_data_json)
+            houses = VHousesForTables.objects.values(
+                'house_id',
+                'suburb_name',
+                'city_name',
+                'region_name',
+                'address',
+                'price',
+                'price_with_price_type',
+                'listing_create_date',
+                'photos',
+                'address',
+                'property_type_full',
+            ).filter(
+                suburb__in=filter_data['suburbs'],
+                listing_create_date__range=[
+                    date.today() - timedelta(days=int(filter_data['listings_age_days'][0])),
+                    date.today()
+                ],
+            ).exclude(
+                house_id__in=excluded_pks
+            )
+
+            if filter_data.get('price_from') and filter_data['price_from'][0]:
+                houses = houses.filter(price__gte=filter_data['price_from'][0])
+            if (filter_data.get('price_to') and
+                    filter_data['price_to'][0] and
+                    int(filter_data['price_to'][0]) != 999999999):
+                houses = houses.filter(price__lte=filter_data['price_to'][0])
+
+            if filter_data.get('government_value_from') and filter_data['government_value_from'][0]:
+                houses = houses.filter(government_value__gte=filter_data['government_value_from'][0])
+            if (filter_data.get('government_value_to') and
+                    filter_data['government_value_to'][0] and
+                    int(filter_data['government_value_to'][0]) != 999999999):
+                houses = houses.filter(government_value__lte=filter_data['government_value_to'][0])
+
+            if filter_data.get('government_value_to_price_from') and filter_data['government_value_to_price_from'][0]:
+                houses = houses.filter(government_to_price__gte=filter_data['government_value_to_price_from'][0])
+            if (filter_data.get('government_value_to_price_to') and
+                    filter_data['government_value_to_price_to'][0] and
+                    float(filter_data['government_value_to_price_to'][0]) != 999):
+                houses = houses.filter(government_to_price__lte=filter_data['government_value_to_price_to'][0])
+
+            if filter_data.get('bedrooms_from') and filter_data['bedrooms_from'][0]:
+                houses = houses.filter(bedrooms__gte=filter_data['bedrooms_from'][0])
+            if (filter_data.get('bedrooms_to') and
+                    filter_data['bedrooms_to'][0] and
+                    int(filter_data['bedrooms_to'][0]) != 999):
+                houses = houses.filter(bedrooms__lte=filter_data['bedrooms_to'][0])
+
+            if filter_data.get('bathrooms_from') and filter_data['bathrooms_from'][0]:
+                houses = houses.filter(bathrooms__gte=filter_data['bathrooms_from'][0])
+            if (filter_data.get('bathrooms_to') and
+                    filter_data['bathrooms_to'][0] and
+                    int(filter_data['bathrooms_to'][0]) != 999):
+                houses = houses.filter(bathrooms__lte=filter_data['bathrooms_to'][0])
+
+            if filter_data.get('landarea_from') and filter_data['landarea_from'][0]:
+                houses = houses.filter(land__gte=filter_data['landarea_from'][0])
+            if (filter_data.get('landarea_to') and
+                    filter_data['landarea_to'][0] and
+                    int(filter_data['landarea_to'][0]) != 999999999):
+                houses = houses.filter(land__lte=filter_data['landarea_to'][0])
+
+            if filter_data.get('floorarea_from') and filter_data['floorarea_from'][0]:
+                houses = houses.filter(floor__gte=filter_data['floorarea_from'][0])
+            if (filter_data.get('floorarea_to') and
+                    filter_data['floorarea_to'][0] and
+                    int(filter_data['floorarea_to'][0]) != 999999999):
+                houses = houses.filter(floor__lte=filter_data['floorarea_to'][0])
+
+            if filter_data.get('pricing_methods') and filter_data['pricing_methods'][0]:
+                houses = houses.filter(price_type__in=filter_data['pricing_methods'])
+
+            if filter_data.get('property_type') and filter_data['property_type'][0]:
+                houses = houses.filter(property_type__in=filter_data['property_type'])
+
+            if filter_data.get('carspace_from') and filter_data['carspace_from'][0]:
+                houses = houses.filter(car_spaces__gte=filter_data['carspace_from'][0])
+            if (filter_data.get('carspace_to') and
+                    filter_data['carspace_to'][0] and
+                    int(filter_data['carspace_to'][0]) != 999):
+                houses = houses.filter(car_spaces__lte=filter_data['carspace_to'][0])
+
+            if filter_data.get('show_only_properties_with_address'):
+                houses = houses.filter(
+                    street_name__isnull=False,
+                    street_number__isnull=False
+                ).exclude(
+                    street_name='',
+                    street_number=''
+                )
+
+            if filter_data.get('ensuite'):
+                houses = houses.filter(ensuite=True)
+
+            if filter_data.get('show_only_open_homes'):
+                now = datetime.now()
+                houses = houses.filter(
+                    open_homes_from__gte=datetime(now.year, now.month, now.day, tzinfo=pytz.UTC),
+                    open_homes_to__lte=datetime(now.year, now.month, now.day, 23, 59, 59, tzinfo=pytz.UTC),
+                )
+
+            if filter_data.get('keywords') and filter_data['keywords'][0]:
+                houses = houses.filter(description__contains=filter_data['keywords'][0])
+
+            if queryset:
+                queryset = queryset | houses
+            else:
+                queryset = houses
+
+        if queryset:
+            return queryset.distinct()
+        return []
+
+    @staticmethod
+    def search(filters):
+        """Search houses by filters."""
+        houses = VHousesForTables.objects.values(
+            'house_id',
+            'suburb_name',
+            'city_name',
+            'region_name',
+            'address',
+            'listing_create_date',
+            'photos',
+            'address',
+            'property_type_full',
+            'price_with_price_type'
+        ).filter(
+            listing_create_date__range=[
+                date.today() - timedelta(days=int(filters['listings_age_days'])),
+                date.today()
+            ],
+        )
+        if filters.get('price_from'):
+            houses = houses.filter(price__gte=filters['price_from'])
+        if filters.get('price_to') and int(filters['price_to']) != 999999999:
+            houses = houses.filter(price__lte=filters['price_to'])
+
+        if filters.get('bedrooms_from'):
+            houses = houses.filter(bedrooms__gte=filters['bedrooms_from'])
+        if filters.get('bedrooms_to') and int(filters['bedrooms_to']) != 999:
+            houses = houses.filter(bedrooms__lte=filters['bedrooms_to'])
+
+        if filters.get('bathrooms_from'):
+            houses = houses.filter(bathrooms__gte=filters['bathrooms_from'])
+        if filters.get('bathrooms_to') and int(filters['bathrooms_to']) != 999:
+            houses = houses.filter(bathrooms__lte=filters['bathrooms_to'])
+
+        if filters.get('landarea_from'):
+            houses = houses.filter(land__gte=filters['landarea_from'])
+        if filters.get('landarea_to') and int(filters['landarea_to']) != 999999999:
+            houses = houses.filter(land__lte=filters['landarea_to'])
+
+        if filters.get('floorarea_from'):
+            houses = houses.filter(floor__gte=filters['floorarea_from'])
+        if filters.get('floorarea_to') and int(filters['floorarea_to']) != 999999999:
+            houses = houses.filter(floor__lte=filters['floorarea_to'])
+
+        if filters.get('suburbs'):
+            houses = houses.filter(suburb_id__in=filters.getlist('suburbs'))
+
+        if filters.get('pricing_methods'):
+            houses = houses.filter(price_type_id__in=filters.getlist('pricing_methods'))
+
+        if filters.get('property_type'):
+            houses = houses.filter(property_type_id__in=filters.getlist('property_type'))
+
+        if filters.get('show_only_properties_with_address'):
+            houses = houses.filter(
+                street_name__isnull=False,
+                street_number__isnull=False
+            ).exclude(
+                street_name='',
+                street_number=''
+            )
+        if filters.get('show_only_open_homes'):
+            now = datetime.now()
+            houses = houses.filter(
+                open_homes_from__gte=datetime(now.year, now.month, now.day, tzinfo=pytz.UTC),
+                open_homes_to__gte=datetime(now.year, now.month, now.day, 23, 59, 59, tzinfo=pytz.UTC),
+            )
+        if filters.get('keywords'):
+            houses = houses.filter(description__contains=filters['keywords'])
+
+        return houses.distinct()
 
 
 class Agency(models.Model):
     agency_id = models.AutoField(primary_key=True)
-    agency_name = models.TextField(unique=True, max_length=512)
+    agency_name = models.CharField(unique=True, max_length=255)
     city = models.ForeignKey('City', models.DO_NOTHING)
-    email = models.TextField(blank=True, null=True)
-    work_phone = models.TextField(blank=True, null=True)
+    email = models.CharField(blank=True, null=True, max_length=255)
+    work_phone = models.CharField(blank=True, null=True, max_length=255)
     houses = models.ManyToManyField(House, db_table='agencyhouse')
 
     def __str__(self):
-        return '{} ({})'.format(self.agency_name, self.city)
+        return self.agency_name
 
     class Meta:
         managed = False
@@ -91,11 +432,11 @@ class Agency(models.Model):
 
 class Agent(models.Model):
     agent_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=256)
-    mobile_phone = models.TextField(blank=True, null=True)
-    ddi_phone = models.TextField(blank=True, null=True)
-    work_phone = models.TextField(blank=True, null=True)
-    email = models.TextField(blank=True, null=True)
+    name = models.CharField(max_length=255)
+    mobile_phone = models.CharField(blank=True, null=True, max_length=255)
+    ddi_phone = models.CharField(blank=True, null=True, max_length=255)
+    work_phone = models.CharField(blank=True, null=True, max_length=255)
+    email = models.CharField(blank=True, null=True, max_length=255)
     agency = models.ForeignKey(Agency, models.DO_NOTHING)
     houses = models.ManyToManyField(House, db_table='agenthouse')
 

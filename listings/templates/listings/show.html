@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block content-h1 %}
+    House data
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>Listings</li>
+        {% if request.resolver_match.url_name == "show_new_listing" %}
+            <li><a href="{% url "listings:new_listing" %}">New</a></li>
+        {% elif request.resolver_match.url_name == "show_liked_listing" %}
+            <li><a href="{% url "listings:liked_listing" %}">Liked</a></li>
+        {% elif request.resolver_match.url_name == "show_disliked_listing" %}
+            <li><a href="{% url "listings:disliked_listing" %}">Disliked</a></li>
+        {% elif request.resolver_match.url_name == "show_still_thinking_listing" %}
+            <li><a href="{% url "listings:still_thinking_listing" %}">Still thinking</a></li>
+        {% endif %}
+        <li class="active">House #{{ house.pk }}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">House data</h3>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center">
+                    <h3><strong>{{ house.street_number }} {{ house.street_name }}, {{ house.suburb }}, {{ house.suburb.city }}, {{ house.suburb.city.region }}</strong></h3>
+
+                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        {% for photo in photos %}
+                            <li
+                                data-target="#carousel-example-generic"
+                                data-slide-to="{{ forloop.counter0 }}"
+                                class="{% if forloop.counter0 == 0 %}active{% endif %}"
+                            ></li>
+                        {% endfor %}
+                    </ol>
+                    <div class="carousel-inner">
+                        {% for photo in photos %}
+                            <div class="item {% if forloop.counter0 == 0 %}active{% endif %}">
+                                <img src="{{ photo }}" >
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                      <span class="fa fa-angle-left"></span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                      <span class="fa fa-angle-right"></span>
+                    </a>
+                  </div>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <h3>Properties</h3>
+            <dl class="dl-horizontal">
+                <dt>Property type</dt>
+                <dd>{{ house.property_type }}</dd>
+                <dt>Property ID</dt>
+                <dd>{{ house.property_id }}</dd>
+                <dt>Bedrooms</dt>
+                <dd>{{ house.bedrooms }}</dd>
+                <dt>Bathrooms</dt>
+                <dd>{{ house.bathrooms }}</dd>
+                <dt>Ensuite</dt>
+                <dd>{{ house.ensuite|yesno:"Yes,No" }}</dd>
+                <dt>Land area</dt>
+                <dd>{{ house.land }}</dd>
+                <dt>Floor area</dt>
+                <dd>{{ house.floor }}</dd>
+                <dt>Car spaces</dt>
+                <dd>{{ house.car_spaces }}</dd>
+                <dt>Description</dt>
+                <dd>{{ house.description|default:"-" }}</dd>
+                <dt>Additional data</dt>
+                <dd>{{ house.additional_data|default:"-" }}</dd>
+                <dt>Url</dt>
+                <dd><a target="_blank" href="{{ house.url }}">{{ house.url }}</a></dd>
+                <dt>Auction time</dt>
+                <dd>{{ house.auction_time|default:"-" }}</dd>
+            </dl>
+
+            <h3>Price</h3>
+            <dl class="dl-horizontal">
+                <dt>Price</dt>
+                <dd>{{ house.price|default:"" }} {{ house.price_type }}</dd>
+                <dt>Government value</dt>
+                <dd>{{ house.government_value|default:"-" }}</dd>
+                <dt>Government to price</dt>
+                <dd>{{ house.government_to_price|default:"-" }}</dd>
+                <dt>Government rates</dt>
+                <dd>{{ house.government_rates|default:"-" }}</dd>
+            </dl>
+
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    {% if request.resolver_match.url_name == "show_new_listing" %}
+                        <a href="{% url "listings:mark_as_liked" house.pk %}?return_url={% url "listings:new_listing" %}" class="btn btn-primary btn-lg"><i class="fa fa-thumbs-o-up"></i> Like</a>
+                        <a href="{% url "listings:mark_as_disliked" house.pk %}?return_url={% url "listings:new_listing" %}" class="btn btn-danger btn-lg"><i class="fa fa-thumbs-o-down"></i> Dislike</a>
+                        <a href="{% url "listings:mark_as_still_thinking" house.pk %}?return_url={% url "listings:new_listing" %}" class="btn btn-warning btn-lg"><i class="fa fa-hourglass"></i> Still thinking</a>
+                    {% elif request.resolver_match.url_name == "show_liked_listing" %}
+                        <a href="{% url "listings:mark_as_disliked" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-danger btn-lg"><i class="fa fa-thumbs-o-down"></i> Dislike</a>
+                        <a href="{% url "listings:mark_as_still_thinking" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-warning btn-lg"><i class="fa fa-hourglass"></i> Still thinking</a>
+                    {% elif request.resolver_match.url_name == "show_disliked_listing" %}
+                        <a href="{% url "listings:mark_as_liked" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:disliked_listing' %}{% endif %}" class="btn btn-primary btn-lg"><i class="fa fa-thumbs-o-up"></i> Like</a>
+                        <a href="{% url "listings:mark_as_still_thinking" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:disliked_listing' %}{% endif %}" class="btn btn-warning btn-lg"><i class="fa fa-hourglass"></i> Still thinking</a>
+                    {% elif request.resolver_match.url_name == "show_still_thinking_listing" %}
+                        <a href="{% url "listings:mark_as_liked" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:still_thinking_listing' %}{% endif %}" class="btn btn-primary btn-lg"><i class="fa fa-thumbs-o-up"></i> Like</a>
+                        <a href="{% url "listings:mark_as_disliked" house.pk %}?return_url={% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:still_thinking_listing' %}{% endif %}" class="btn btn-danger btn-lg"><i class="fa fa-thumbs-o-down"></i> Dislike</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if request.resolver_match.url_name == "show_liked_listing" %}
+                <h3>My data</h3>
+                <form method="post">
+                    <input type="hidden" name="return_url" value="{{ request.GET.return_url }}">
+                    {% bootstrap_form form %}
+                    {% csrf_token %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "ok" %} Save
+                        </button>
+                        <a href="{% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-warning">{% bootstrap_icon "floppy-remove" %} Cancel</a>
+                    {% endbuttons %}
+                </form>
+            {% endif %}
+
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(function () {
+            $("#id_first_offer_date, #id_date_sold").datepicker({
+                format: "yyyy-mm-dd"
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block styles %}
+    <style>
+        input[type='number'] {
+            -moz-appearance: textfield;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+    </style>
+{% endblock %}
