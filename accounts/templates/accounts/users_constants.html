@@ -19,7 +19,7 @@
     <!-- Default box -->
     <div class="box">
         <div class="box-header with-border">
-            <h3 class="box-title">Edit profile data</h3>
+            <h3 class="box-title">Edit user's constants</h3>
         </div>
         <div class="box-body">
             <div class="nav-tabs-custom">
@@ -28,8 +28,8 @@
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab_user_data">
-                        <form action="{% url 'accounts:profile' %}" method="post" class="form">
-                            {% bootstrap_form form_user_data %}
+                        <form action="{% url 'accounts:users_constants' %}" method="post" class="form">
+                            {% bootstrap_form form_constants %}
                             {% csrf_token %}
                             {% buttons %}
                                 <button type="submit" class="btn btn-primary">

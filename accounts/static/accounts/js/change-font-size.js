@@ -23,7 +23,7 @@ $(function() {
     $("#increase-font").click(function (e) {
         e.preventDefault();
         $.post(
-            "/accounts/profile/change-font-size/",
+            "/accounts/settings/change-font-size/",
             {
                 action: "increase"
             },
@@ -36,7 +36,7 @@ $(function() {
     $("#decrease-font").click(function (e) {
         e.preventDefault();
         $.post(
-            "/accounts/profile/change-font-size/",
+            "/accounts/settings/change-font-size/",
             function (data) {
                 changeFontSize(data.ratio);
             }

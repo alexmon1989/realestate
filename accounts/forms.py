@@ -1,10 +1,11 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
-from django_select2.forms import Select2Widget, Select2MultipleWidget
+from django_select2.forms import Select2MultipleWidget, Select2Widget
 
-from home.models import Suburb, PricingMethod, PropertyType
-from .models import Profile
+from home.models import Suburb, PricingMethod
+from .models import Profile, Constants
+from home.models import City
 
 
 class UserForm(ModelForm):
@@ -23,6 +24,26 @@ class SettingsForm(ModelForm):
     class Meta:
         model = Profile
         exclude = ()
+
+
+class UsersConstantsForm(ModelForm):
+    """Form for user's constants."""
+    class Meta:
+        model = Constants
+        exclude = ('user', )
+
+
+class CitiesConstantsForm(forms.Form):
+    """Form for city/region constants."""
+    CITY_CHOICES = [(c.pk, c.city_name) for c in City.objects.order_by('city_name')]
+
+    city = forms.ChoiceField(label='City', widget=Select2Widget(), choices=CITY_CHOICES)
+    capital_growth = forms.FloatField(label='Capital growth', min_value=0)
+
+    def __init__(self, *args, **kwargs):
+        self.base_fields['city'].initial = kwargs.pop('active_city_id', None)
+
+        super(CitiesConstantsForm, self).__init__(*args, **kwargs)
 
 
 class HousesFilterForm(forms.Form):

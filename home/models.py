@@ -28,7 +28,7 @@ class Region(models.Model):
 class City(models.Model):
     city_id = models.AutoField(primary_key=True)
     city_name = models.CharField('City name', unique=True, max_length=255)
-    capital_growth = models.IntegerField(blank=True, null=True)
+    capital_growth = models.FloatField(blank=True, null=True)
     council_link = models.TextField(blank=True, null=True)
     region = models.ForeignKey('Region', models.CASCADE)
 

@@ -60,10 +60,10 @@
                 </a>
             </li>
 
-            {% with 'profile create_filter edit_filter delete_filter' as url_name_list %}
+            {% with 'profile house_filters change_password users_constants region_and_cities_constants create_filter edit_filter delete_filter' as url_name_list %}
                 <li class="{% if request.resolver_match.url_name in url_name_list %}active{% endif %}">
                     <a href="{% url 'accounts:profile' %}">
-                        <i class="fa fa-user"></i> <span>Profile</span>
+                        <i class="fa fa-user"></i> <span>Settings</span>
                     </a>
                 </li>
             {% endwith %}

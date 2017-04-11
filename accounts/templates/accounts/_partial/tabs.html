@@ -1,0 +1,21 @@
+<ul class="nav nav-tabs">
+    <li class="{% if request.resolver_match.url_name == "profile" %}active{% endif %}">
+        <a href="{% url 'accounts:profile' %}">Profile data</a>
+    </li>
+
+    <li class="{% if request.resolver_match.url_name == "house_filters" %}active{% endif %}">
+        <a href="{% url 'accounts:house_filters' %}">Houses filters</a>
+    </li>
+
+    <li class="{% if request.resolver_match.url_name == "change_password" %}active{% endif %}">
+        <a href="{% url 'accounts:change_password' %}">Change password</a>
+    </li>
+
+    <li class="{% if request.resolver_match.url_name == "users_constants" %}active{% endif %}">
+        <a href="{% url 'accounts:users_constants' %}">User’s constants</a>
+    </li>
+
+    <li class="{% if request.resolver_match.url_name == "region_and_cities_constants" %}active{% endif %}">
+        <a href="{% url 'accounts:region_and_cities_constants' %}">Region and City constants</a>
+    </li>
+</ul>

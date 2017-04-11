@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import MaxValueValidator, MinValueValidator
+from annoying.fields import AutoOneToOneField
+
+from home.models import City
 
 
 class HousesFilter(models.Model):
@@ -41,3 +45,88 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Constants(models.Model):
+    """Constants user model (extends User model fields)."""
+    user = AutoOneToOneField(User, on_delete=models.CASCADE)
+    loan_interest_rate = models.FloatField(
+        'Loan interest rate, %',
+        validators=[
+            MaxValueValidator(95),
+            MinValueValidator(5)
+        ],
+        default=5
+    )
+    loan_deposit = models.FloatField(
+        'Loan deposit, %',
+        validators=[
+            MaxValueValidator(95),
+            MinValueValidator(5)
+        ],
+        default=5
+    )
+    new_built_loan_deposit = models.FloatField(
+        'New-build loan deposit, %',
+        validators=[
+            MaxValueValidator(95),
+            MinValueValidator(5)
+        ],
+        default=5
+    )
+    property_management_commission = models.FloatField(
+        'Property Management commission, %',
+        validators=[
+            MaxValueValidator(20),
+            MinValueValidator(1)
+        ],
+        default=1
+    )
+    vacancy_rate = models.IntegerField(
+        'Vacancy rate, weeks',
+        validators=[
+            MinValueValidator(0)
+        ],
+        default=0
+    )
+    gross_yield = models.FloatField(
+        'Gross yield, %',
+        validators=[
+            MaxValueValidator(30),
+            MinValueValidator(1),
+        ],
+        default=1
+    )
+    net_yield = models.FloatField(
+        'Net yield, %',
+        validators=[
+            MaxValueValidator(30),
+            MinValueValidator(1),
+        ],
+        default=1
+    )
+    min_cashflow = models.IntegerField(
+        'Min cashflow',
+        validators=[
+            MinValueValidator(0)
+        ],
+        default=0
+    )
+    inflation = models.FloatField(
+        'Inflation, %',
+        validators=[
+            MaxValueValidator(30),
+            MinValueValidator(1),
+        ],
+        default=1
+    )
+
+    def __str__(self):
+        return "User's constants"
+
+
+class CitiesConstants(models.Model):
+    """Cities constants model."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    capital_growth = models.FloatField(blank=True, null=True)

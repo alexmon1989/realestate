@@ -15,10 +15,10 @@ import json
 
 from decorators import group_required
 
-from .forms import UserForm, HousesFilterForm
+from .forms import UserForm, HousesFilterForm, UsersConstantsForm, CitiesConstantsForm
 
-from .models import HousesFilter
-from home.models import Suburb, PropertyType
+from .models import HousesFilter, CitiesConstants
+from home.models import Suburb, PropertyType, City
 
 from .tables import FiltersTable
 
@@ -26,7 +26,24 @@ from .tables import FiltersTable
 @login_required
 @group_required('Users')
 def profile(request):
-    """Shows profile data in forms for edit."""
+    """Shows profile data in form for edit."""
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User data successfully saved.')
+            return redirect(reverse('accounts:profile'))
+    else:
+        form = UserForm(instance=request.user)
+    return render(request, 'accounts/profile.html', {
+        'form_user_data': form,
+    })
+
+
+@login_required
+@group_required('Users')
+def house_filters(request):
+    """Shows houses filters list."""
     filters_data = []
     filters = request.user.housesfilter_set.all()
     for f in filters:
@@ -41,20 +58,39 @@ def profile(request):
             'landarea_to': filter_data_json['landarea_to'][0],
             'property_type': ', '.join([property_type.name
                                         for property_type
-                                        in PropertyType.objects.filter(pk__in=filter_data_json.get('property_type', []))]),
+                                        in
+                                        PropertyType.objects.filter(pk__in=filter_data_json.get('property_type', []))]),
             'disabled': f.disabled,
             'created_at': f.created_at,
             'updated_at': f.updated_at,
             'actions': f.id,
         })
-
     filters_table = FiltersTable(filters_data)
-    return render(request, 'accounts/profile.html', {
-        'form_user_data': UserForm(instance=request.user),
-        'form_change_password': PasswordChangeForm(request.user),
+    return render(request, 'accounts/house_filters.html', {
         'form_user_filter_settings': HousesFilterForm(),
-        'filters_table': filters_table
+        'filters_table': filters_table,
     })
+
+
+@login_required
+@group_required('Users')
+def region_and_cities_constants(request):
+    """Shows form with city constants."""
+    if request.method == 'POST':
+        form = CitiesConstantsForm(request.POST)
+        if form.is_valid():
+            city_constants, created = request.user.citiesconstants_set.get_or_create(city_id=request.POST['city'])
+            city_constants.capital_growth = request.POST['capital_growth']
+            city_constants.save()
+            messages.success(request,
+                             'City constants for {} has been successfully saved.'.format(city_constants.city))
+            return redirect('{}?active_city_id={}'.format(
+                reverse('accounts:region_and_cities_constants'),
+                request.POST['city']
+            ))
+    else:
+        form = CitiesConstantsForm(active_city_id=request.GET.get('active_city_id'))
+    return render(request, 'accounts/region_and_cities_constants.html', {'form': form})
 
 
 @login_required
@@ -69,7 +105,7 @@ def create_filter(request):
             new_filter.name = request.POST.get('name')
             new_filter.save()
             messages.success(request, 'The new filter has been successfully created.')
-            return redirect('{}?active_tab=filters'.format(reverse('accounts:profile')))
+            return redirect(reverse('accounts:house_filters'))
     else:
         form = HousesFilterForm()
 
@@ -93,7 +129,7 @@ def edit_filter(request, pk):
             else:
                 message = 'The filter #{} has been successfully updated.'.format(house_filter.pk)
             messages.success(request, message)
-            return redirect('{}?active_tab=filters'.format(reverse('accounts:profile')))
+            return redirect(reverse('accounts:house_filters'))
     else:
         filter_data_json = json.loads(house_filter.filter_data_json)
         house_filter_dict = {}
@@ -114,7 +150,7 @@ class FilterDeleteView(SuccessMessageMixin, DeleteView):
 
     def get_success_url(self):
         """URL for success redirect."""
-        return '{}?active_tab=filters'.format(reverse('accounts:profile'))
+        return reverse('accounts:house_filters')
 
     def get_queryset(self):
         """User can delete only own filters."""
@@ -131,38 +167,38 @@ class FilterDeleteView(SuccessMessageMixin, DeleteView):
         return super(FilterDeleteView, self).dispatch(*args, **kwargs)
 
 
-@require_POST
 @login_required
 @group_required('Users')
-def save_user_data(request):
-    """Changes user's data."""
-    form = UserForm(request.POST, instance=request.user)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'User data successfully saved.')
-        return redirect('{}?active_tab=user-data'.format(reverse('accounts:profile')))
-    return render(request, 'accounts/profile.html', {
-        'form_user_data': form,
-        'form_change_password': PasswordChangeForm(request.user),
-        'form_user_filter_settings': HousesFilterForm(request.user),
+def users_constants(request):
+    """Save's user's constants."""
+    if request.method == 'POST':
+        form = UsersConstantsForm(request.POST, instance=request.user.constants)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User\'s constants has been successfully saved.')
+            return redirect(reverse('accounts:users_constants'))
+    else:
+        form = UsersConstantsForm(instance=request.user.constants)
+    return render(request, 'accounts/users_constants.html', {
+        'form_constants': form,
     })
 
 
-@require_POST
 @login_required
 @group_required('Users')
 def change_password(request):
     """Changes user's password."""
-    form = PasswordChangeForm(request.user, request.POST)
-    if form.is_valid():
-        user = form.save()
-        update_session_auth_hash(request, user)
-        messages.success(request, 'Your password was successfully updated!')
-        return redirect('{}?active_tab=change-password'.format(reverse('accounts:profile')))
-    return render(request, 'accounts/profile.html', {
-        'form_user_data': UserForm(instance=request.user),
-        'form_change_password': form,
-        'form_user_filter_settings': HousesFilterForm(request.user),
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect(reverse('accounts:change_password'))
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'accounts/change_password.html', {
+        'form_change_password': form
     })
 
 
@@ -207,3 +243,17 @@ def toggle_disabled(request, pk):
     house_filter.save()
 
     return JsonResponse({'success': True, 'disabled': int(house_filter.disabled)})
+
+
+@login_required
+@group_required('Users')
+def get_capital_growth(request, city_id):
+    """Gets capital growth of city and returns JSON."""
+    city = get_object_or_404(City, pk=city_id)
+    try:
+        cities_constants = CitiesConstants.objects.get(city=city, user=request.user)
+        capital_growth = cities_constants.capital_growth
+    except CitiesConstants.DoesNotExist:
+        capital_growth = city.capital_growth
+
+    return JsonResponse({'success': True, 'capital_growth': capital_growth})
