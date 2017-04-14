@@ -42,7 +42,7 @@ $(function () {
         var IOPayments = amountOfLoan * intRate / 100;
         var purchasePrice = parseFloat($("#id_purchase_price").val()) || 0;
         var depositForm = parseFloat($("#id_deposit").val()) || 0;
-        var deposit = purchasePrice * depositForm;
+        var deposit = purchasePrice * depositForm / 100;
         var rates = parseFloat($("#id_rates").val()) || 0;
         var insurance = parseFloat($("#id_insurance").val()) || 0;
         var repairsMaintenance = parseFloat($("#id_repairs_maintenance").val()) || 0;
