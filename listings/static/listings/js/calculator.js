@@ -63,7 +63,7 @@ $(function () {
         var oneYearReturn = capitalGrowthRate * propertyMarketValue / 100 + equity + cashFlow;
         var returnOnDeposit = oneYearReturn / deposit * 100;
         var resultingGrossYield = weeklyRent * 52 / purchasePrice * 100;
-        var resultingNetYield = (weeklyRent * 52 - purchasePrice) / amountOfLoan * 100;
+        var resultingNetYield = (weeklyRent * 52 - propertyExpenses) / amountOfLoan * 100;
         var grossYield = parseFloat($("#id_gross_yield").val()) || 0;
         var netYield = parseFloat($("#id_net_yield").val()) || 0;
         var minCashflow = parseFloat($("#id_min_cashflow").val()) || 0;
