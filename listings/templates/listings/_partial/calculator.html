@@ -1,0 +1,89 @@
+{% load bootstrap3 %}
+<form>
+    {% bootstrap_field calculator_form.managed %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Values</h4>
+            {% bootstrap_field calculator_form.property_managers_commission addon_after=field_addons.property_managers_commission addon_after_class='input-group-btn' %}
+            {% bootstrap_field calculator_form.int_rate addon_after=field_addons.int_rate addon_after_class='input-group-btn' %}
+            {% bootstrap_field calculator_form.deposit addon_after=field_addons.deposit addon_after_class='input-group-btn' %}
+            {% bootstrap_field calculator_form.vacancy addon_after=field_addons.vacancy addon_after_class='input-group-btn' %}
+            {% bootstrap_field calculator_form.capital_growth addon_after=field_addons.capital_growth addon_after_class='input-group-btn' %}
+        </div>
+
+        <div class="col-md-4">
+            <h4>Variables</h4>
+            {% bootstrap_field calculator_form.weekly_rent %}
+            {% bootstrap_field calculator_form.purchase_price %}
+            <dl>
+                <dt>Walk Away Price</dt>
+                <dd>50$</dd>
+            </dl>
+        </div>
+
+        <div class="col-md-4">
+            <h4>Buying rules</h4>
+
+            {% bootstrap_field calculator_form.gross_yield addon_after=field_addons.gross_yield addon_after_class='input-group-btn'  %}
+            {% bootstrap_field calculator_form.net_yield addon_after=field_addons.net_yield addon_after_class='input-group-btn'  %}
+            {% bootstrap_field calculator_form.min_cashflow addon_after=field_addons.min_cashflow addon_after_class='input-group-btn'  %}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Fixed items</h4>
+            <dl>
+                <dt>Property Market Value</dt>
+                <dd>{{ house_user_data.market_reg_value }} $</dd>
+                <dt>Amount of Loan</dt>
+                <dd>{{ house_user_data.offer_price }} $</dd>
+                <dt>I/O Payments</dt>
+                <dd><span id="io-payments"></span></dd>
+                <dt>Deposit</dt>
+                <dd><span id="deposit"></span></dd>
+                <dt>Property Expenses (incl. vacancy, if any)</dt>
+                <dd><span id="property-expences"></span></dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            <h4>Property performance</h4>
+
+            <dl>
+                <dt>Discount</dt>
+                <dd><span id="discount"></span></dd>
+                <dt>%</dt>
+                <dd><span id="percent"></span></dd>
+                <dt>1-Year Return</dt>
+                <dd><span id="one-year-return"></span></dd>
+                <dt>Return on deposit</dt>
+                <dd><span id="return-on-deposit"></span></dd>
+                <dt>Equity</dt>
+                <dd><span id="equity"></span></dd>
+                <dt>Resulting Gross Yield</dt>
+                <dd><span id="resulting-gross-yield"></span></dd>
+                <dt>Resulting Net Yield</dt>
+                <dd><span id="resulting-net-yield"></span></dd>
+                <dt>Cashflow</dt>
+                <dd><span id="cashflow"></span></dd>
+            </dl>
+        </div>
+    </div>
+
+    <hr>
+
+    {% buttons %}
+        <button type="button" class="btn btn-primary" id="reset">
+            {% bootstrap_icon "refresh" %} Back to standard calculation
+        </button>
+        <button type="button" class="btn btn-success" id="findRent">
+            {% bootstrap_icon "ok" %} Find Rent (*based on a gross yield)
+        </button>
+        <button type="button" class="btn btn-warning" id="findPrice">
+            {% bootstrap_icon "ok" %} Find price (*based on a gross yield)
+        </button>
+    {% endbuttons %}
+</form>

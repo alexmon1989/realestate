@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
+{% load static %}
 
 {% block content-h1 %}
     House data
@@ -121,18 +122,33 @@
             </div>
 
             {% if request.resolver_match.url_name == "show_liked_listing" %}
-                <h3>My data</h3>
-                <form method="post">
-                    <input type="hidden" name="return_url" value="{{ request.GET.return_url }}">
-                    {% bootstrap_form form %}
-                    {% csrf_token %}
-                    {% buttons %}
-                        <button type="submit" class="btn btn-primary">
-                        {% bootstrap_icon "ok" %} Save
-                        </button>
-                        <a href="{% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-warning">{% bootstrap_icon "floppy-remove" %} Cancel</a>
-                    {% endbuttons %}
-                </form>
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="{% if not request.GET.active_tab or request.GET.active_tab == 'data' %}active{% endif %}"><a href="#tab_1" data-toggle="tab">My data</a></li>
+                        <li class="{% if request.GET.active_tab == 'calculator' %}active{% endif %}"><a href="#tab_2" data-toggle="tab">Calculator</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane {% if not request.GET.active_tab or request.GET.active_tab == 'data' %}active{% endif %}" id="tab_1">
+                            <form method="post">
+                                <input type="hidden" name="return_url" value="{{ request.GET.return_url }}">
+                                {% bootstrap_form form %}
+                                {% csrf_token %}
+                                {% buttons %}
+                                    <button type="submit" class="btn btn-primary">
+                                    {% bootstrap_icon "ok" %} Save
+                                    </button>
+                                    <a href="{% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-warning">{% bootstrap_icon "floppy-remove" %} Cancel</a>
+                                {% endbuttons %}
+                            </form>
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane {% if request.GET.active_tab == 'calculator' %}active{% endif %}" id="tab_2">
+                            {% include 'listings/_partial/calculator.html' %}
+                        </div>
+                        <!-- /.tab-pane -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
             {% endif %}
 
         </div>
@@ -147,12 +163,15 @@
 
 {% block scripts %}
     <script>
+        var houseId = {{ house.pk }};
+
         $(function () {
             $("#id_first_offer_date, #id_date_sold").datepicker({
                 format: "yyyy-mm-dd"
             });
         });
     </script>
+    <script src="{% static "listings/js/calculator.js" %}"></script>
 {% endblock %}
 
 {% block styles %}

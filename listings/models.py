@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from home.models import House
+from accounts.models import Constants as UserConstants
 
 
 class Mark(models.Model):
@@ -82,3 +83,122 @@ class HouseUserData(models.Model):
 
     def __str__(self):
         return '{} for {}'.format(self.user, self.house)
+
+
+class Calculator(models.Model):
+    """Calculator values model."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    managed = models.BooleanField('Managed', default=True)
+    property_managers_commission = models.FloatField(
+        'Property Manager’s commission, %',
+        null=True,
+        blank=True,
+        validators=[
+            MaxValueValidator(20),
+            MinValueValidator(1),
+        ],
+    )
+    int_rate = models.FloatField(
+        'Int Rate, %',
+        null=True,
+        blank=True,
+        validators=[
+            MaxValueValidator(95),
+            MinValueValidator(5),
+        ],
+    )
+    deposit = models.FloatField(
+        'Deposit, %',
+        null=True,
+        blank=True,
+        validators=[
+            MaxValueValidator(95),
+            MinValueValidator(5),
+        ],
+    )
+    vacancy = models.IntegerField(
+        'Vacancy, weeks',
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(0),
+        ],
+    )
+    capital_growth = models.FloatField(
+        'Capital Growth rate, %',
+        null=True,
+        blank=True,
+        validators=[
+            MaxValueValidator(100),
+            MinValueValidator(0),
+        ],
+    )
+    weekly_rent = models.IntegerField(
+        'Weekly Rent, $',
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(0),
+        ],
+    )
+    purchase_price = models.IntegerField(
+        'Purchase Price, $',
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(0),
+        ],
+    )
+    gross_yield = models.FloatField(
+        'Gross Yield, %',
+        null=True,
+        blank=True,
+        validators=[
+            MaxValueValidator(30),
+            MinValueValidator(1),
+        ],
+    )
+    net_yield = models.FloatField(
+        'Net Yield, %',
+        null=True,
+        blank=True,
+        validators=[
+            MaxValueValidator(30),
+            MinValueValidator(1),
+        ],
+    )
+    min_cashflow = models.FloatField(
+        'Min Cashflow, $',
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(0),
+        ],
+    )
+
+    @staticmethod
+    def get_or_create(user, house):
+        """Returns existed calculator model or creates new and return it."""
+        try:
+            calculator = Calculator.objects.get(user=user, house=house)
+        except Calculator.DoesNotExist:
+            calculator = Calculator(user=user, house=house)
+
+            # Initial values
+            users_constants, created = UserConstants.objects.get_or_create(user=user)
+            calculator.property_managers_commission = users_constants.property_management_commission
+            calculator.int_rate = users_constants.loan_interest_rate
+            calculator.deposit = users_constants.loan_deposit
+            calculator.vacancy = users_constants.vacancy_rate
+            calculator.capital_growth = house.suburb.city.capital_growth
+            house_user_data = user.houseuserdata_set.get(house=house)
+            calculator.weekly_rent = house_user_data.rent_per_week
+            calculator.purchase_price = house_user_data.offer_price
+            calculator.gross_yield = users_constants.gross_yield
+            calculator.net_yield = users_constants.net_yield
+            calculator.min_cashflow = users_constants.min_cashflow
+
+            # saving
+            calculator.save()
+        return calculator

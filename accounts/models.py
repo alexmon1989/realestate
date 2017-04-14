@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.core.validators import MaxValueValidator, MinValueValidator
 from annoying.fields import AutoOneToOneField
 
-from home.models import City
+from home.models import City, House
 
 
 class HousesFilter(models.Model):

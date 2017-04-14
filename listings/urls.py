@@ -19,4 +19,6 @@ urlpatterns = [
     url(r'^mark-as-liked/(?P<pk>[0-9]+)/$', views.mark_as_liked, name='mark_as_liked'),
     url(r'^mark-as-disliked/(?P<pk>[0-9]+)/$', views.mark_as_disliked, name='mark_as_disliked'),
     url(r'^mark-as-still-thinking/(?P<pk>[0-9]+)/$', views.mark_as_still_thinking, name='mark_as_still_thinking'),
+    url(r'^save-calculator-data/(?P<house_id>[0-9]+)/$', views.save_calculator_data, name='save_calculator_data'),
+    url(r'^reset-calculator-data/(?P<house_id>[0-9]+)/$', views.reset_calculator_data, name='reset_calculator_data'),
 ]

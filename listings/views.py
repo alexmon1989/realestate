@@ -2,11 +2,18 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
+
+import json
 
 from django_tables2 import RequestConfig
 
 from home.models import House, VHousesForTables
-from .models import MarkedHouse
+from .models import MarkedHouse, Calculator
+from settings.models import Global as GlobalConstants
 
 from .tables import (NewListingsTable, NewListingsTableWithPhoto, LikedListingsTable, LikedListingsTableWithPhoto,
                      DislikedListingsTable, DislikedListingsTableWithPhoto, StillThinkingListingsTable,
@@ -14,7 +21,7 @@ from .tables import (NewListingsTable, NewListingsTableWithPhoto, LikedListingsT
 
 from decorators import group_required
 
-from .forms import HouseUserDataForm
+from .forms import HouseUserDataForm, CalculatorForm
 
 
 @login_required
@@ -222,11 +229,103 @@ def show_liked_listing(request, pk):
     else:
         form = HouseUserDataForm(instance=house_user_data)
 
+    # Field addons
+    global_constants = GlobalConstants.objects.first()
+    users_constants = request.user.constants
+    field_addons = CalculatorForm.get_fields_addons(
+        users_constants,
+        global_constants,
+        marked_house.house.suburb.city.capital_growth
+    )
+
     return render(request, 'listings/show.html', {
         'house': marked_house.house,
         'photos': photos,
         'form': form,
+        'calculator_form': CalculatorForm(instance=Calculator.get_or_create(request.user, marked_house.house)),
+        'field_addons': field_addons,
+        'house_user_data': house_user_data
     })
+
+
+@require_POST
+@csrf_exempt
+@login_required
+@group_required('Users')
+def save_calculator_data(request, house_id):
+    try:
+        calculator = Calculator.objects.get(user=request.user, house_id=house_id)
+
+        calculator.managed = bool(request.POST.get('managed', True))
+
+        if request.POST.get('property_managers_commission') != '':
+            calculator.property_managers_commission = request.POST.get('property_managers_commission')
+        else:
+            calculator.property_managers_commission = None
+
+        if request.POST.get('int_rate') != '':
+            calculator.int_rate = request.POST.get('int_rate')
+        else:
+            calculator.int_rate = None
+
+        if request.POST.get('deposit') != '':
+            calculator.deposit = request.POST.get('deposit')
+        else:
+            calculator.deposit = None
+
+        if request.POST.get('vacancy') != '':
+            calculator.vacancy = request.POST.get('vacancy')
+        else:
+            calculator.vacancy = None
+
+        if request.POST.get('capital_growth') != '':
+            calculator.capital_growth = request.POST.get('capital_growth')
+        else:
+            calculator.capital_growth = None
+
+        if request.POST.get('weekly_rent') != '':
+            calculator.weekly_rent = request.POST.get('weekly_rent')
+        else:
+            calculator.weekly_rent = None
+
+        if request.POST.get('purchase_price') != '':
+            calculator.purchase_price = request.POST.get('purchase_price')
+        else:
+            calculator.purchase_price = None
+
+        if request.POST.get('gross_yield') != '':
+            calculator.gross_yield = request.POST.get('gross_yield')
+        else:
+            calculator.gross_yield = None
+
+        if request.POST.get('net_yield') != '':
+            calculator.net_yield = request.POST.get('net_yield')
+        else:
+            calculator.net_yield = None
+
+        if request.POST.get('min_cashflow') != '':
+            calculator.min_cashflow = request.POST.get('min_cashflow')
+        else:
+            calculator.min_cashflow = None
+
+        calculator.save()
+        return JsonResponse({'success': 1})
+    except Calculator.DoesNotExist:
+        return JsonResponse({'success': 0, 'error': 'Record not found'})
+
+
+@login_required
+@group_required('Users')
+def reset_calculator_data(request, house_id):
+    """Resets calculator data."""
+    try:
+        calculator = Calculator.objects.get(user=request.user, house_id=house_id)
+        calculator.delete()
+        calculator = Calculator.get_or_create(request.user, House.objects.get(pk=house_id))
+        calculator_json = json.dumps(model_to_dict(calculator))
+        return JsonResponse({'success': 1, 'calculator': calculator_json})
+    except Calculator.DoesNotExist:
+        return JsonResponse({'success': 0, 'error': 'Record not found'})
 
 
 @login_required
