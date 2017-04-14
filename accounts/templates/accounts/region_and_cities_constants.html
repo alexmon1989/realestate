@@ -81,6 +81,7 @@
         var getCapitalGrowth = function (cityId) {
             $.getJSON('/accounts/settings/users-constants/get-capital-growth/' + cityId + '/', function (data) {
                 $("#id_capital_growth").val(data.capital_growth);
+                $("#global_capital_growth").html(data.global_capital_growth || 'not specified');
             });
         };
 

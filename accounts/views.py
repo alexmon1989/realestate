@@ -256,4 +256,8 @@ def get_capital_growth(request, city_id):
     except CitiesConstants.DoesNotExist:
         capital_growth = city.capital_growth
 
-    return JsonResponse({'success': True, 'capital_growth': capital_growth})
+    return JsonResponse({
+        'success': True,
+        'capital_growth': capital_growth,
+        'global_capital_growth': city.capital_growth
+    })

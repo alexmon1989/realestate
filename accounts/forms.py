@@ -38,7 +38,11 @@ class CitiesConstantsForm(forms.Form):
     CITY_CHOICES = [(c.pk, c.city_name) for c in City.objects.order_by('city_name')]
 
     city = forms.ChoiceField(label='City', widget=Select2Widget(), choices=CITY_CHOICES)
-    capital_growth = forms.FloatField(label='Capital growth', min_value=0)
+    capital_growth = forms.FloatField(
+        label='Capital growth',
+        min_value=0,
+        help_text='Global value: <span id="global_capital_growth"></span>'
+    )
 
     def __init__(self, *args, **kwargs):
         self.base_fields['city'].initial = kwargs.pop('active_city_id', None)
