@@ -39,7 +39,7 @@ $(function () {
         var propertyMarketValue = parseFloat($("#id_market_reg_value").val()) || 0;
         var amountOfLoan = parseFloat($("#id_offer_price").val()) || 0;
         var intRate = parseFloat($("#id_int_rate").val()) || 0;
-        var IOPayments = amountOfLoan * intRate;
+        var IOPayments = amountOfLoan * intRate / 100;
         var purchasePrice = parseFloat($("#id_purchase_price").val()) || 0;
         var depositForm = parseFloat($("#id_deposit").val()) || 0;
         var deposit = purchasePrice * depositForm;
@@ -50,9 +50,10 @@ $(function () {
         var otherExpences = parseFloat($("#id_other_expenses").val()) || 0;
         var weeklyRent = $("#id_weekly_rent").val() || 0;
         var vacancy = $("#id_vacancy").val() || 0;
+        var rate = $("#id_property_managers_commission").val() || 0;
         var propertyExpenses = rates + insurance + repairsMaintenance
             + bodyCorporate + otherExpences
-            + (weeklyRent * (52 - vacancy) * intRate * 1.15)
+            + (weeklyRent * (52 - vacancy) * (rate / 100) * 1.15)
             + (weeklyRent * vacancy);
         var discount = propertyMarketValue - purchasePrice;
         var percent = discount / propertyMarketValue * 100;
@@ -67,18 +68,18 @@ $(function () {
         var netYield = parseFloat($("#id_net_yield").val()) || 0;
         var minCashflow = parseFloat($("#id_min_cashflow").val()) || 0;
 
-        $("#io-payments").html(IOPayments  + ' $');
-        $("#deposit").html(deposit + ' $');
-        $("#property-expences").html(propertyExpenses + ' $');
+        $("#io-payments").html('$ ' + IOPayments.toFixed(2));
+        $("#deposit").html('$ ' + deposit.toFixed(2));
+        $("#property-expences").html('$ ' + propertyExpenses.toFixed(2));
 
-        $("#discount").html(discount + ' $');
-        $("#percent").html(percent + ' %');
-        $("#one-year-return").html(oneYearReturn + ' $');
-        $("#return-on-deposit").html(returnOnDeposit + ' %');
-        $("#equity").html(equity + ' $');
-        $("#resulting-gross-yield").html(resultingGrossYield + ' %');
-        $("#resulting-net-yield").html(resultingNetYield + ' %');
-        $("#cashflow").html(cashFlow + ' $');
+        $("#discount").html('$ ' + discount.toFixed(2));
+        $("#percent").html(percent.toFixed(2) + ' %');
+        $("#one-year-return").html('$ ' + oneYearReturn.toFixed(2));
+        $("#return-on-deposit").html(returnOnDeposit.toFixed(2) + ' %');
+        $("#equity").html('$ ' + equity.toFixed(2));
+        $("#resulting-gross-yield").html(resultingGrossYield.toFixed(2) + ' %');
+        $("#resulting-net-yield").html(resultingNetYield.toFixed(2) + ' %');
+        $("#cashflow").html('$ ' + cashFlow.toFixed(2));
 
         if (resultingGrossYield >= grossYield) {
             $( "#resulting-gross-yield" ).removeClass('text-red').addClass('text-green');

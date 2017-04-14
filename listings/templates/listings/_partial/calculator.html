@@ -18,7 +18,7 @@
             {% bootstrap_field calculator_form.purchase_price %}
             <dl>
                 <dt>Walk Away Price</dt>
-                <dd>50$</dd>
+                <dd>$ {{ house_user_data.walk_away_price }}</dd>
             </dl>
         </div>
 
@@ -38,9 +38,9 @@
             <h4>Fixed items</h4>
             <dl>
                 <dt>Property Market Value</dt>
-                <dd>{{ house_user_data.market_reg_value }} $</dd>
+                <dd>$ {{ house_user_data.market_reg_value }}</dd>
                 <dt>Amount of Loan</dt>
-                <dd>{{ house_user_data.offer_price }} $</dd>
+                <dd>$ {{ house_user_data.offer_price }}</dd>
                 <dt>I/O Payments</dt>
                 <dd><span id="io-payments"></span></dd>
                 <dt>Deposit</dt>
