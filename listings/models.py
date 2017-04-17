@@ -26,10 +26,6 @@ class HouseUserData(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     fenced = models.CharField('Fenced', blank=True, null=True, max_length=255)
     title_type = models.CharField('Title type', blank=True, null=True, max_length=255)
-    asking_price = models.IntegerField('Asking price',
-                                       blank=True,
-                                       null=True,
-                                       validators=[MinValueValidator(0), MaxValueValidator(1000000)])
     reason_for_selling = models.CharField('Reason for selling', blank=True, null=True, max_length=255)
     first_offer_date = models.DateField('First offer date', blank=True, null=True)
     offer_price = models.IntegerField('Offer price',
