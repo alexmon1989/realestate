@@ -164,6 +164,7 @@
 {% block scripts %}
     <script>
         var houseId = {{ house.pk }};
+        var gst = {{ gst }};
 
         $(function () {
             $("#id_first_offer_date, #id_date_sold").datepicker({

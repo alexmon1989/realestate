@@ -55,7 +55,7 @@ $(function () {
         var rate = $("#id_property_managers_commission").val() || 0;
         var propertyExpenses = rates + insurance + repairsMaintenance
             + bodyCorporate + otherExpences
-            + (weeklyRent * (52 - vacancy) * (rate / 100) * 1.15)
+            + (weeklyRent * (52 - vacancy) * (rate / 100) * (1 + gst / 100))
             + (weeklyRent * vacancy);
         var discount = propertyMarketValue - purchasePrice;
         var percent = discount / propertyMarketValue * 100;

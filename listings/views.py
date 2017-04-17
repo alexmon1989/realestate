@@ -251,7 +251,8 @@ def show_liked_listing(request, pk):
         'form': form,
         'calculator_form': CalculatorForm(instance=Calculator.get_or_create(request.user, marked_house.house)),
         'field_addons': field_addons,
-        'house_user_data': house_user_data
+        'house_user_data': house_user_data,
+        'gst': global_constants.gst
     })
 
 
