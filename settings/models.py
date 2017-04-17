@@ -3,7 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Global(models.Model):
-    bond_link = models.CharField('Bond link', max_length=255)
+    bond_link = models.CharField('Bond link', max_length=255, null=True, blank=True)
     gst = models.FloatField(
         'GST, %',
         validators=[
@@ -11,13 +11,9 @@ class Global(models.Model):
             MinValueValidator(5)
         ]
     )
-    qv_link = models.FloatField(
-        'QV link, %',
-        validators=[
-            MaxValueValidator(95),
-            MinValueValidator(5)
-        ]
-    )
+    qv_growth = models.CharField('QV Growth', max_length=255, null=True, blank=True)
+    qv_rental = models.CharField('QV Rental', max_length=255, null=True, blank=True)
+    qv_sales = models.CharField('QV Sales', max_length=255, null=True, blank=True)
     loan_deposit = models.FloatField(
         'Loan deposit, %',
         validators=[
