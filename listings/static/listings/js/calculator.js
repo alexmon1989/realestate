@@ -1,4 +1,8 @@
 $(function () {
+    // Initial values for weekly_rent and purchase_price
+    $("#id_weekly_rent").val( $("#id_rent_per_week").val() );
+    $("#id_purchase_price").val( $("#id_offer_price").val() );
+
     $(".change-value").click(function (e) {
         e.preventDefault();
         $this = $(this);
@@ -23,8 +27,6 @@ $(function () {
                 deposit: $("#id_deposit").val(),
                 vacancy: $("#id_vacancy").val(),
                 capital_growth: $("#id_capital_growth").val(),
-                weekly_rent: $("#id_weekly_rent").val(),
-                purchase_price: $("#id_purchase_price").val(),
                 gross_yield: $("#id_gross_yield").val(),
                 net_yield: $("#id_net_yield").val(),
                 min_cashflow: $("#id_min_cashflow").val()
@@ -106,12 +108,14 @@ $(function () {
         "#id_deposit, " +
         "#id_vacancy, " +
         "#id_capital_growth, " +
-        "#id_weekly_rent, " +
-        "#id_purchase_price, " +
         "#id_gross_yield, " +
         "#id_net_yield, " +
         "#id_min_cashflow").on('change', function() {
             saveCalculatorData();
+            calculateFixedBuying();
+    });
+
+    $("#id_weekly_rent, #id_purchase_price").on('change', function() {
             calculateFixedBuying();
     });
 

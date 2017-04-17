@@ -134,22 +134,6 @@ class Calculator(models.Model):
             MinValueValidator(0),
         ],
     )
-    weekly_rent = models.IntegerField(
-        'Weekly Rent, $',
-        null=True,
-        blank=True,
-        validators=[
-            MinValueValidator(0),
-        ],
-    )
-    purchase_price = models.IntegerField(
-        'Purchase Price, $',
-        null=True,
-        blank=True,
-        validators=[
-            MinValueValidator(0),
-        ],
-    )
     gross_yield = models.FloatField(
         'Gross Yield, %',
         null=True,
@@ -192,9 +176,6 @@ class Calculator(models.Model):
             calculator.deposit = users_constants.loan_deposit
             calculator.vacancy = users_constants.vacancy_rate
             calculator.capital_growth = house.suburb.city.capital_growth
-            house_user_data = user.houseuserdata_set.get(house=house)
-            calculator.weekly_rent = house_user_data.rent_per_week
-            calculator.purchase_price = house_user_data.offer_price
             calculator.gross_yield = users_constants.gross_yield
             calculator.net_yield = users_constants.net_yield
             calculator.min_cashflow = users_constants.min_cashflow
