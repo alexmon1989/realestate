@@ -14,6 +14,7 @@ from django_tables2 import RequestConfig
 from home.models import House, VHousesForTables
 from .models import MarkedHouse, Calculator
 from settings.models import Global as GlobalConstants
+from accounts.models import CitiesConstants
 
 from .tables import (NewListingsTable, NewListingsTableWithPhoto, LikedListingsTable, LikedListingsTableWithPhoto,
                      DislikedListingsTable, DislikedListingsTableWithPhoto, StillThinkingListingsTable,
@@ -232,10 +233,16 @@ def show_liked_listing(request, pk):
     # Field addons
     global_constants = GlobalConstants.objects.first()
     users_constants = request.user.constants
+    try:
+        user_city_constants = request.user.citiesconstants_set.get(city=marked_house.house.suburb.city)
+        user_capital_growth = user_city_constants.capital_growth
+    except CitiesConstants.DoesNotExist:
+        user_capital_growth = 0
     field_addons = CalculatorForm.get_fields_addons(
         users_constants,
         global_constants,
-        marked_house.house.suburb.city.capital_growth
+        marked_house.house.suburb.city.capital_growth,
+        user_capital_growth
     )
 
     return render(request, 'listings/show.html', {

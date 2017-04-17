@@ -10,7 +10,7 @@ class HouseUserDataForm(ModelForm):
 
 class CalculatorForm(ModelForm):
     @staticmethod
-    def get_fields_addons(users_constants, global_constants, capital_growth):
+    def get_fields_addons(users_constants, global_constants, global_capital_growth, user_capital_growth):
         return {
             'property_managers_commission': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'
                                             '<a href="#" data-value="{1}" class="btn btn-warning change-value">Global value: {1}%</a>'.format(
@@ -30,8 +30,10 @@ class CalculatorForm(ModelForm):
                 users_constants.vacancy_rate,
                 global_constants.vacancy_rate,
             ),
-            'capital_growth': '<a href="#" data-value="{0}" class="btn btn-warning change-value">Global value: {0}%</a>'.format(
-                capital_growth or 0,
+            'capital_growth': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'
+                              '<a href="#" data-value="{1}" class="btn btn-warning change-value">Global value: {1}%</a>'.format(
+                user_capital_growth,
+                global_capital_growth or 0,
             ),
             'gross_yield': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'
                            '<a href="#" data-value="{1}" class="btn btn-warning change-value">Global value: {1}%</a>'.format(
