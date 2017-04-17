@@ -41,7 +41,7 @@ class CalculatorForm(ModelForm):
             'net_yield': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'.format(
                 users_constants.net_yield,
             ),
-            'min_cashflow': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}$</a>'.format(
+            'min_cashflow': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: $ {0}</a>'.format(
                 users_constants.min_cashflow,
             ),
         }
