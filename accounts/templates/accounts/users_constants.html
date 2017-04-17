@@ -29,7 +29,23 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab_user_data">
                         <form action="{% url 'accounts:users_constants' %}" method="post" class="form">
-                            {% bootstrap_form form_constants %}
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {% bootstrap_field form_constants.loan_interest_rate %}
+                                    {% bootstrap_field form_constants.loan_deposit %}
+                                    {% bootstrap_field form_constants.new_built_loan_deposit %}
+                                </div>
+                                <div class="col-md-4">
+                                    {% bootstrap_field form_constants.property_management_commission %}
+                                    {% bootstrap_field form_constants.vacancy_rate %}
+                                    {% bootstrap_field form_constants.inflation %}
+                                </div>
+                                <div class="col-md-4">
+                                    {% bootstrap_field form_constants.gross_yield %}
+                                    {% bootstrap_field form_constants.net_yield %}
+                                    {% bootstrap_field form_constants.min_cashflow %}
+                                </div>
+                            </div>
                             {% csrf_token %}
                             {% buttons %}
                                 <button type="submit" class="btn btn-primary">
