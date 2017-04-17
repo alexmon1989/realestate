@@ -35,20 +35,14 @@ class CalculatorForm(ModelForm):
                 user_capital_growth,
                 global_capital_growth or 0,
             ),
-            'gross_yield': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'
-                           '<a href="#" data-value="{1}" class="btn btn-warning change-value">Global value: {1}%</a>'.format(
+            'gross_yield': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'.format(
                 users_constants.gross_yield,
-                global_constants.gross_yield,
             ),
-            'net_yield': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'
-                         '<a href="#" data-value="{1}" class="btn btn-warning change-value">Global value: {1}%</a>'.format(
+            'net_yield': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'.format(
                 users_constants.net_yield,
-                global_constants.net_yield,
             ),
-            'min_cashflow': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}$</a>'
-                            '<a href="#" data-value="{1}" class="btn btn-warning change-value">Global value: {1}$</a>'.format(
+            'min_cashflow': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}$</a>'.format(
                 users_constants.min_cashflow,
-                global_constants.min_cashflow,
             ),
         }
 
