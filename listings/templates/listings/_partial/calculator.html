@@ -60,9 +60,7 @@
 
             <dl>
                 <dt>Discount</dt>
-                <dd><span id="discount"></span></dd>
-                <dt>%</dt>
-                <dd><span id="percent"></span></dd>
+                <dd><span id="discount"></span> (<span id="percent"></span>)</dd>
                 <dt>1-Year Return</dt>
                 <dd><span id="one-year-return"></span></dd>
                 <dt>Return on deposit</dt>
@@ -88,14 +86,14 @@
     <hr>
 
     {% buttons %}
-        <button type="button" class="btn btn-primary" id="reset">
-            {% bootstrap_icon "refresh" %} Back to standard calculation
-        </button>
         <button type="button" class="btn btn-success" id="findRent">
             {% bootstrap_icon "ok" %} Find Rent (*based on a gross yield)
         </button>
         <button type="button" class="btn btn-warning" id="findPrice">
             {% bootstrap_icon "ok" %} Find price (*based on a gross yield)
+        </button>
+        <button type="button" class="btn btn-primary" id="reset">
+            {% bootstrap_icon "refresh" %} Back to standard calculation
         </button>
     {% endbuttons %}
 </form>

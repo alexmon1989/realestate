@@ -5,7 +5,7 @@ $(function () {
 
     $(".change-value").click(function (e) {
         e.preventDefault();
-        $this = $(this);
+        var $this = $(this);
         var value = $this.data('value');
         var $input = $this.parent().siblings("input").first();
         if ($input.val() !== value) {
@@ -148,23 +148,11 @@ $(function () {
     });
 
     /**
-     * "Reset" button click handler. resets calculator values to default.
+     * "Reset" button click handler. Resets rent_per_week, offer_price values to default.
      */
     $("#reset").click(function () {
-        $.getJSON('/listings/reset-calculator-data/' + houseId + '/', function (data) {
-            var calculatorJson = $.parseJSON(data.calculator);
-            $("#id_managed").prop('checked', 1);
-            $("#id_property_managers_commission").val(calculatorJson.property_managers_commission);
-            $("#id_int_rate").val(calculatorJson.int_rate);
-            $("#id_deposit").val(calculatorJson.deposit);
-            $("#id_vacancy").val(calculatorJson.vacancy);
-            $("#id_capital_growth").val(calculatorJson.capital_growth);
-            $("#id_weekly_rent").val(calculatorJson.weekly_rent);
-            $("#id_purchase_price").val(calculatorJson.purchase_price);
-            $("#id_gross_yield").val(calculatorJson.gross_yield);
-            $("#id_net_yield").val(calculatorJson.net_yield);
-            $("#id_min_cashflow").val(calculatorJson.min_cashflow);
-        })
+        $("#id_weekly_rent").val( $("#id_rent_per_week").val() );
+        $("#id_purchase_price").val( $("#id_offer_price").val() );
     });
 
     calculateFixedBuying();
