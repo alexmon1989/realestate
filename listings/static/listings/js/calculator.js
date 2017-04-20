@@ -68,6 +68,11 @@ $(function () {
         var grossYield = parseFloat($("#id_gross_yield").val()) || 0;
         var netYield = parseFloat($("#id_net_yield").val()) || 0;
         var minCashflow = parseFloat($("#id_min_cashflow").val()) || 0;
+        var governmentValue = parseFloat($("#id_government_value").val()) || 0;
+        var purchasePriceToGovernmentValue = 0;
+        if (purchasePrice > 0 && governmentValue > 0) {
+            purchasePriceToGovernmentValue = purchasePrice / governmentValue;
+        }
 
         $("#io-payments").html('$ ' + IOPayments.toFixed(2));
         $("#deposit").html('$ ' + deposit.toFixed(2));
@@ -78,6 +83,11 @@ $(function () {
         $("#one-year-return").html('$ ' + oneYearReturn.toFixed(2));
         $("#return-on-deposit").html(returnOnDeposit.toFixed(2) + ' %');
         $("#equity").html('$ ' + equity.toFixed(2));
+        if (purchasePrice > 0 && governmentValue > 0) {
+            $("#purchase_price_to_government_value").html(purchasePriceToGovernmentValue.toFixed(2));
+        } else {
+             $("#purchase_price_to_government_value").html('');
+        }
         $("#resulting-gross-yield").html(resultingGrossYield.toFixed(2) + ' %');
         $("#resulting-net-yield").html(resultingNetYield.toFixed(2) + ' %');
         $("#cashflow").html('$ ' + cashFlow.toFixed(2));
