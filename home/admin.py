@@ -29,11 +29,25 @@ class AgencyAdmin(admin.ModelAdmin):
 
 class CityAdmin(admin.ModelAdmin):
     """Admin model for City objects."""
-    search_fields = ('city_name', 'region__name', 'capital_growth', 'council_link')
+    search_fields = ('city_name', 'region__name')
 
-    list_display = ('city_name', 'region', 'capital_growth', 'council_link')
+    list_display = (
+        'city_name',
+        'region',
+        'capital_growth',
+        'council_link',
+        'rates_link_1',
+        'rates_link_2',
+        'lim_link',
+        'property_bag_link',
+        'council_phone',
+        'council_email',
+        'flooding_link',
+    )
 
     list_filter = ('region__name', )
+
+    ordering = ('city_name', )
 
 
 class AgentAdmin(admin.ModelAdmin):

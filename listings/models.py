@@ -24,33 +24,30 @@ class HouseUserData(models.Model):
     """Liked house user data model."""
     house = models.ForeignKey(House, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    fenced = models.CharField('Fenced', blank=True, null=True, max_length=255)
-    title_type = models.CharField('Title type', blank=True, null=True, max_length=255)
     reason_for_selling = models.CharField('Reason for selling', blank=True, null=True, max_length=255)
     first_offer_date = models.DateField('First offer date', blank=True, null=True)
     offer_price = models.IntegerField('Offer price',
                                       blank=True,
                                       null=True,
-                                      validators=[MinValueValidator(0), MaxValueValidator(1000000)])
+                                      validators=[MinValueValidator(0)])
     walk_away_price = models.IntegerField('Walk away price',
                                           blank=True,
                                           null=True,
-                                          validators=[MinValueValidator(0), MaxValueValidator(1000000)])
+                                          validators=[MinValueValidator(0)])
     date_sold = models.DateField('Date sold', blank=True, null=True)
-    sale_price = models.IntegerField('Sale price',
-                                     blank=True,
-                                     null=True,
-                                     validators=[MinValueValidator(0), MaxValueValidator(1000000)])
+    sold_for = models.IntegerField('Sold for',
+                                   blank=True,
+                                   null=True,
+                                   validators=[MinValueValidator(0)])
     market_reg_value = models.IntegerField('Market/reg value',
                                            blank=True,
                                            null=True,
-                                           validators=[MinValueValidator(0), MaxValueValidator(1000000)])
-    owner_rented = models.CharField('Owner/rented', blank=True, null=True, max_length=255)
+                                           validators=[MinValueValidator(0)])
+    owner_occupied = models.BooleanField('Owner occupied', default=False)
     rent_per_week = models.FloatField('Rent per week',
                                       blank=True,
                                       null=True,
                                       validators=[MinValueValidator(0)])
-    rent_appraisal_done = models.BooleanField('Rent appraisal done', default=False)
     insurance = models.FloatField('Insurance',
                                   blank=True,
                                   null=True,
@@ -59,11 +56,7 @@ class HouseUserData(models.Model):
                                             blank=True,
                                             null=True,
                                             validators=[MinValueValidator(0)])
-    body_corporate = models.FloatField('Body Corporate',
-                                       blank=True,
-                                       null=True,
-                                       validators=[MinValueValidator(0)])
-    other_expenses = models.FloatField('Other expenses',
+    body_corporate = models.FloatField('Body Corporate Fees',
                                        blank=True,
                                        null=True,
                                        validators=[MinValueValidator(0)])
@@ -71,14 +64,48 @@ class HouseUserData(models.Model):
                                          blank=True,
                                          null=True,
                                          validators=[MinValueValidator(0)])
-    rates = models.FloatField('Rates',
+    rates = models.FloatField('Council Rates',
                               blank=True,
                               null=True,
                               validators=[MinValueValidator(0)])
     notes = models.TextField('Notes', blank=True, null=True)
+    RENT_TYPE_CHOICES = (
+        (1, 'Current Rent'),
+        (2, 'Agency'),
+        (3, 'PM'),
+    )
+    rent_type = models.IntegerField('Rent type', choices=RENT_TYPE_CHOICES, null=True, blank=True, default=None)
+    TITLE_TYPE_CHOICES = (
+        (1, 'Freehold'),
+        (2, 'Crosslease'),
+        (3, 'Leasehold'),
+        (4, 'Unit title'),
+    )
+    title_type = models.IntegerField('Title type', null=True, blank=True, choices=TITLE_TYPE_CHOICES)
+    new_build = models.BooleanField('New Build', default=False)
+    FENCED_CHOICES = (
+        (1, 'Fully'),
+        (2, 'Partially'),
+        (3, 'Not fenced'),
+    )
+    fenced = models.IntegerField('Fenced', blank=True, null=True, choices=FENCED_CHOICES)
+    flooding_10 = models.BooleanField('10 year flooding', default=False)
+    flooding_100 = models.BooleanField('100 year flooding', default=False)
+    renovations = models.FloatField('Renovations', blank=True, null=True)
+    revisit_on = models.DateField('Revisit on', blank=True, null=True)
 
     def __str__(self):
         return '{} for {}'.format(self.user, self.house)
+
+
+class OtherExpense(models.Model):
+    """Model for other expenses for house user data."""
+    house_user_data = models.ForeignKey(HouseUserData, on_delete=models.CASCADE)
+    key = models.CharField('Key', max_length=255)
+    value = models.FloatField('Value')
+
+    def __str__(self):
+        return '{}: {}'.format(self.key, self.value)
 
 
 class Calculator(models.Model):

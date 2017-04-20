@@ -6,13 +6,14 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
+from django.db.models import Sum
 
 import json
 
 from django_tables2 import RequestConfig
 
 from home.models import House, VHousesForTables
-from .models import MarkedHouse, Calculator
+from .models import MarkedHouse, Calculator, OtherExpense
 from settings.models import Global as GlobalConstants
 from accounts.models import CitiesConstants
 
@@ -22,7 +23,7 @@ from .tables import (NewListingsTable, NewListingsTableWithPhoto, LikedListingsT
 
 from decorators import group_required
 
-from .forms import HouseUserDataForm, CalculatorForm
+from .forms import HouseUserDataForm, CalculatorForm, OtherExpenseForm
 
 
 @login_required
@@ -228,7 +229,7 @@ def show_liked_listing(request, pk):
                 return_url = request.GET['return_url']
             return redirect(return_url)
     else:
-        form = HouseUserDataForm(instance=house_user_data)
+        form = HouseUserDataForm(instance=house_user_data, house=marked_house.house)
 
     # Field addons
     global_constants = GlobalConstants.objects.first()
@@ -242,7 +243,8 @@ def show_liked_listing(request, pk):
         users_constants,
         global_constants,
         marked_house.house.suburb.city.capital_growth,
-        user_capital_growth
+        user_capital_growth,
+        house_user_data.new_build
     )
 
     return render(request, 'listings/show.html', {
@@ -252,8 +254,58 @@ def show_liked_listing(request, pk):
         'calculator_form': CalculatorForm(instance=Calculator.get_or_create(request.user, marked_house.house)),
         'field_addons': field_addons,
         'house_user_data': house_user_data,
-        'gst': global_constants.gst
+        'gst': global_constants.gst,
+        'total_other_expenses': house_user_data.otherexpense_set.aggregate(Sum('value')),
+        'form_create_expense': OtherExpenseForm()
     })
+
+
+@login_required
+@group_required('Users')
+def delete_other_expenses_item(request, pk):
+    """Deletes other expense item."""
+    try:
+        expense = OtherExpense.objects.get(pk=pk)
+    except OtherExpense.DoesNotExist:
+        return JsonResponse({'success': 0, 'error': 'Item not found.'}, status=404)
+
+    # Check if it is expense item of this user
+    if expense.house_user_data.user.pk != request.user.pk:
+        return JsonResponse({'success': 0, 'error': 'Item not found.'}, status=404)
+
+    expense.delete()
+
+    return JsonResponse({
+        'success': 1,
+        'total_other_expenses': OtherExpense.objects.filter(
+            house_user_data__user=request.user,
+            house_user_data__house=expense.house_user_data.house
+        ).aggregate(Sum('value'))
+    })
+
+
+@require_POST
+@csrf_exempt
+@login_required
+@group_required('Users')
+def create_other_expenses_item(request):
+    """Deletes other expense item."""
+    form = OtherExpenseForm(request.POST)
+    if form.is_valid():
+        expense = form.save()
+
+        return JsonResponse({
+            'success': 1,
+            'pk': expense.pk,
+            'key': expense.key,
+            'value': expense.value,
+            'total_other_expenses': OtherExpense.objects.filter(
+                house_user_data__user=request.user,
+                house_user_data__house=expense.house_user_data.house
+            ).aggregate(Sum('value'))
+        })
+    else:
+        return JsonResponse({'success': 0, 'errors': form.errors}, status=422)
 
 
 @require_POST

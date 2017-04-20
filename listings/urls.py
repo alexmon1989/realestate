@@ -21,4 +21,10 @@ urlpatterns = [
     url(r'^mark-as-still-thinking/(?P<pk>[0-9]+)/$', views.mark_as_still_thinking, name='mark_as_still_thinking'),
     url(r'^save-calculator-data/(?P<house_id>[0-9]+)/$', views.save_calculator_data, name='save_calculator_data'),
     url(r'^reset-calculator-data/(?P<house_id>[0-9]+)/$', views.reset_calculator_data, name='reset_calculator_data'),
+    url(
+        r'^liked/delete-other-expenses-item/(?P<pk>[0-9]+)/$',
+        views.delete_other_expenses_item,
+        name='delete_other_expenses_item'
+    ),
+    url(r'^liked/create-other-expenses-item/$', views.create_other_expenses_item, name='create_other_expenses_item'),
 ]

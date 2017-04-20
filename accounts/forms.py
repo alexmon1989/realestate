@@ -35,7 +35,7 @@ class UsersConstantsForm(ModelForm):
 
 class CitiesConstantsForm(forms.Form):
     """Form for city/region constants."""
-    CITY_CHOICES = [(c.pk, c.city_name) for c in City.objects.order_by('city_name')]
+    CITY_CHOICES = [(c['pk'], c['city_name']) for c in City.objects.values('pk', 'city_name').order_by('city_name')]
 
     city = forms.ChoiceField(label='City', widget=Select2Widget(), choices=CITY_CHOICES)
     capital_growth = forms.FloatField(

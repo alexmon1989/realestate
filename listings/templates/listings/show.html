@@ -93,7 +93,7 @@
             <h3>Price</h3>
             <dl class="dl-horizontal">
                 <dt>Price</dt>
-                <dd>{{ house.price|default:"" }} {{ house.price_type }}</dd>
+                <dd><span id="price">{{ house.price|default:"" }}</span> <span id="price-type">{{ house.price_type }}</span></dd>
                 <dt>Government value</dt>
                 <dd>{{ house.government_value|default:"-" }}</dd>
                 <dt>Government to price</dt>
@@ -129,17 +129,7 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane {% if not request.GET.active_tab or request.GET.active_tab == 'data' %}active{% endif %}" id="tab_1">
-                            <form method="post">
-                                <input type="hidden" name="return_url" value="{{ request.GET.return_url }}">
-                                {% bootstrap_form form %}
-                                {% csrf_token %}
-                                {% buttons %}
-                                    <button type="submit" class="btn btn-primary">
-                                    {% bootstrap_icon "ok" %} Save
-                                    </button>
-                                    <a href="{% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-warning">{% bootstrap_icon "floppy-remove" %} Cancel</a>
-                                {% endbuttons %}
-                            </form>
+                            {% include 'listings/_partial/my_data.html' %}
                         </div>
                         <!-- /.tab-pane -->
                         <div class="tab-pane {% if request.GET.active_tab == 'calculator' %}active{% endif %}" id="tab_2">
@@ -165,13 +155,15 @@
     <script>
         var houseId = {{ house.pk }};
         var gst = {{ gst }};
+        var otherExpences = parseFloat({{ total_other_expenses.value__sum }});
 
         $(function () {
-            $("#id_first_offer_date, #id_date_sold").datepicker({
+            $("#id_first_offer_date, #id_date_sold, #id_revisit_on").datepicker({
                 format: "yyyy-mm-dd"
             });
         });
     </script>
+    <script src="{% static "listings/js/my-data.js" %}"></script>
     <script src="{% static "listings/js/calculator.js" %}"></script>
 {% endblock %}
 

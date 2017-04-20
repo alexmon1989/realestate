@@ -1,0 +1,147 @@
+{% load bootstrap3 %}
+
+<form method="post">
+    <input type="hidden" name="return_url" value="{{ request.GET.return_url }}">
+    {% csrf_token %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Property Data</h4>
+            {% bootstrap_field form.rent_per_week %}
+            {% bootstrap_field form.rent_type %}
+            {% bootstrap_field form.owner_occupied %}
+            {% bootstrap_field form.title_type %}
+            {% bootstrap_field form.government_value %}
+
+            {% if house.suburb.city.rates_link_1 or house.suburb.city.rates_link_2 %}
+                <p>
+                    {% if house.suburb.city.rates_link_1 %}
+                       <a class="btn btn-primary" href="{{ house.suburb.city.rates_link_1 }}" target="_blank">GV Check</a>
+                    {% endif %}
+
+                    {% if house.suburb.city.rates_link_2 %}
+                        <a class="btn btn-primary" href="{{ house.suburb.city.rates_link_2 }}" target="_blank">GV Check 2</a>
+                    {% endif %}
+                </p>
+            {% endif %}
+
+            {% if house.price_type.pk == 1 and house_user_data.government_value %}
+                <dl>
+                    <dt>Asking price/Government value ratio</dt>
+                    <dd>{% widthratio house.price house_user_data.government_value 1 %}</dd>
+                </dl>
+            {% endif %}
+
+            {% bootstrap_field form.market_reg_value %}
+            {% bootstrap_field form.new_build %}
+            {% bootstrap_field form.fenced %}
+            {% bootstrap_field form.reason_for_selling %}
+
+            {% if house.suburb.city.lim_link %}
+                <p><a class="btn btn-primary" href="{{ house.suburb.city.lim_link }}" target="_blank">Order LIM</a></p>
+            {% endif %}
+
+            {% if house.suburb.city.property_bag_link %}
+                <p><a class="btn btn-primary" href="{{ house.suburb.city.property_bag_link }}" target="_blank">Order Property Bag</a></p>
+            {% endif %}
+
+            {% if house.suburb.city.council_link %}
+                <p><a class="btn btn-primary" href="{{ house.suburb.city.council_link }}" target="_blank">Go to council website</a></p>
+            {% endif %}
+
+            {% if house.suburb.city.council_phone %}
+                <dl>
+                    <dt>Council phone number</dt>
+                    <dd>{{ house.suburb.city.council_phone }}</dd>
+                </dl>
+            {% endif %}
+
+            {% if house.suburb.city.council_email %}
+                <p><a class="btn btn-primary" href="mailto:{{ house.suburb.city.council_email }}">Email to Council</a></p>
+            {% endif %}
+
+            {% if house.suburb.city.flooding_link %}
+                <p><a class="btn btn-primary" href="{{ house.suburb.city.flooding_link }}" target="_blank">Check flooding plain</a></p>
+            {% endif %}
+
+            {% bootstrap_field form.flooding_10 %}
+            {% bootstrap_field form.flooding_100 %}
+        </div>
+
+        <div class="col-md-4">
+            <h4>Expenses</h4>
+
+            {% bootstrap_field form.rates %}
+
+            {% if house.suburb.city.rates_link_1 or house.suburb.city.rates_link_2 %}
+                <p>
+                    {% if house.suburb.city.rates_link_1 %}
+                       <a class="btn btn-primary" href="{{ house.suburb.city.rates_link_1 }}" target="_blank">Check council rates</a>
+                    {% endif %}
+
+                    {% if house.suburb.city.rates_link_2 %}
+                        <a class="btn btn-primary" href="{{ house.suburb.city.rates_link_2 }}" target="_blank">Check council rates 2</a>
+                    {% endif %}
+                </p>
+            {% endif %}
+
+            {% bootstrap_field form.insurance %}
+            {% bootstrap_field form.repairs_maintenance %}
+            {% bootstrap_field form.body_corporate %}
+            {% bootstrap_field form.renovations %}
+
+            <div class="form-group">
+                <label class="control-label">Other Expenses</label>
+                <table class="table table-bordered">
+                    {% for expense in house_user_data.otherexpense_set.all %}
+                        <tr id="#other-expense-tr" data-expense_id="{{ expense.pk }}">
+                            <td><strong>{{ expense.key }}</strong></td>
+                            <td>{{ expense.value }}</td>
+                            <td><a href="#" title="Delete" class="expense-delete"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>
+                            <input type="hidden" id="house_user_data_id" value="{{ house_user_data.pk }}">
+                            <input class="form-control input-sm" id="id_key" placeholder="Key" type="text">
+                        </td>
+                        <td><input class="form-control input-sm" placeholder="Value" id="id_value" type="text"></td>
+                        <td><button type="button" class="btn btn-primary btn-sm" id="create-expense">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td id="total_other_expenses">{{ total_other_expenses.value__sum }}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+            </div>
+
+
+        </div>
+
+        <div class="col-md-4">
+            <h4>Offer data</h4>
+
+            {% bootstrap_field form.offer_price %}
+            {% bootstrap_field form.walk_away_price %}
+            {% bootstrap_field form.first_offer_date %}
+            {% bootstrap_field form.revisit_on %}
+            {% bootstrap_field form.date_sold %}
+            {% bootstrap_field form.sold_for %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% bootstrap_field form.notes %}
+        </div>
+    </div>
+
+
+    {% buttons %}
+        <button type="submit" class="btn btn-success">
+        {% bootstrap_icon "ok" %} Save
+        </button>
+        <a href="{% if request.GET.return_url %}{{ request.GET.return_url }}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-warning">{% bootstrap_icon "floppy-remove" %} Cancel</a>
+    {% endbuttons %}
+</form>

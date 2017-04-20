@@ -29,8 +29,15 @@ class City(models.Model):
     city_id = models.AutoField(primary_key=True)
     city_name = models.CharField('City name', unique=True, max_length=255)
     capital_growth = models.FloatField(blank=True, null=True)
-    council_link = models.TextField(blank=True, null=True)
     region = models.ForeignKey('Region', models.CASCADE)
+    council_link = models.TextField(blank=True, null=True)
+    rates_link_1 = models.CharField('Rates link #1', blank=True, null=True, max_length=255)
+    rates_link_2 = models.CharField('Rates link #2', blank=True, null=True, max_length=255)
+    property_bag_link = models.CharField('Property bag link', blank=True, null=True, max_length=255)
+    council_phone = models.CharField('Council phone', blank=True, null=True, max_length=255)
+    council_email = models.CharField('Council email', blank=True, null=True, max_length=255)
+    flooding_link = models.CharField('Flooding link', blank=True, null=True, max_length=255)
+    lim_link = models.CharField('Lim link', blank=True, null=True, max_length=255)
 
     class Meta:
         managed = False
