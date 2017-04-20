@@ -102,6 +102,15 @@
                 <dd>{{ house.government_rates|default:"-" }}</dd>
             </dl>
 
+            {% if open_homes %}
+                <h3>Open homes</h3>
+                <ul>
+                    {% for open_home in open_homes %}
+                        <li>{{ open_home.date_from }} - {{ open_home.date_to }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
             <div class="row">
                 <div class="col-md-12 text-center">
                     {% if request.resolver_match.url_name == "show_new_listing" %}

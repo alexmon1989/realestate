@@ -9,6 +9,7 @@ from django.forms.models import model_to_dict
 from django.db.models import Sum
 
 import json
+import datetime
 
 from django_tables2 import RequestConfig
 
@@ -256,7 +257,11 @@ def show_liked_listing(request, pk):
         'house_user_data': house_user_data,
         'gst': global_constants.gst,
         'total_other_expenses': house_user_data.otherexpense_set.aggregate(Sum('value')),
-        'form_create_expense': OtherExpenseForm()
+        'form_create_expense': OtherExpenseForm(),
+        'open_homes': marked_house.house.openhomes_set.filter(date_from__gte=datetime.date.today()).order_by('date_from').values(
+            'date_from',
+            'date_to'
+        )
     })
 
 
