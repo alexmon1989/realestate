@@ -28,4 +28,16 @@ $(function(){
         $("#id_property_type > optgroup").last().find("option").prop("selected", "selected");
         $("#id_property_type").trigger("change");
     });
+
+    $(".set-custom-value").click(function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        var $select = $this.parent().siblings("select").first();
+        var $input = $('<input class="form-control" placeholder="Custom value" title="" type="number" name="' + $select.attr('name')
+            + '" id="' + $select.attr('id') + '">');
+
+        $select.remove();
+        $input.insertAfter($this.parent().siblings("label"));
+        $input.focus();
+    });
 });

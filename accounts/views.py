@@ -98,7 +98,7 @@ def region_and_cities_constants(request):
 def create_filter(request):
     """Creates user filter."""
     if request.method == 'POST':
-        form = HousesFilterForm(request.POST)
+        form = HousesFilterForm(data=request.POST)
         if form.is_valid():
             new_filter = HousesFilter(filter_data_json=json.dumps(dict(request.POST)), user_id=request.user.pk)
             new_filter.disabled = bool(request.POST.get('disabled', False))
@@ -118,7 +118,7 @@ def edit_filter(request, pk):
     """Edits user filter."""
     house_filter = get_object_or_404(HousesFilter.objects.filter(user=request.user), pk=pk)
     if request.method == 'POST':
-        form = HousesFilterForm(request.POST)
+        form = HousesFilterForm(data=request.POST)
         if form.is_valid():
             house_filter.filter_data_json = json.dumps(dict(request.POST))
             house_filter.disabled = bool(request.POST.get('disabled', False))
