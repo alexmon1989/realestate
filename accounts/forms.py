@@ -467,5 +467,6 @@ class HousesFilterForm(forms.Form):
                 break
         if not item_exist and data:
             item = data, data
-            item_list.extend([item])
-            self.base_fields[field_name].choices = item_list
+            new_item_list = item_list.copy()
+            new_item_list.extend([item])
+            self.base_fields[field_name].choices = new_item_list
