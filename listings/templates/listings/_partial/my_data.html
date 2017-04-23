@@ -25,12 +25,10 @@
                 </p>
             {% endif %}
 
-            {% if house.price_type.pk == 1 and house_user_data.government_value %}
-                <dl>
-                    <dt>Asking price/Government value ratio</dt>
-                    <dd>{% widthratio house.price house_user_data.government_value 1 %}</dd>
-                </dl>
-            {% endif %}
+            <dl id="dl_asking_price_to_government_value" style="display: none;">
+                <dt>Asking price/Government value ratio</dt>
+                <dd id="asking_price_to_government_value"></dd>
+            </dl>
 
             {% bootstrap_field form.market_reg_value %}
             {% bootstrap_field form.new_build %}

@@ -1,4 +1,22 @@
 $(function () {
+    /**
+     * Calculates and displays asking_price_to_government_value.
+     */
+    var calculateAskingPriceToGovernmentValue = function () {
+        var price = parseFloat($("#price").html()) || 0;
+        var governmentValue = parseFloat($("#id_government_value").val()) || 0;
+        if (price > 0 && governmentValue > 0) {
+            var priceToGovernmentValue = price / governmentValue;
+            $("#asking_price_to_government_value").html(priceToGovernmentValue.toFixed(2));
+            $("#dl_asking_price_to_government_value").show();
+        } else {
+            $("#asking_price_to_government_value").html('');
+            $("#dl_asking_price_to_government_value").hide();
+        }
+    };
+
+    calculateAskingPriceToGovernmentValue();
+
     $("#use-offer-price").click(function (e) {
         e.preventDefault();
         $("#id_market_reg_value").val( $("#id_offer_price").val() );
@@ -12,6 +30,18 @@ $(function () {
     $("#use-government-value").click(function (e) {
         e.preventDefault();
         $("#id_market_reg_value").val( $("#id_government_value").val() );
+    });
+
+    $("#id_rent_per_week").change(function () {
+        $("#id_weekly_rent").val( $("#id_rent_per_week").val() );
+    });
+
+    $("#id_offer_price").change(function () {
+        $("#id_purchase_price").val( $("#id_offer_price").val() );
+    });
+
+    $("#id_government_value").change(function () {
+        calculateAskingPriceToGovernmentValue();
     });
 
     $(document.body).on('click', '.expense-delete' ,function(e) {
