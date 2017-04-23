@@ -37,6 +37,7 @@ $(function(){
             + '" id="' + $select.attr('id') + '">');
 
         $select.remove();
+        $this.hide();
         $input.insertAfter($this.parent().siblings("label"));
         $input.focus();
     });
