@@ -256,7 +256,7 @@ def show_liked_listing(request, pk):
         'field_addons': field_addons,
         'house_user_data': house_user_data,
         'gst': global_constants.gst,
-        'total_other_expenses': house_user_data.otherexpense_set.aggregate(Sum('value')),
+        'total_other_expenses': house_user_data.otherexpense_set.aggregate(Sum('value'))['value__sum'] or 0,
         'form_create_expense': OtherExpenseForm(),
         'open_homes': marked_house.house.openhomes_set.filter(date_from__gte=datetime.date.today()).order_by('date_from').values(
             'date_from',

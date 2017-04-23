@@ -164,7 +164,7 @@
     <script>
         var houseId = {{ house.pk }};
         var gst = {{ gst }};
-        var otherExpences = parseFloat({{ total_other_expenses.value__sum }});
+        var otherExpences = parseFloat({{ total_other_expenses }});
 
         $(function () {
             $("#id_first_offer_date, #id_date_sold, #id_revisit_on").datepicker({
