@@ -71,8 +71,8 @@ class HouseUserData(models.Model):
     notes = models.TextField('Notes', blank=True, null=True)
     RENT_TYPE_CHOICES = (
         (1, 'Current Rent'),
-        (2, 'Agency'),
-        (3, 'PM'),
+        (2, 'Agent provided rent appraisal'),
+        (3, 'Property Manager appraised'),
     )
     rent_type = models.IntegerField('Rent type', choices=RENT_TYPE_CHOICES, null=True, blank=True, default=None)
     TITLE_TYPE_CHOICES = (
