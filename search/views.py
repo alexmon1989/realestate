@@ -15,7 +15,7 @@ def index(request):
     houses = []
 
     if request.GET:
-        form = SearchForm(request.GET)
+        form = SearchForm(data=request.GET)
         houses = VHousesForTables.search(request.GET)
     else:
         form = SearchForm()

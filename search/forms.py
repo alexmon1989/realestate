@@ -8,7 +8,7 @@ class SearchForm(forms.Form):
     """Form for search houses."""
     suburbs = forms.MultipleChoiceField(label='Area selection',
                                         required=False)
-    PRICE_FROM_CHOICES = (
+    PRICE_FROM_CHOICES = [
         (None, 'Any'),
         (0, '$0'),
         (25000, '$25,000'),
@@ -30,8 +30,8 @@ class SearchForm(forms.Form):
         (1200000, '$1,2m'),
         (1400000, '$1,4m'),
         (1600000, '$1,6m'),
-    )
-    PRICE_TO_CHOICES = (
+    ]
+    PRICE_TO_CHOICES = [
         (None, 'Any'),
         (0, '$0'),
         (25000, '$25,000'),
@@ -59,14 +59,16 @@ class SearchForm(forms.Form):
         (7500000, '$7,5m'),
         (10000000, '$10m'),
         (999999999, '$10m+'),
-    )
+    ]
     price_from = forms.ChoiceField(label='Price from',
                                    required=False,
-                                   choices=PRICE_FROM_CHOICES)
+                                   choices=PRICE_FROM_CHOICES,
+                                   help_text='<a href="#" class="set-custom-value">Custom value</a>')
     price_to = forms.ChoiceField(label='Price to',
                                  required=False,
                                  choices=PRICE_TO_CHOICES,
-                                 initial=999999999)
+                                 initial=999999999,
+                                 help_text='<a href="#" class="set-custom-value">Custom value</a>')
 
     PRICING_METHODS_CHOICES = ((pricing_method.id, pricing_method.name)
                                for pricing_method in PricingMethod.objects.order_by('name'))
@@ -78,19 +80,20 @@ class SearchForm(forms.Form):
                                                 ),
                                                 help_text='<a id="pricing-methods-select-all" href="#">Select all</a>')
 
-    BEDROOMS_FROM_CHOICES = (
+    BEDROOMS_FROM_CHOICES = [
         (None, 'Any'),
         (1, '1'),
         (2, '2'),
         (3, '3'),
         (4, '4'),
         (5, '5'),
-    )
+    ]
     bedrooms_from = forms.ChoiceField(label='Bedrooms from',
                                       required=False,
-                                      choices=BEDROOMS_FROM_CHOICES)
+                                      choices=BEDROOMS_FROM_CHOICES,
+                                      help_text='<a href="#" class="set-custom-value">Custom value</a>')
 
-    BEDROOMS_TO_CHOICES = (
+    BEDROOMS_TO_CHOICES = [
         (None, 'Any'),
         (1, '1'),
         (2, '2'),
@@ -98,33 +101,37 @@ class SearchForm(forms.Form):
         (4, '4'),
         (5, '5'),
         (999, '5+'),
-    )
+    ]
     bedrooms_to = forms.ChoiceField(label='Bedrooms to',
                                     required=False,
                                     choices=BEDROOMS_TO_CHOICES,
-                                    initial=999)
+                                    initial=999,
+                                    help_text='<a href="#" class="set-custom-value">Custom value</a>')
 
-    BATHROOMS_FROM_CHOICES = (
+    BATHROOMS_FROM_CHOICES = [
         (None, 'Any'),
         (1, '1'),
         (2, '2'),
         (3, '3'),
-    )
+    ]
     bathrooms_from = forms.ChoiceField(label='Bathrooms from',
                                        required=False,
-                                       choices=BATHROOMS_FROM_CHOICES)
-    BATHROOMS_TO_CHOICES = (
+                                       choices=BATHROOMS_FROM_CHOICES,
+                                       help_text='<a href="#" class="set-custom-value">Custom value</a>')
+    BATHROOMS_TO_CHOICES = [
+        (None, 'Any'),
         (1, '1'),
         (2, '2'),
         (3, '3'),
         (999, '3+'),
-    )
+    ]
     bathrooms_to = forms.ChoiceField(label='Bathrooms to',
                                      required=False,
                                      choices=BATHROOMS_TO_CHOICES,
-                                     initial=999)
+                                     initial=999,
+                                     help_text='<a href="#" class="set-custom-value">Custom value</a>')
 
-    LANDAREA_FROM_CHOICES = (
+    LANDAREA_FROM_CHOICES = [
         (None, 'Any'),
         (0, '0 m²'),
         (100, '100 m²'),
@@ -142,11 +149,12 @@ class SearchForm(forms.Form):
         (150000, '15 HA'),
         (250000, '25 HA'),
         (999999999, '25 HA+'),
-    )
+    ]
     landarea_from = forms.ChoiceField(label='Landarea from',
                                       required=False,
-                                      choices=LANDAREA_FROM_CHOICES)
-    LANDAREA_TO_CHOICES = (
+                                      choices=LANDAREA_FROM_CHOICES,
+                                      help_text='<a href="#" class="set-custom-value">Custom value</a>')
+    LANDAREA_TO_CHOICES = [
         (None, 'Any'),
         (0, '0 m²'),
         (100, '100 m²'),
@@ -164,13 +172,14 @@ class SearchForm(forms.Form):
         (150000, '15 HA'),
         (250000, '25 HA'),
         (999999999, '25 HA+'),
-    )
+    ]
     landarea_to = forms.ChoiceField(label='Landarea to',
                                     required=False,
                                     choices=LANDAREA_TO_CHOICES,
-                                    initial=999999999)
+                                    initial=999999999,
+                                    help_text='<a href="#" class="set-custom-value">Custom value</a>')
 
-    FLOORAREA_FROM_CHOICES = (
+    FLOORAREA_FROM_CHOICES = [
         (None, 'Any'),
         (0, '0 m²'),
         (20, '20 m²'),
@@ -182,12 +191,13 @@ class SearchForm(forms.Form):
         (150, '150 m²'),
         (180, '180 m²'),
         (999999999, '200 m²+'),
-    )
+    ]
     floorarea_from = forms.ChoiceField(label='Floorarea from',
                                        required=False,
-                                       choices=FLOORAREA_FROM_CHOICES)
+                                       choices=FLOORAREA_FROM_CHOICES,
+                                       help_text='<a href="#" class="set-custom-value">Custom value</a>')
 
-    FLOORAREA_TO_CHOICES = (
+    FLOORAREA_TO_CHOICES = [
         (None, 'Any'),
         (0, '0 m²'),
         (20, '20 m²'),
@@ -199,11 +209,12 @@ class SearchForm(forms.Form):
         (150, '150 m²'),
         (180, '180 m²'),
         (999999999, '200 m²+'),
-    )
+    ]
     floorarea_to = forms.ChoiceField(label='Floorarea to',
                                      required=False,
                                      choices=FLOORAREA_TO_CHOICES,
-                                     initial=999999999)
+                                     initial=999999999,
+                                     help_text='<a href="#" class="set-custom-value" >Custom value</a>')
 
     PROPERTY_TYPE_CHOICES = [
         ("Residential", [
@@ -255,4 +266,30 @@ class SearchForm(forms.Form):
                    in Suburb.objects.values('id', 'name').order_by('city__region__name', 'city__city_name', 'name')]
         self.base_fields['suburbs'].choices = suburbs
 
+        if kwargs.get('data') or kwargs.get('initial'):
+            data = kwargs.get('data') or kwargs.get('initial')
+
+            self.check_item_exist(self.PRICE_FROM_CHOICES, data['price_from'], 'price_from')
+            self.check_item_exist(self.PRICE_TO_CHOICES, data['price_to'], 'price_to')
+            self.check_item_exist(self.BEDROOMS_FROM_CHOICES, data['bedrooms_from'], 'bedrooms_from')
+            self.check_item_exist(self.BEDROOMS_TO_CHOICES, data['bedrooms_to'], 'bedrooms_to')
+            self.check_item_exist(self.BATHROOMS_FROM_CHOICES, data['bathrooms_from'], 'bathrooms_from')
+            self.check_item_exist(self.BATHROOMS_TO_CHOICES, data['bathrooms_to'], 'bathrooms_to')
+            self.check_item_exist(self.LANDAREA_FROM_CHOICES, data['landarea_from'], 'landarea_from')
+            self.check_item_exist(self.LANDAREA_TO_CHOICES, data['landarea_to'], 'landarea_to')
+            self.check_item_exist(self.FLOORAREA_FROM_CHOICES, data['floorarea_from'], 'floorarea_from')
+            self.check_item_exist(self.FLOORAREA_TO_CHOICES, data['floorarea_to'], 'floorarea_to')
+
         super(SearchForm, self).__init__(*args, **kwargs)
+
+    def check_item_exist(self, item_list, data, field_name):
+        item_exist = False
+        for x in item_list:
+            if data and x[0] == float(data):
+                item_exist = True
+                break
+        if not item_exist and data:
+            item = data, data
+            new_item_list = item_list.copy()
+            new_item_list.extend([item])
+            self.base_fields[field_name].choices = new_item_list
