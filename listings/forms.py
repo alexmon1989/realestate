@@ -4,7 +4,7 @@ from .models import HouseUserData, Calculator, OtherExpense
 
 
 class HouseUserDataForm(ModelForm):
-    rent_type = forms.ChoiceField(choices=HouseUserData.RENT_TYPE_CHOICES, widget=forms.RadioSelect(), required=False)
+    rent_type = forms.ChoiceField(label='Appraisal type', choices=HouseUserData.RENT_TYPE_CHOICES, widget=forms.RadioSelect(), required=False)
     market_reg_value = forms.CharField(
         label='Market/registered value',
     )
