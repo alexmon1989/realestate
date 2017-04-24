@@ -27,4 +27,5 @@ urlpatterns = [
         name='delete_other_expenses_item'
     ),
     url(r'^liked/create-other-expenses-item/$', views.create_other_expenses_item, name='create_other_expenses_item'),
+    url(r'^get-deposit-values/$', views.get_deposit_values, name='get_deposit_values'),
 ]

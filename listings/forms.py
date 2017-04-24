@@ -46,8 +46,8 @@ class CalculatorForm(ModelForm):
             'int_rate': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'.format(
                 users_constants.loan_interest_rate
             ),
-            'deposit': '<a href="#" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'
-                       '<a href="#" data-value="{1}" class="btn btn-warning change-value">Global value: {1}%</a>'.format(
+            'deposit': '<a href="#" id="user-deposit" data-value="{0}" class="btn btn-primary change-value">User\'s value: {0}%</a>'
+                       '<a href="#" id="global-deposit" data-value="{1}" class="btn btn-warning change-value">Global value: {1}%</a>'.format(
                 user_deposit,
                 global_deposit,
             ),

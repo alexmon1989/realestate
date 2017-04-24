@@ -471,3 +471,24 @@ def mark_as_still_thinking(request, pk):
         return_url = request.GET['return_url']
 
     return redirect(return_url)
+
+
+@login_required
+@group_required('Users')
+def get_deposit_values(request):
+    """Returns JSON with current deposit values."""
+    global_constants = GlobalConstants.objects.first()
+    users_constants = request.user.constants
+
+    if int(request.GET.get('is_new_build')) == 1:
+        res = {
+            'global_deposit': global_constants.new_built_loan_deposit,
+            'user_deposit': users_constants.new_built_loan_deposit,
+        }
+    else:
+        res = {
+            'global_deposit': global_constants.loan_deposit,
+            'user_deposit': users_constants.loan_deposit,
+        }
+
+    return JsonResponse(res)

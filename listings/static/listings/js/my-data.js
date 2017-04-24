@@ -89,4 +89,20 @@ $(function () {
             }
         });
     });
+
+    $("#id_new_build").change(function () {
+        var isNewBuild = $("#id_new_build").is(":checked");
+
+        $.get('/listings/get-deposit-values/',
+            {
+                'is_new_build': isNewBuild ? 1 : 0
+            },
+            function (data) {
+                var globalDeposit = data.global_deposit;
+                var userDeposit = data.user_deposit;
+
+                $("#global-deposit").html("Global value: " + globalDeposit.toFixed(1) + "%").data('value', globalDeposit);
+                $("#user-deposit").html("User's value: " + userDeposit.toFixed(1) + "%").data('value', userDeposit);
+            });
+    });
 });
