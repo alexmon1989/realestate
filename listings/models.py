@@ -74,7 +74,7 @@ class HouseUserData(models.Model):
         (2, 'Agent provided rent appraisal'),
         (3, 'Property Manager appraised'),
     )
-    rent_type = models.IntegerField('Rent type', choices=RENT_TYPE_CHOICES, null=True, blank=True, default=None)
+    rent_type = models.IntegerField('Appraisal type', choices=RENT_TYPE_CHOICES, null=True, blank=True, default=None)
     TITLE_TYPE_CHOICES = (
         (1, 'Freehold'),
         (2, 'Crosslease'),
