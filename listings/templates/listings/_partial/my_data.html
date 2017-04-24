@@ -89,7 +89,7 @@
             {% bootstrap_field form.renovations %}
 
             <div class="form-group">
-                <label class="control-label">Other Expenses</label>
+                <label class="control-label">Other Annual Expenses</label>
                 <table class="table table-bordered">
                     {% for expense in house_user_data.otherexpense_set.all %}
                         <tr id="#other-expense-tr" data-expense_id="{{ expense.pk }}">
