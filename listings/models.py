@@ -44,10 +44,10 @@ class HouseUserData(models.Model):
                                            null=True,
                                            validators=[MinValueValidator(0)])
     owner_occupied = models.BooleanField('Owner occupied', default=False)
-    rent_per_week = models.FloatField('Rent per week',
-                                      blank=True,
-                                      null=True,
-                                      validators=[MinValueValidator(0)])
+    rent_per_week = models.IntegerField('Rent per week',
+                                        blank=True,
+                                        null=True,
+                                        validators=[MinValueValidator(0)])
     insurance = models.FloatField('Insurance',
                                   blank=True,
                                   null=True,

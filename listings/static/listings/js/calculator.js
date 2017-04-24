@@ -50,9 +50,9 @@ $(function () {
         var insurance = parseFloat($("#id_insurance").val()) || 0;
         var repairsMaintenance = parseFloat($("#id_repairs_maintenance").val()) || 0;
         var bodyCorporate = parseFloat($("#id_body_corporate").val()) || 0;
-        var weeklyRent = $("#id_weekly_rent").val() || 0;
-        var vacancy = $("#id_vacancy").val() || 0;
-        var rate = $("#id_property_managers_commission").val() || 0;
+        var weeklyRent = parseInt($("#id_weekly_rent").val()) || 0;
+        var vacancy = parseInt($("#id_vacancy").val()) || 0;
+        var rate = parseFloat($("#id_property_managers_commission").val()) || 0;
         var propertyExpenses;
         if (managed) {
             propertyExpenses = rates + insurance + repairsMaintenance
