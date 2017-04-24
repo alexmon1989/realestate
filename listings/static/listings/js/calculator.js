@@ -38,6 +38,7 @@ $(function () {
      * Clacilates values in Fixed, Buying sections
      */
     var calculateFixedBuying = function () {
+        var managed = $("#id_managed").is(':checked');
         var propertyMarketValue = parseFloat($("#id_market_reg_value").val()) || 0;
         var amountOfLoan = parseFloat($("#id_offer_price").val()) || 0;
         var intRate = parseFloat($("#id_int_rate").val()) || 0;
@@ -52,10 +53,17 @@ $(function () {
         var weeklyRent = $("#id_weekly_rent").val() || 0;
         var vacancy = $("#id_vacancy").val() || 0;
         var rate = $("#id_property_managers_commission").val() || 0;
-        var propertyExpenses = rates + insurance + repairsMaintenance
-            + bodyCorporate + otherExpences
-            + (weeklyRent * (52 - vacancy) * (rate / 100) * (1 + gst / 100))
-            + (weeklyRent * vacancy);
+        var propertyExpenses;
+        if (managed) {
+            propertyExpenses = rates + insurance + repairsMaintenance
+                + bodyCorporate + otherExpences
+                + (weeklyRent * (52 - vacancy) * (rate / 100) * (1 + gst / 100))
+                + (weeklyRent * vacancy);
+        } else {
+            propertyExpenses = rates + insurance + repairsMaintenance
+                + bodyCorporate + otherExpences
+                + (weeklyRent * vacancy);
+        }
         var discount = propertyMarketValue - purchasePrice;
         var percent = discount / propertyMarketValue * 100;
         var capitalGrowthRate = parseFloat($("#id_capital_growth").val()) || 0;
