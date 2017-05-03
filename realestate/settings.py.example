@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'listings',
     'search',
+    'settings',
 ]
 
 MIDDLEWARE = [
@@ -137,7 +138,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
+    os.path.join(BASE_DIR, "home"),
+    os.path.join(BASE_DIR, "accounts"),
+    os.path.join(BASE_DIR, "listings"),
+    os.path.join(BASE_DIR, "search"),
 ]
 
 MESSAGE_TAGS = {
