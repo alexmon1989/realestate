@@ -13,3 +13,4 @@ pytz==2017.2
 singlemodeladmin==0.7
 six==1.10.0
 sqlparse==0.2.3
+uWSGI==2.0.14
