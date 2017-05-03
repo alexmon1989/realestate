@@ -105,5 +105,4 @@ ENV/
 /bower_components/
 /static/
 /cache/
-/home/static/AdminLTE/
 /uwsgi.ini
