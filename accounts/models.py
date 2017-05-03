@@ -57,7 +57,7 @@ class Constants(models.Model):
             MaxValueValidator(95),
             MinValueValidator(5)
         ],
-        default=5
+        default=0
     )
     loan_deposit = models.FloatField(
         'Loan deposit, %',
@@ -65,7 +65,7 @@ class Constants(models.Model):
             MaxValueValidator(95),
             MinValueValidator(5)
         ],
-        default=GlobalSettings.objects.values('loan_deposit').first()['loan_deposit']
+        default=40
     )
     new_built_loan_deposit = models.FloatField(
         'New-build loan deposit, %',
@@ -73,7 +73,7 @@ class Constants(models.Model):
             MaxValueValidator(95),
             MinValueValidator(5)
         ],
-        default=GlobalSettings.objects.values('new_built_loan_deposit').first()['new_built_loan_deposit']
+        default=20
     )
     property_management_commission = models.FloatField(
         'Property Management commission, %',
@@ -81,14 +81,14 @@ class Constants(models.Model):
             MaxValueValidator(20),
             MinValueValidator(1)
         ],
-        default=GlobalSettings.objects.values('property_management_commission').first()['property_management_commission']
+        default=0
     )
     vacancy_rate = models.IntegerField(
         'Vacancy rate, weeks',
         validators=[
             MinValueValidator(0)
         ],
-        default=GlobalSettings.objects.values('vacancy_rate').first()['vacancy_rate']
+        default=2
     )
     gross_yield = models.FloatField(
         'Gross yield, %',
@@ -96,7 +96,7 @@ class Constants(models.Model):
             MaxValueValidator(30),
             MinValueValidator(1),
         ],
-        default=GlobalSettings.objects.values('gross_yield').first()['gross_yield']
+        default=0
     )
     net_yield = models.FloatField(
         'Net yield, %',
@@ -104,14 +104,14 @@ class Constants(models.Model):
             MaxValueValidator(30),
             MinValueValidator(1),
         ],
-        default=GlobalSettings.objects.values('net_yield').first()['net_yield']
+        default=0
     )
     min_cashflow = models.IntegerField(
         'Min cashflow',
         validators=[
             MinValueValidator(0)
         ],
-        default=GlobalSettings.objects.values('min_cashflow').first()['min_cashflow']
+        default=0
     )
     inflation = models.FloatField(
         'Inflation, %',
@@ -119,7 +119,7 @@ class Constants(models.Model):
             MaxValueValidator(30),
             MinValueValidator(1),
         ],
-        default=GlobalSettings.objects.values('inflation').first()['inflation']
+        default=0
     )
 
     def __str__(self):
