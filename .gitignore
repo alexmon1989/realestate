@@ -108,3 +108,4 @@ ENV/
 /uwsgi.ini
 !/home/static/AdminLTE/build/
 !/home/static/AdminLTE/dist/
+!/home/static/AdminLTE/plugins/tree-multiselect/dist/
