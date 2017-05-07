@@ -109,3 +109,4 @@ ENV/
 !/home/static/AdminLTE/build/
 !/home/static/AdminLTE/dist/
 !/home/static/AdminLTE/plugins/tree-multiselect/dist/
+!/home/static/AdminLTE/plugins/lightbox2/dist/
