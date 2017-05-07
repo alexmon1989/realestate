@@ -16,6 +16,8 @@ class Global(models.Model):
     qv_sales = models.CharField('QV Sales', max_length=255, null=True, blank=True)
     loan_deposit = models.FloatField(
         'Loan deposit, %',
+        null=True,
+        blank=True,
         validators=[
             MaxValueValidator(95),
             MinValueValidator(5)
@@ -23,6 +25,8 @@ class Global(models.Model):
     )
     new_built_loan_deposit = models.FloatField(
         'New-build loan deposit, %',
+        null=True,
+        blank=True,
         validators=[
             MaxValueValidator(95),
             MinValueValidator(5)
@@ -30,6 +34,8 @@ class Global(models.Model):
     )
     property_management_commission = models.FloatField(
         'Property Management commission, %',
+        null=True,
+        blank=True,
         validators=[
             MaxValueValidator(20),
             MinValueValidator(1)
@@ -37,12 +43,16 @@ class Global(models.Model):
     )
     vacancy_rate = models.IntegerField(
         'Vacancy rate, weeks',
+        null=True,
+        blank=True,
         validators=[
             MinValueValidator(0)
         ]
     )
     gross_yield = models.FloatField(
         'Gross yield, %',
+        null=True,
+        blank=True,
         validators=[
             MaxValueValidator(30),
             MinValueValidator(1),
@@ -50,6 +60,8 @@ class Global(models.Model):
     )
     net_yield = models.FloatField(
         'Net yield, %',
+        null=True,
+        blank=True,
         validators=[
             MaxValueValidator(30),
             MinValueValidator(1),
@@ -57,12 +69,16 @@ class Global(models.Model):
     )
     min_cashflow = models.IntegerField(
         'Min cashflow',
+        null=True,
+        blank=True,
         validators=[
             MinValueValidator(0)
         ]
     )
     inflation = models.FloatField(
         'Inflation, %',
+        null=True,
+        blank=True,
         validators=[
             MaxValueValidator(30),
             MinValueValidator(1),
