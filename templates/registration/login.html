@@ -42,15 +42,18 @@
                     </div>
                 {% endif %}
 
-                {% if next %}
+                {% if next and user.is_authenticated %}
                     <div class="callout callout-danger">
                         <h4>Error!</h4>
-                        {% if user.is_authenticated %}
                         <p>Your account doesn't have access to this page. To proceed,
                             please login with an account that has access.</p>
-                        {% else %}
+                    </div>
+                {% endif %}
+
+                {% if next and next != '/' and not user.is_authenticated %}
+                    <div class="callout callout-danger">
+                        <h4>Error!</h4>
                         <p>Please login to see this page.</p>
-                        {% endif %}
                     </div>
                 {% endif %}
 
