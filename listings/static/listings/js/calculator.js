@@ -40,7 +40,7 @@ $(function () {
     var calculateFixedBuying = function () {
         var managed = $("#id_managed").is(':checked');
         var propertyMarketValue = parseFloat($("#id_market_reg_value").val()) || 0;
-        var amountOfLoan = parseFloat($("#id_offer_price").val()) || 0;
+        var amountOfLoan = parseFloat($("#id_purchase_price").val()) || 0;
         var intRate = parseFloat($("#id_int_rate").val()) || 0;
         var IOPayments = amountOfLoan * intRate / 100;
         var purchasePrice = parseFloat($("#id_purchase_price").val()) || 0;
@@ -83,6 +83,7 @@ $(function () {
         }
 
         $("#io-payments").html('$ ' + IOPayments.toFixed(2));
+        $("#amount-of-loan").html('$ ' + amountOfLoan.toFixed(2));
         $("#deposit").html('$ ' + deposit.toFixed(2));
         $("#property-expences").html('$ ' + propertyExpenses.toFixed(2));
 
@@ -169,7 +170,7 @@ $(function () {
      */
     $("#reset").click(function () {
         $("#id_weekly_rent").val( $("#id_rent_per_week").val() );
-        $("#id_purchase_price").val( $("#id_offer_price").val() );
+        $("#id_purchase_price").val( $("#id_offer_price").val() ).trigger('change');
     });
 
     calculateFixedBuying();
