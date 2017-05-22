@@ -26,7 +26,7 @@ class HouseUserData(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     reason_for_selling = models.CharField('Reason for selling', blank=True, null=True, max_length=255)
     first_offer_date = models.DateField('First offer date', blank=True, null=True)
-    offer_price = models.IntegerField('Offer price',
+    offer_price = models.IntegerField('Offer price *',
                                       blank=True,
                                       null=True,
                                       validators=[MinValueValidator(0)])
@@ -39,20 +39,20 @@ class HouseUserData(models.Model):
                                    blank=True,
                                    null=True,
                                    validators=[MinValueValidator(0)])
-    market_reg_value = models.IntegerField('Market/reg value',
+    market_reg_value = models.IntegerField('Market/reg value *',
                                            blank=True,
                                            null=True,
                                            validators=[MinValueValidator(0)])
     owner_occupied = models.BooleanField('Owner occupied', default=False)
-    rent_per_week = models.IntegerField('Rent per week',
+    rent_per_week = models.IntegerField('Rent per week *',
                                         blank=True,
                                         null=True,
                                         validators=[MinValueValidator(0)])
-    insurance = models.FloatField('Insurance',
+    insurance = models.FloatField('Insurance *',
                                   blank=True,
                                   null=True,
                                   validators=[MinValueValidator(0)])
-    repairs_maintenance = models.FloatField('Annual Repairs/Maintenance',
+    repairs_maintenance = models.FloatField('Annual Repairs/Maintenance *',
                                             blank=True,
                                             null=True,
                                             validators=[MinValueValidator(0)])
@@ -64,7 +64,7 @@ class HouseUserData(models.Model):
                                          blank=True,
                                          null=True,
                                          validators=[MinValueValidator(0)])
-    rates = models.FloatField('Council Rates',
+    rates = models.FloatField('Council Rates *',
                               blank=True,
                               null=True,
                               validators=[MinValueValidator(0)])

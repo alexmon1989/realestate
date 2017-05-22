@@ -53,6 +53,8 @@ class Constants(models.Model):
     user = AutoOneToOneField(User, on_delete=models.CASCADE)
     loan_interest_rate = models.FloatField(
         'Loan interest rate, %',
+        blank=True,
+        null=True,
         validators=[
             MaxValueValidator(95),
             MinValueValidator(5)
@@ -61,6 +63,8 @@ class Constants(models.Model):
     )
     loan_deposit = models.FloatField(
         'Loan deposit, %',
+        blank=True,
+        null=True,
         validators=[
             MaxValueValidator(95),
             MinValueValidator(5)
@@ -69,6 +73,8 @@ class Constants(models.Model):
     )
     new_built_loan_deposit = models.FloatField(
         'New-build loan deposit, %',
+        blank=True,
+        null=True,
         validators=[
             MaxValueValidator(95),
             MinValueValidator(5)
@@ -77,6 +83,8 @@ class Constants(models.Model):
     )
     property_management_commission = models.FloatField(
         'Property Management commission, %',
+        blank=True,
+        null=True,
         validators=[
             MaxValueValidator(20),
             MinValueValidator(1)
@@ -85,6 +93,8 @@ class Constants(models.Model):
     )
     vacancy_rate = models.IntegerField(
         'Vacancy rate, weeks',
+        blank=True,
+        null=True,
         validators=[
             MinValueValidator(0)
         ],
@@ -92,6 +102,8 @@ class Constants(models.Model):
     )
     gross_yield = models.FloatField(
         'Gross yield, %',
+        blank=True,
+        null=True,
         validators=[
             MaxValueValidator(30),
             MinValueValidator(1),
@@ -100,6 +112,8 @@ class Constants(models.Model):
     )
     net_yield = models.FloatField(
         'Net yield, %',
+        blank=True,
+        null=True,
         validators=[
             MaxValueValidator(30),
             MinValueValidator(1),
@@ -108,6 +122,8 @@ class Constants(models.Model):
     )
     min_cashflow = models.IntegerField(
         'Min cashflow',
+        blank=True,
+        null=True,
         validators=[
             MinValueValidator(0)
         ],
@@ -115,6 +131,8 @@ class Constants(models.Model):
     )
     inflation = models.FloatField(
         'Inflation, %',
+        blank=True,
+        null=True,
         validators=[
             MaxValueValidator(30),
             MinValueValidator(1),

@@ -106,7 +106,7 @@
                 <h3>Open homes</h3>
                 <ul>
                     {% for open_home in open_homes %}
-                        <li>{{ open_home.date_from }} - {{ open_home.date_to }}</li>
+                        <li>{{ open_home.date_from }} - {{ open_home.date_to|date:"P" }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}

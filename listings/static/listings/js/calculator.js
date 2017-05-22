@@ -82,16 +82,16 @@ $(function () {
             purchasePriceToGovernmentValue = purchasePrice / governmentValue;
         }
 
-        $("#io-payments").html('$ ' + IOPayments.toFixed(2));
+        $("#io-payments").html('$ ' + IOPayments.toFixed(0));
         $("#amount-of-loan").html('$ ' + amountOfLoan.toFixed(2));
-        $("#deposit").html('$ ' + deposit.toFixed(2));
+        $("#deposit").html('$ ' + deposit.toFixed(0));
         $("#property-expences").html('$ ' + propertyExpenses.toFixed(2));
 
-        $("#discount").html('$ ' + discount.toFixed(2));
+        $("#discount").html('$ ' + discount.toFixed(0));
         $("#percent").html(percent.toFixed(2) + ' %');
         $("#one-year-return").html('$ ' + oneYearReturn.toFixed(2));
         $("#return-on-deposit").html(returnOnDeposit.toFixed(2) + ' %');
-        $("#equity").html('$ ' + equity.toFixed(2));
+        $("#equity").html('$ ' + equity.toFixed(0));
         if (purchasePrice > 0 && governmentValue > 0) {
             $("#purchase_price_to_government_value").html(purchasePriceToGovernmentValue.toFixed(2));
         } else {

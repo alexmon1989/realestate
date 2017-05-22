@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, reverse
+from django.urls import resolve
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
@@ -206,6 +207,11 @@ def show_new_listing(request, pk):
 @group_required('Users')
 def show_liked_listing(request, pk):
     """Shows page with house data."""
+    if request.method == 'GET':
+        return_url = request.GET.get('return_url')
+        if return_url:
+            resolve(return_url)
+
     # Getting house
     queryset = MarkedHouse.objects.filter(user=request.user, house_id=pk, mark_id=1)
     marked_house = get_object_or_404(queryset)
