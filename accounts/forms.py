@@ -415,7 +415,7 @@ class HousesFilterForm(forms.Form):
     ensuite = forms.BooleanField(label='Ensuite', initial=False, required=False)
 
     listings_age_days = forms.IntegerField(
-        label='LListing age (days), not more than',
+        label='Listing age (days), not more than',
         required=True,
         initial=14,
         min_value=0
