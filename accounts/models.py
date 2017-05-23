@@ -57,7 +57,7 @@ class Constants(models.Model):
         null=True,
         validators=[
             MaxValueValidator(95),
-            MinValueValidator(5)
+            MinValueValidator(0)
         ],
         default=0
     )
@@ -67,7 +67,7 @@ class Constants(models.Model):
         null=True,
         validators=[
             MaxValueValidator(95),
-            MinValueValidator(5)
+            MinValueValidator(0)
         ],
         default=40
     )
@@ -77,7 +77,7 @@ class Constants(models.Model):
         null=True,
         validators=[
             MaxValueValidator(95),
-            MinValueValidator(5)
+            MinValueValidator(0)
         ],
         default=20
     )
@@ -87,7 +87,7 @@ class Constants(models.Model):
         null=True,
         validators=[
             MaxValueValidator(20),
-            MinValueValidator(1)
+            MinValueValidator(0)
         ],
         default=0
     )
@@ -106,7 +106,7 @@ class Constants(models.Model):
         null=True,
         validators=[
             MaxValueValidator(30),
-            MinValueValidator(1),
+            MinValueValidator(0),
         ],
         default=0
     )
@@ -116,7 +116,7 @@ class Constants(models.Model):
         null=True,
         validators=[
             MaxValueValidator(30),
-            MinValueValidator(1),
+            MinValueValidator(0),
         ],
         default=0
     )
@@ -135,7 +135,7 @@ class Constants(models.Model):
         null=True,
         validators=[
             MaxValueValidator(30),
-            MinValueValidator(1),
+            MinValueValidator(0),
         ],
         default=0
     )
