@@ -83,7 +83,7 @@ $(function () {
         }
 
         $("#io-payments").html('$ ' + IOPayments.toFixed(0));
-        $("#amount-of-loan").html('$ ' + amountOfLoan.toFixed(2));
+        $("#amount-of-loan").html('$ ' + amountOfLoan.toFixed(0));
         $("#deposit").html('$ ' + deposit.toFixed(0));
         $("#property-expences").html('$ ' + propertyExpenses.toFixed(2));
 
