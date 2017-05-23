@@ -150,7 +150,7 @@ class SearchForm(forms.Form):
         (250000, '25 HA'),
         (999999999, '25 HA+'),
     ]
-    landarea_from = forms.ChoiceField(label='Landarea from',
+    landarea_from = forms.ChoiceField(label='Land Area from',
                                       required=False,
                                       choices=LANDAREA_FROM_CHOICES,
                                       help_text='<a href="#" class="set-custom-value">Custom value</a>')
@@ -173,7 +173,7 @@ class SearchForm(forms.Form):
         (250000, '25 HA'),
         (999999999, '25 HA+'),
     ]
-    landarea_to = forms.ChoiceField(label='Landarea to',
+    landarea_to = forms.ChoiceField(label='Land Area to',
                                     required=False,
                                     choices=LANDAREA_TO_CHOICES,
                                     initial=999999999,
@@ -192,7 +192,7 @@ class SearchForm(forms.Form):
         (180, '180 m²'),
         (999999999, '200 m²+'),
     ]
-    floorarea_from = forms.ChoiceField(label='Floorarea from',
+    floorarea_from = forms.ChoiceField(label='Floor Area from',
                                        required=False,
                                        choices=FLOORAREA_FROM_CHOICES,
                                        help_text='<a href="#" class="set-custom-value">Custom value</a>')
@@ -210,7 +210,7 @@ class SearchForm(forms.Form):
         (180, '180 m²'),
         (999999999, '200 m²+'),
     ]
-    floorarea_to = forms.ChoiceField(label='Floorarea to',
+    floorarea_to = forms.ChoiceField(label='Floor Area to',
                                      required=False,
                                      choices=FLOORAREA_TO_CHOICES,
                                      initial=999999999,
@@ -254,7 +254,7 @@ class SearchForm(forms.Form):
     show_only_properties_with_address = forms.BooleanField(label='Show only properties with an address', required=False)
     keywords = forms.CharField(label='Keywords', required=False)
     listings_age_days = forms.IntegerField(
-        label='Listings age (days), not more',
+        label='Listing age (days), not more than',
         required=True,
         initial=14,
         min_value=0
