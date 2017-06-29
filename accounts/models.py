@@ -18,6 +18,9 @@ class HousesFilter(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return '"{}"'.format(self.name) if self.name else 'filter'
+
 
 class Profile(models.Model):
     """Profile model for extending User model fields."""
