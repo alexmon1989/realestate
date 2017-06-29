@@ -348,25 +348,24 @@ class HousesFilterForm(forms.Form):
 
     PROPERTY_TYPE_CHOICES = [
         ("Residential", [
-            (2, 'House'),
             (1, 'Apartment'),
+            (8, 'Home & Income'),
+            (2, 'House'),
+            (13, 'Multiple Properties'),
+            (17, 'Rental House'),
             (11, 'Studio'),
             (4, 'Townhouse'),
             (5, 'Unit'),
         ]),
         ("Other", [
-            (8, 'Home & Income'),
+            (16, 'Boat shed'),
+            (15, 'Carpark'),
             (7, 'Lifestyle Property'),
             (6, 'Lifestyle Section'),
-            (12, 'Section'),
             (14, 'Retirement Living'),
-            (15, 'Carpark'),
-            (16, 'Boat shed'),
-            (13, 'Multiple Properties'),
-            (17, 'Rentals House'),
             (10, 'Rural Lifestyle Property'),
             (9, 'Rural Lifestyle Section'),
-            (12, 'Section')
+            (12, 'Section'),
          ])
     ]
     property_type = forms.MultipleChoiceField(label='Property type',
