@@ -32,7 +32,14 @@
         <div class="box-body">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2 text-center">
-                    <h3><strong>{{ house.street_number }} {{ house.street_name }}, {{ house.suburb }}, {{ house.suburb.city }}, {{ house.suburb.city.region }}</strong></h3>
+                    <h3>
+                        <strong>
+                            {% if house.street_number or house.street_name %}
+                                {{ house.street_number }} {{ house.street_name }},
+                            {% endif %}
+                            {{ house.suburb }}, {{ house.suburb.city }}, {{ house.suburb.city.region }}
+                        </strong>
+                    </h3>
 
                     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                     <ol class="carousel-indicators">
