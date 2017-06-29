@@ -63,9 +63,11 @@ def liked_listings(request):
                        "THEN CONCAT_WS(' ', house.street_number, house.street_name) "
                        "ELSE 'Address not specified' END",
             "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)",
-            "price_with_price_type": "CONCAT_WS(' ', "
-                                     "CASE WHEN house.price <> 0 THEN house.price END, "
-                                     "pricing_method.name)",
+            "price_with_price_type": "CASE "
+                                     "WHEN (`house`.`price` <> 0) "
+                                     "THEN FORMAT(`house`.`price`, 0) "
+                                     "ELSE `pricing_method`.`name` "
+                                     "END"
         }
     ).values(
         'house_id',
@@ -109,9 +111,11 @@ def disliked_listings(request):
                        "THEN CONCAT_WS(' ', house.street_number, house.street_name) "
                        "ELSE 'Address not specified' END",
             "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)",
-            "price_with_price_type": "CONCAT_WS(' ', "
-                                     "CASE WHEN house.price <> 0 THEN house.price END, "
-                                     "pricing_method.name)",
+            "price_with_price_type": "CASE "
+                                     "WHEN (`house`.`price` <> 0) "
+                                     "THEN FORMAT(`house`.`price`, 0) "
+                                     "ELSE `pricing_method`.`name` "
+                                     "END"
         }
     ).values(
         'house_id',
@@ -155,9 +159,11 @@ def still_thinking_listings(request):
                        "THEN CONCAT_WS(' ', house.street_number, house.street_name) "
                        "ELSE 'Address not specified' END",
             "property_type": "CONCAT_WS(' bedrooms ', house.bedrooms, property_type.name)",
-            "price_with_price_type": "CONCAT_WS(' ', "
-                                     "CASE WHEN house.price <> 0 THEN house.price END, "
-                                     "pricing_method.name)",
+            "price_with_price_type": "CASE "
+                                     "WHEN (`house`.`price` <> 0) "
+                                     "THEN FORMAT(`house`.`price`, 0) "
+                                     "ELSE `pricing_method`.`name` "
+                                     "END"
         }
     ).values(
         'house_id',
