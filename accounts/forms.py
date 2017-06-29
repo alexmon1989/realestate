@@ -199,12 +199,12 @@ class HousesFilterForm(forms.Form):
         t = (round(x*0.1, 1), str(round(x*0.1, 1)))
         GOVERNMENT_VALUE_TO_PRICE_CHOICES.append(t)
     GOVERNMENT_VALUE_TO_PRICE_CHOICES.append((999, '2+'))
-    government_value_to_price_from = forms.ChoiceField(label='Ratio of Government Value to Price to',
+    government_value_to_price_from = forms.ChoiceField(label='Ratio of Government Value to Price from',
                                                        required=False,
                                                        choices=GOVERNMENT_VALUE_TO_PRICE_CHOICES,
                                                        help_text='<a href="#" class="set-custom-value">Custom value</a>')
 
-    government_value_to_price_to = forms.ChoiceField(label='Ratio of Government Value to Price From',
+    government_value_to_price_to = forms.ChoiceField(label='Ratio of Government Value to Price to',
                                                      required=False,
                                                      choices=GOVERNMENT_VALUE_TO_PRICE_CHOICES,
                                                      initial=999,
