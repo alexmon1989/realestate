@@ -380,7 +380,7 @@ class HousesFilterForm(forms.Form):
                                                         '<a id="property-type-select-other" href="#">'
                                                         'Select Other types</a><br>'
                                                         '<a id="property-type-select-all" href="#">Select all</a>')
-    show_only_open_homes = forms.BooleanField(label='Show only open homes', required=False)
+    show_only_open_homes = forms.BooleanField(label='Show only properties with open home time defined', required=False)
     show_only_properties_with_address = forms.BooleanField(label='Show only properties with an address', required=False)
     keywords = forms.CharField(label='Keywords', required=False)
 
