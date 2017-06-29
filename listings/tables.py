@@ -38,8 +38,8 @@ class NewListingsTableActionColumn(tables.Column):
     def render(self, value):
         return format_html(
             '<div class="btn-group">'
-            '<a href="{}?return_url={}" class="btn btn-primary"><i class="fa fa-thumbs-o-up"></i></a>'
-            '<a href="{}" class="btn btn-danger"><i class="fa fa-thumbs-o-down"></i></a>'
+            '<a href="{}?return_url={}" class="btn btn-primary"><i class="fa fa-plus"></i></a>'
+            '<a href="{}" class="btn btn-danger"><i class="fa fa-minus"></i></a>'
             '<a href="{}" class="btn btn-warning"><i class="fa fa-hourglass"></i></a>'
             '</div>',
             reverse('listings:mark_as_liked', args=(value,)),
@@ -114,7 +114,7 @@ class LikedListingsTableActionColumn(tables.Column):
     def render(self, value):
         return format_html(
             '<div class="btn-group">'
-            '<a href="{0}?return_url={2}" class="btn btn-danger"><i class="fa fa-thumbs-o-down"></i></a>'
+            '<a href="{0}?return_url={2}" class="btn btn-danger"><i class="fa fa-minus"></i></a>'
             '<a href="{1}?return_url={2}" class="btn btn-warning"><i class="fa fa-hourglass"></i></a>'
             '</div>',
             reverse('listings:mark_as_disliked', args=(value,)),
@@ -178,7 +178,7 @@ class DislikedListingsTableActionColumn(tables.Column):
     def render(self, value):
         return format_html(
             '<div class="btn-group">'
-            '<a href="{0}?return_url={2}" class="btn btn-primary"><i class="fa fa-thumbs-o-up"></i></a>'
+            '<a href="{0}?return_url={2}" class="btn btn-primary"><i class="fa fa-plus"></i></a>'
             '<a href="{1}?return_url={2}" class="btn btn-warning"><i class="fa fa-hourglass"></i></a>'
             '</div>',
             reverse('listings:mark_as_liked', args=(value,)),
@@ -212,8 +212,8 @@ class StillThinkingListingsTableActionColumn(tables.Column):
     def render(self, value):
         return format_html(
             '<div class="btn-group">'
-            '<a href="{0}?return_url={2}" class="btn btn-primary"><i class="fa fa-thumbs-o-up"></i></a>'
-            '<a href="{1}?return_url={2}" class="btn btn-danger"><i class="fa fa-thumbs-o-down"></i></a>'
+            '<a href="{0}?return_url={2}" class="btn btn-primary"><i class="fa fa-plus"></i></a>'
+            '<a href="{1}?return_url={2}" class="btn btn-danger"><i class="fa fa-minus"></i></a>'
             '</div>',
             reverse('listings:mark_as_liked', args=(value,)),
             reverse('listings:mark_as_disliked', args=(value,)),
