@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django_tables2 import RequestConfig
 from .forms import SearchForm
 from home.models import VHousesForTables
-from listings.tables import NewListingsTableWithPhoto
+from search.tables import ListingsTable
 
 from decorators import group_required
 
@@ -15,12 +15,13 @@ def index(request):
     houses = []
 
     if request.GET:
+        request.session['search_uri'] = request.get_full_path()
         form = SearchForm(data=request.GET)
         houses = VHousesForTables.search(request.GET)
     else:
         form = SearchForm()
 
-    table = NewListingsTableWithPhoto(houses)
+    table = ListingsTable(houses)
     RequestConfig(request).configure(table)
 
     return render(request, 'search/index.html', {

@@ -442,6 +442,8 @@ def mark_as_liked(request, pk):
     return_url = reverse('listings:new_listing')
     if request.GET.get('return_url'):
         return_url = request.GET['return_url']
+        if return_url == 'search':
+            return_url = request.session['search_uri']
 
     return redirect('{}?return_url={}'.format(
         reverse('listings:show_liked_listing', args=(pk,)),
@@ -463,6 +465,8 @@ def mark_as_disliked(request, pk):
     return_url = reverse('listings:new_listing')
     if request.GET.get('return_url'):
         return_url = request.GET['return_url']
+        if return_url == 'search':
+            return_url = request.session['search_uri']
 
     return redirect(return_url)
 
@@ -481,6 +485,8 @@ def mark_as_still_thinking(request, pk):
     return_url = reverse('listings:new_listing')
     if request.GET.get('return_url'):
         return_url = request.GET['return_url']
+        if return_url == 'search':
+            return_url = request.session['search_uri']
 
     return redirect(return_url)
 
