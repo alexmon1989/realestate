@@ -93,6 +93,7 @@ class HouseUserData(models.Model):
     flooding_100 = models.BooleanField('100 year flooding', default=False)
     renovations = models.FloatField('Renovations', blank=True, null=True)
     revisit_on = models.DateField('Revisit on', blank=True, null=True)
+    appraised_on = models.DateField('Appraised on', blank=True, null=True)
 
     def __str__(self):
         return '{} for {}'.format(self.user, self.house)
