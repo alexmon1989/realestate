@@ -11,13 +11,61 @@
 {% endblock %}
 
 {% block content %}
+
+
     <!-- Default box -->
     <div class="box">
         <div class="box-header with-border">
-            <h3 class="box-title">Dashboard</h3>
+            <h3 class="box-title">Home</h3>
         </div>
         <div class="box-body">
-            <p>Wellcome, <strong>{{ request.user }}</strong>! Start your work with left menu.</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <!-- small box -->
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>{{ new_count }}</h3>
+
+                            <p>New Listings</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-fw fa-sticky-note-o"></i>
+                        </div>
+                        <a href="{% url 'listings:new_listing' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-md-4">
+                    <!-- small box -->
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>{{ liked_count }}</h3>
+
+                            <p>Liked Listings</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-fw fa-plus"></i>
+                        </div>
+                        <a href="{% url 'listings:liked_listing' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-md-4">
+                    <!-- small box -->
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>{{ still_thinking_count }}</h3>
+
+                            <p>Still Thinking Listings</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-clock"></i>
+                        </div>
+                        <a href="{% url 'listings:still_thinking_listing' %}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
         </div>
         <!-- /.box-body -->
         <div class="box-footer">
