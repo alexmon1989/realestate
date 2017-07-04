@@ -30,6 +30,7 @@
                     <div class="tab-pane active" id="tab_user_data">
                         <form action="{% url 'accounts:profile' %}" method="post" class="form">
                             {% bootstrap_form form_user_data %}
+                            {% bootstrap_form form_user_profile_data %}
                             {% csrf_token %}
                             {% buttons %}
                                 <button type="submit" class="btn btn-primary">

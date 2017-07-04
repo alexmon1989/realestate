@@ -16,16 +16,14 @@ class UserForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('first_name', 'last_name', 'email',)
 
 
-class SettingsForm(ModelForm):
-    """Form for settings."""
-    email = forms.CharField(max_length=75, required=True)
-
+class UserProfileForm(ModelForm):
+    """Form for profile data."""
     class Meta:
         model = Profile
-        exclude = ()
+        fields = ('telephone',)
 
 
 class UsersConstantsForm(ModelForm):

@@ -15,7 +15,7 @@ import json
 
 from decorators import group_required
 
-from .forms import UserForm, HousesFilterForm, UsersConstantsForm, CitiesConstantsForm
+from .forms import UserForm, HousesFilterForm, UsersConstantsForm, CitiesConstantsForm, UserProfileForm
 
 from .models import HousesFilter, CitiesConstants
 from home.models import Suburb, PropertyType, City
@@ -28,15 +28,19 @@ from .tables import FiltersTable
 def profile(request):
     """Shows profile data in form for edit."""
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
+        form1 = UserForm(request.POST, instance=request.user)
+        form2 = UserProfileForm(request.POST, instance=request.user.profile)
+        if form1.is_valid():
+            form1.save()
+            form2.save()
             messages.success(request, 'User data successfully saved.')
             return redirect(reverse('accounts:profile'))
     else:
-        form = UserForm(instance=request.user)
+        form1 = UserForm(instance=request.user)
+        form2 = UserProfileForm(instance=request.user.profile)
     return render(request, 'accounts/profile.html', {
-        'form_user_data': form,
+        'form_user_data': form1,
+        'form_user_profile_data': form2,
     })
 
 
