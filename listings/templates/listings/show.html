@@ -110,6 +110,66 @@
                 <dd>{{ house.government_rates|default:"-" }}</dd>
             </dl>
 
+            {% if request.resolver_match.url_name == "show_liked_listing" %}
+                {% if house.agent_set.count %}
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3>Agents</h3>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Mobile phone</th>
+                                        <th>Ddi phone</th>
+                                        <th>Work phone</th>
+                                        <th>Email</th>
+                                        <th>Agency</th>
+                                    </tr>
+
+                                    {% for agent in house.agent_set.all %}
+                                        <tr>
+                                            <td>{{ agent.name }}</td>
+                                            <td>{{ agent.mobile_phone }}</td>
+                                            <td>{{ agent.ddi_phone }}</td>
+                                            <td>{{ agent.work_phone }}</td>
+                                            <td>{{ agent.email }}</td>
+                                            <td>{{ agent.agency.agency_name }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                {% if house.agency_set.count %}
+                    <h3>Agencies</h3>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                    </tr>
+
+                                    {% for agency in house.agency_set.all %}
+                                        <tr>
+                                            <td>{{ agency.agency_name }}</td>
+                                            <td>{{ agency.email }}</td>
+                                            <td>{{ agency.work_phone }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+
             {% if open_homes %}
                 <h3>Open homes</h3>
                 <ul>
