@@ -29,7 +29,7 @@ from .forms import HouseUserDataForm, CalculatorForm, OtherExpenseForm
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def new_listings(request):
     """Shows page with new listings."""
     # user's houses filters
@@ -54,7 +54,7 @@ def new_listings(request):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def liked_listings(request):
     """Shows page with liked listings."""
     houses = MarkedHouse.objects.extra(
@@ -102,7 +102,7 @@ def liked_listings(request):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def disliked_listings(request):
     """Shows page with disliked listings."""
     houses = MarkedHouse.objects.extra(
@@ -150,7 +150,7 @@ def disliked_listings(request):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def still_thinking_listings(request):
     """Shows page with still thinking listings."""
     houses = MarkedHouse.objects.extra(
@@ -198,7 +198,7 @@ def still_thinking_listings(request):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def show_new_listing(request, pk):
     """Shows page with house data."""
     house = get_object_or_404(House, pk=pk)
@@ -210,7 +210,7 @@ def show_new_listing(request, pk):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def show_liked_listing(request, pk):
     """Shows page with house data."""
     if request.method == 'GET':
@@ -278,7 +278,7 @@ def show_liked_listing(request, pk):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def delete_other_expenses_item(request, pk):
     """Deletes other expense item."""
     try:
@@ -304,7 +304,7 @@ def delete_other_expenses_item(request, pk):
 @require_POST
 @csrf_exempt
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def create_other_expenses_item(request):
     """Deletes other expense item."""
     form = OtherExpenseForm(request.POST)
@@ -328,7 +328,7 @@ def create_other_expenses_item(request):
 @require_POST
 @csrf_exempt
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def save_calculator_data(request, house_id):
     try:
         calculator = Calculator.objects.get(user=request.user, house_id=house_id)
@@ -392,7 +392,7 @@ def save_calculator_data(request, house_id):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def reset_calculator_data(request, house_id):
     """Resets calculator data."""
     try:
@@ -406,7 +406,7 @@ def reset_calculator_data(request, house_id):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def show_disliked_listing(request, pk):
     """Shows page with house data."""
     house = get_object_or_404(House, pk=pk)
@@ -418,7 +418,7 @@ def show_disliked_listing(request, pk):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def show_still_thinking_listing(request, pk):
     """Shows page with house data."""
     house = get_object_or_404(House, pk=pk)
@@ -430,7 +430,7 @@ def show_still_thinking_listing(request, pk):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def mark_as_liked(request, pk):
     """Marks house as liked and redirects to show_liked_listing page."""
     house = get_object_or_404(House, pk=pk)
@@ -450,7 +450,7 @@ def mark_as_liked(request, pk):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def mark_as_disliked(request, pk):
     """Marks house as disliked and redirects to show_disliked_listing page."""
     house = get_object_or_404(House, pk=pk)
@@ -470,7 +470,7 @@ def mark_as_disliked(request, pk):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def mark_as_still_thinking(request, pk):
     """Marks house as disliked and redirects to show_still_thinking_listing page."""
     house = get_object_or_404(House, pk=pk)
@@ -490,7 +490,7 @@ def mark_as_still_thinking(request, pk):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def get_deposit_values(request):
     """Returns JSON with current deposit values."""
     global_constants = GlobalConstants.objects.first()

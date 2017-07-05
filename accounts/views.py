@@ -24,7 +24,7 @@ from .tables import FiltersTable
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def profile(request):
     """Shows profile data in form for edit."""
     if request.method == 'POST':
@@ -45,7 +45,7 @@ def profile(request):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def house_filters(request):
     """Shows houses filters list."""
     filters_data = []
@@ -77,7 +77,7 @@ def house_filters(request):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def region_and_cities_constants(request):
     """Shows form with city constants."""
     if request.method == 'POST':
@@ -98,7 +98,7 @@ def region_and_cities_constants(request):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def create_filter(request):
     """Creates user filter."""
     if request.method == 'POST':
@@ -117,7 +117,7 @@ def create_filter(request):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def edit_filter(request, pk):
     """Edits user filter."""
     house_filter = get_object_or_404(HousesFilter.objects.filter(user=request.user), pk=pk)
@@ -166,13 +166,13 @@ class FilterDeleteView(SuccessMessageMixin, DeleteView):
         return super(FilterDeleteView, self).delete(request, *args, **kwargs)
 
     @method_decorator(login_required)
-    @method_decorator(group_required('Users'))
+    @method_decorator(group_required(('Users', 'Self')))
     def dispatch(self, *args, **kwargs):
         return super(FilterDeleteView, self).dispatch(*args, **kwargs)
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def users_constants(request):
     """Save's user's constants."""
     if request.method == 'POST':
@@ -189,7 +189,7 @@ def users_constants(request):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def change_password(request):
     """Changes user's password."""
     if request.method == 'POST':
@@ -208,7 +208,7 @@ def change_password(request):
 
 @require_POST
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 @csrf_exempt
 def change_show_title_photo(request):
     """Changes show_title_photo field of Profile model."""
@@ -220,7 +220,7 @@ def change_show_title_photo(request):
 
 @require_POST
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 @csrf_exempt
 def change_font_size(request):
     """Changes font size ration in profile data."""
@@ -238,7 +238,7 @@ def change_font_size(request):
 
 @require_POST
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 @csrf_exempt
 def toggle_disabled(request, pk):
     """Toggles disabled property of filter object and returns JSON."""
@@ -250,7 +250,7 @@ def toggle_disabled(request, pk):
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def get_capital_growth(request, city_id):
     """Gets capital growth of city and returns JSON."""
     city = get_object_or_404(City, pk=city_id)

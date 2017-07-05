@@ -8,7 +8,7 @@ from home.models import VHousesForTables
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def dashboard(request):
     """Shows dashboard page."""
     filters = request.user.housesfilter_set.filter(disabled=False).all()

@@ -9,7 +9,7 @@ from decorators import group_required
 
 
 @login_required
-@group_required('Users')
+@group_required(('Users', 'Self'))
 def index(request):
     """Shows search page and search results."""
     houses = []
