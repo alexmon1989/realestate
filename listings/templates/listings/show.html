@@ -80,14 +80,22 @@
                 <dd>{{ house.bedrooms }}</dd>
                 <dt>Bathrooms</dt>
                 <dd>{{ house.bathrooms }}</dd>
-                <dt>Ensuite</dt>
-                <dd>{{ house.ensuite|yesno:"Yes,No" }}</dd>
-                <dt>Land area</dt>
-                <dd>{{ house.land }}</dd>
-                <dt>Floor area</dt>
-                <dd>{{ house.floor }}</dd>
-                <dt>Car spaces</dt>
-                <dd>{{ house.car_spaces }}</dd>
+                {% if house.ensuite %}
+                    <dt>Ensuite</dt>
+                    <dd>{{ house.ensuite|yesno:"Yes,No" }}</dd>
+                {% endif %}
+                {% if house.land %}
+                    <dt>Land area</dt>
+                    <dd>{{ house.land }}</dd>
+                {% endif %}
+                {% if house.floor %}
+                    <dt>Floor area</dt>
+                    <dd>{{ house.floor }}</dd>
+                {% endif %}
+                {% if house.car_spaces %}
+                    <dt>Car spaces</dt>
+                    <dd>{{ house.car_spaces }}</dd>
+                {% endif %}
                 <dt>Description</dt>
                 <dd>{{ house.description|default:"-" }}</dd>
                 <dt>Additional data</dt>
@@ -103,12 +111,18 @@
                 <dt>Price</dt>
                 {% load humanize %}
                 <dd><span id="price">{{ house.price|default:""|intcomma }}</span> <span id="price-type">{{ house.price_type }}</span></dd>
-                <dt>Government value</dt>
-                <dd>{{ house.government_value|default:"-" }}</dd>
-                <dt>Government to price</dt>
-                <dd>{{ house.government_to_price|default:"-" }}</dd>
-                <dt>Government rates</dt>
-                <dd>{{ house.government_rates|default:"-" }}</dd>
+                {% if house.government_value %}
+                    <dt>Government value</dt>
+                    <dd>{{ house.government_value|default:"-" }}</dd>
+                {% endif %}
+                {% if house.government_to_price %}
+                    <dt>Government to price</dt>
+                    <dd>{{ house.government_to_price|default:"-" }}</dd>
+                {% endif %}
+                {% if house.government_rates %}
+                    <dt>Government rates</dt>
+                    <dd>{{ house.government_rates|default:"-" }}</dd>
+                {% endif %}
             </dl>
 
             {% if request.resolver_match.url_name == "show_liked_listing" %}
