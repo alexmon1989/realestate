@@ -49,8 +49,24 @@ class ListingsTableActionColumn(tables.Column):
         )
 
 
+class AddressLink(tables.LinkColumn):
+    def render(self, value, record, bound_column):
+        def resolve_if_accessor(val):
+            return val.resolve(record) if isinstance(val, A) else val
+
+        params = {}
+        if self.args:
+            params['args'] = [resolve_if_accessor(a) for a in self.args]
+
+        return format_html(
+            '<a href="{}?return_url=search">{}</a>',
+            reverse('listings:show_new_listing', args=params['args']),
+            value
+        )
+
+
 class ListingsTable(tables.Table):
-    address = tables.LinkColumn('listings:show_new_listing',
+    address = AddressLink('listings:show_new_listing',
                                 args=[A('house_id')],
                                 accessor='address')
     region = tables.Column(accessor='region_name', verbose_name='Region')
