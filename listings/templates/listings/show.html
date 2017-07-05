@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 {% load static %}
+{% load auth_extras %}
 
 {% block content-h1 %}
     House data
@@ -122,7 +123,9 @@
                                         <th>Mobile phone</th>
                                         <th>Ddi phone</th>
                                         <th>Work phone</th>
-                                        <th>Email</th>
+                                        {% if request.user|has_group:"Self" %}
+                                            <th>Email</th>
+                                        {% endif %}
                                         <th>Agency</th>
                                     </tr>
 
@@ -132,7 +135,9 @@
                                             <td>{{ agent.mobile_phone }}</td>
                                             <td>{{ agent.ddi_phone }}</td>
                                             <td>{{ agent.work_phone }}</td>
-                                            <td>{{ agent.email }}</td>
+                                            {% if request.user|has_group:"Self" %}
+                                                <td><a href="mailto:{{ agent.email }}">{{ agent.email }}</a></td>
+                                            {% endif %}
                                             <td>{{ agent.agency.agency_name }}</td>
                                         </tr>
                                     {% endfor %}
@@ -152,14 +157,18 @@
                                 <tbody>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Email</th>
+                                        {% if request.user|has_group:"Self" %}
+                                            <th>Email</th>
+                                        {% endif %}
                                         <th>Phone</th>
                                     </tr>
 
                                     {% for agency in house.agency_set.all %}
                                         <tr>
                                             <td>{{ agency.agency_name }}</td>
-                                            <td>{{ agency.email }}</td>
+                                            {% if request.user|has_group:"Self" %}
+                                                <td><a href="mailto:{{ agency.email }}">{{ agency.email }}</a></td>
+                                            {% endif %}
                                             <td>{{ agency.work_phone }}</td>
                                         </tr>
                                     {% endfor %}
