@@ -1,3 +1,4 @@
+import datetime
 from django import forms
 from django.forms import ModelForm
 from .models import HouseUserData, Calculator, OtherExpense
@@ -21,6 +22,24 @@ class HouseUserDataForm(ModelForm):
                         '<a href="#" id="use-government-value" class="btn btn-default btn-sm">Use Government Valuation</a>'
 
         self.fields['market_reg_value'].help_text = help_text
+
+    def clean_revisit_on(self):
+        revisit_on = self.cleaned_data['revisit_on']
+        if revisit_on:
+            present = datetime.date.today()
+
+            if revisit_on <= present:
+                raise forms.ValidationError("Field must contain future date")
+        return revisit_on
+
+    def clean_date_sold(self):
+        date_sold = self.cleaned_data['date_sold']
+        if date_sold:
+            present = datetime.date.today()
+
+            if date_sold > present:
+                raise forms.ValidationError("Field must contain date that is earlier than or equal to today's")
+        return date_sold
 
     class Meta:
         model = HouseUserData
