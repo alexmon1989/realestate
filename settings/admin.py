@@ -1,6 +1,6 @@
 from django.contrib import admin
 from singlemodeladmin import SingleModelAdmin
-from .models import Global
+from .models import Global, MotdBanner
 
 
 class DeleteNotAllowedModelAdmin(SingleModelAdmin):
@@ -8,3 +8,4 @@ class DeleteNotAllowedModelAdmin(SingleModelAdmin):
         return False
 
 admin.site.register(Global, DeleteNotAllowedModelAdmin)
+admin.site.register(MotdBanner, DeleteNotAllowedModelAdmin)

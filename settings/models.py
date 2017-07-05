@@ -91,3 +91,12 @@ class Global(models.Model):
     class Meta:
         verbose_name = 'Global constants'
         verbose_name_plural = 'Global constants'
+
+
+class MotdBanner(models.Model):
+    enabled = models.BooleanField('Enabled', default=False)
+    message = models.CharField('Message', default='It will be tachnical work on the site soon.', max_length=255)
+
+    class Meta:
+        verbose_name = 'MOTD banner'
+        verbose_name_plural = 'MOTD banner'

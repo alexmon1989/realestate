@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load account_extras %}
+{% load motd_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,6 +50,7 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+        {% motd_banner %}
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
