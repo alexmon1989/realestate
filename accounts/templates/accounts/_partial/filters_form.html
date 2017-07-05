@@ -3,7 +3,7 @@
 
 <form action="" method="post" class="form" id="filter-form">
     <div class="form-group" style="max-height: 615px; overflow-y: scroll">
-        <label class="control-label" for="id_suburbs">Area selection</label>
+        <label class="control-label" for="id_suburbs" data-toggle="tooltip" data-placement="bottom" title="Click on + to see a list of cities to select or tick the box to select all cities from a certain region. Use 'Select All' on the right to select all regions">Area selection</label>
         <select name="suburbs" id="id_suburbs" multiple="multiple">
             {% for choice in form.suburbs.field.choices %}
                 {% get_full_suburb_path choice.0 as full_path %}
@@ -36,5 +36,43 @@
           enableSelectAll: true,
           startCollapsed: true
         });
+    });
+
+    $(function () {
+        $("#id_price_from, #id_price_to")
+            .prev()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Choose from the list or click on Custom value to enter your own value.');
+
+        $("#id_pricing_methods")
+            .prev()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Click on the field to see the list of pricing methods to choose from. To add the method click on it. To add more methods, continue clicking on the field and adding as many methods as you like.');
+
+        $("#id_government_value_from, #id_government_value_to")
+            .prev()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Choose from the list or click on Custom value to enter your own value.');
+
+        $("#id_property_type")
+            .prev()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Click on the field to see the list of property types to choose from. To add the type click on it. To add more property types, continue clicking on the field and adding as many as you like or use one of the \'Select\' options.');
+
+        $("#id_ensuite")
+            .parent()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Tick this box if you want to filter only properties that have ensuite bathroom.');
+
+        $("#id_disabled")
+            .parent()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Tick this box if you don\'t want this filter to be in use straight away. Un-tick this box once you\'ve decided to start using it.');
     });
 </script>

@@ -95,6 +95,13 @@
             $(document.body).on("change", "#id_city", function() {
                 getCapitalGrowth($idCity.val());
             });
+
+            $("#id_capital_growth")
+                .prev()
+                .attr('data-placement', 'bottom')
+                .attr('data-toggle', 'tooltip')
+                .attr('title', 'Field is populated with a value from global database for a chosen region/city. If you want to change it, delete the global value and enter your own value.');
+
         });
     </script>
 {% endblock %}

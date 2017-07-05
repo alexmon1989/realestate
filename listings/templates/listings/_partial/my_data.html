@@ -90,7 +90,7 @@
             {% bootstrap_field form.renovations %}
 
             <div class="form-group">
-                <label class="control-label">Other Annual Expenses</label>
+                <label class="control-label" id="id_other_annual_expenses">Other Annual Expenses</label>
                 <table class="table table-bordered">
                     {% for expense in house_user_data.otherexpense_set.all %}
                         <tr id="#other-expense-tr" data-expense_id="{{ expense.pk }}">
@@ -144,3 +144,42 @@
         <a href="{% if request.GET.return_url %}{% if request.GET.return_url == 'search' %}{{ request.session.search_uri }}{% else %}{{ request.GET.return_url }}{% endif %}{% else %}{% url 'listings:liked_listing' %}{% endif %}" class="btn btn-warning">{% bootstrap_icon "floppy-remove" %} Cancel</a>
     {% endbuttons %}
 </form>
+
+<script>
+    $(function () {
+        $("#id_flooding_10, #id_flooding_100")
+            .parent()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Tick appropriate box/es if you\'ve checked flooding map for the property and found that it is prone to flooding.');
+
+        $("#id_body_corporate")
+            .prev()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Only for properties that have body corporate on them.');
+
+        $("#id_renovations")
+            .prev()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Optional field. Enter estimate costs of renovations that you want to do on the property.');
+
+        $("#id_other_annual_expenses")
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Optional field. Add any other expenses that you want to include in calculations and are not covered by above.');
+
+        $("#id_walk_away_price")
+            .prev()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Maximum price that you are willing to pay for the property.');
+
+        $("#id_revisit_on")
+            .prev()
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', 'Optional field to complete if you want to make another offer on this property later.');
+    });
+</script>

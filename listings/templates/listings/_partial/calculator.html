@@ -29,7 +29,7 @@
         </div>
 
         <div class="col-md-4">
-            <h4>Buying rules</h4>
+            <h4 data-toggle="tooltip" data-placement="bottom" title="Use values you've set up for User's constants in Settings by clicking on blue buttons or enter new values here.">Buying rules</h4>
 
             {% bootstrap_field calculator_form.gross_yield addon_after=field_addons.gross_yield addon_after_class='input-group-btn'  %}
             {% bootstrap_field calculator_form.net_yield addon_after=field_addons.net_yield addon_after_class='input-group-btn'  %}
@@ -88,13 +88,13 @@
     <hr>
 
     {% buttons %}
-        <button type="button" class="btn btn-success" id="findRent">
+        <button type="button" class="btn btn-success" id="findRent" data-toggle="tooltip" data-placement="bottom" title="Finds a rent required to achieve desired Gross Yield.">
             {% bootstrap_icon "ok" %} Find Rent (*based on a gross yield)
         </button>
-        <button type="button" class="btn btn-warning" id="findPrice">
+        <button type="button" class="btn btn-warning" id="findPrice" data-toggle="tooltip" data-placement="bottom" title="Finds a maximum purchase price that will give you desired Gross Yield.">
             {% bootstrap_icon "ok" %} Find price (*based on a gross yield)
         </button>
-        <button type="button" class="btn btn-primary" id="reset">
+        <button type="button" class="btn btn-primary" id="reset" data-toggle="tooltip" data-placement="bottom" title="Resets data after using Find Rent or Find Price buttons.">
             {% bootstrap_icon "refresh" %} Back to standard calculation
         </button>
     {% endbuttons %}
