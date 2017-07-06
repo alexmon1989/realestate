@@ -226,6 +226,7 @@
                     <ul class="nav nav-tabs">
                         <li class="{% if not request.GET.active_tab or request.GET.active_tab == 'data' %}active{% endif %}"><a href="#tab_1" data-toggle="tab">My data</a></li>
                         <li class="{% if request.GET.active_tab == 'calculator' %}active{% endif %}"><a href="#tab_2" data-toggle="tab">Calculator</a></li>
+                        <li class="{% if request.GET.active_tab == 'staticstic' %}active{% endif %}"><a href="#tab_3" data-toggle="tab">Statistical data</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane {% if not request.GET.active_tab or request.GET.active_tab == 'data' %}active{% endif %}" id="tab_1">
@@ -234,6 +235,10 @@
                         <!-- /.tab-pane -->
                         <div class="tab-pane {% if request.GET.active_tab == 'calculator' %}active{% endif %}" id="tab_2">
                             {% include 'listings/_partial/calculator.html' %}
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane {% if request.GET.active_tab == 'staticstic' %}active{% endif %}" id="tab_3">
+                            {% include 'listings/_partial/statistic.html' %}
                         </div>
                         <!-- /.tab-pane -->
                     </div>

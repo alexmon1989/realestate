@@ -30,6 +30,7 @@ class City(models.Model):
     city_id = models.AutoField(primary_key=True)
     city_name = models.CharField('City name', unique=True, max_length=255)
     capital_growth = models.FloatField(blank=True, null=True)
+    average_value = models.IntegerField(blank=True, null=True)
     region = models.ForeignKey('Region', models.CASCADE)
     council_link = models.TextField(blank=True, null=True)
     rates_link_1 = models.CharField('Rates link #1', blank=True, null=True, max_length=255)
@@ -471,3 +472,34 @@ class Agent(models.Model):
         verbose_name = 'Agent'
         verbose_name_plural = 'Agents'
         unique_together = (('name', 'agency'),)
+
+
+class SalesPrices(models.Model):
+    suburb = models.ForeignKey(Suburb, models.CASCADE, primary_key=True)
+    number_of_sales = models.IntegerField()
+    median_sale_price = models.IntegerField()
+    difference = models.FloatField()
+    capital_value_date = models.DateField()
+    property_type = models.ForeignKey(PropertyType, models.CASCADE, primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'sales_prices'
+        unique_together = (('suburb', 'property_type'),)
+
+
+class RentalAnalysis(models.Model):
+    suburb = models.ForeignKey(Suburb, models.CASCADE, primary_key=True)
+    bonds = models.IntegerField()
+    median_rent = models.IntegerField()
+    median_e = models.IntegerField()
+    gross_yield = models.FloatField()
+    annual_rent_change = models.FloatField()
+    annual_e_change = models.FloatField()
+    property_type = models.ForeignKey(PropertyType, models.CASCADE, primary_key=True)
+    bedrooms = models.IntegerField(primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'rental_analysis'
+        unique_together = (('suburb', 'property_type', 'bedrooms'),)

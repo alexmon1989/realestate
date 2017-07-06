@@ -1,0 +1,51 @@
+<dl>
+    {% if house.suburb.city.average_value %}
+        <dt>Average value</dt>
+        <dd>{{ house.suburb.city.average_value }}</dd>
+    {% endif %}
+
+    {% if sales_prices.median_sale_price %}
+        <dt>Median sale price</dt>
+        <dd>{{ sales_prices.median_sale_price }}</dd>
+    {% endif %}
+
+    {% if sales_prices.difference %}
+        <dt>Statistical Difference between Sales Price and CV</dt>
+        <dd>{{ sales_prices.difference }}</dd>
+    {% endif %}
+
+    {% if sales_prices.capital_value_date %}
+        <dt>Capital Value Date</dt>
+        <dd>{{ sales_prices.capital_value_date }}</dd>
+    {% endif %}
+
+    {% if rental_analysis.median_rent %}
+        <dt>Madian rent</dt>
+        <dd>{{ rental_analysis.median_rent }}</dd>
+    {% endif %}
+
+    {% if rental_analysis.median_e %}
+        <dt>Median E-valuer</dt>
+        <dd>{{ rental_analysis.median_e }}</dd>
+    {% endif %}
+
+    {% if rental_analysis.gross_yield %}
+        <dt>Statistic Gross yield</dt>
+        <dd>{{ rental_analysis.gross_yield }}</dd>
+    {% endif %}
+
+    {% if rental_analysis.annual_rent_change %}
+        <dt>Annual rent change</dt>
+        <dd>{{ rental_analysis.annual_rent_change }}</dd>
+    {% endif %}
+
+    {% if rental_analysis.annual_e_change %}
+        <dt>Annual E-valuer change</dt>
+        <dd>{{ rental_analysis.annual_e_change }}</dd>
+    {% endif %}
+
+    {% if house.suburb.city.capital_growth %}
+        <dt>Capital Growth</dt>
+        <dd>{{ house.suburb.city.capital_growth }}</dd>
+    {% endif %}
+</dl>

@@ -14,7 +14,7 @@ import datetime
 
 from django_tables2 import RequestConfig
 
-from home.models import House, VHousesForTables
+from home.models import House, VHousesForTables, RentalAnalysis, SalesPrices
 from .models import MarkedHouse, Calculator, OtherExpense
 from settings.models import Global as GlobalConstants
 from accounts.models import CitiesConstants
@@ -260,6 +260,15 @@ def show_liked_listing(request, pk):
         house_user_data.new_build
     )
 
+    # Statistical data
+    rental_analysis = marked_house.house.suburb.rentalanalysis_set.filter(
+        property_type_id=marked_house.house.property_type_id,
+        bedrooms=marked_house.house.bedrooms
+    ).first()
+    sales_prices = marked_house.house.suburb.salesprices_set.filter(
+        property_type_id=marked_house.house.property_type_id
+    ).first()
+
     return render(request, 'listings/show.html', {
         'house': marked_house.house,
         'photos': photos,
@@ -273,7 +282,9 @@ def show_liked_listing(request, pk):
         'open_homes': marked_house.house.openhomes_set.filter(date_from__gte=datetime.date.today()).order_by('date_from').values(
             'date_from',
             'date_to'
-        )
+        ),
+        'rental_analysis': rental_analysis,
+        'sales_prices': sales_prices,
     })
 
 
