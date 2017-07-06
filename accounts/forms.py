@@ -56,6 +56,17 @@ class HousesFilterForm(forms.Form):
                            required=False)
     suburbs = forms.MultipleChoiceField(label='Area selection',
                                         required=True)
+
+    PRICING_METHODS_CHOICES = ((pricing_method.id, pricing_method.name)
+                               for pricing_method in PricingMethod.objects.order_by('name'))
+    pricing_methods = forms.MultipleChoiceField(label='Pricing methods',
+                                                required=False,
+                                                choices=PRICING_METHODS_CHOICES,
+                                                widget=Select2MultipleWidget(
+                                                    attrs={'data-placeholder': 'All pricing methods'}
+                                                ),
+                                                help_text='<a id="pricing-methods-select-all" href="#">Select all</a>')
+
     PRICE_FROM_CHOICES = [
         (None, 'Any'),
         (0, '$0'),
@@ -117,16 +128,6 @@ class HousesFilterForm(forms.Form):
                                  choices=PRICE_TO_CHOICES,
                                  initial=999999999,
                                  help_text='<a href="#" class="set-custom-value">Custom value</a>')
-
-    PRICING_METHODS_CHOICES = ((pricing_method.id, pricing_method.name)
-                               for pricing_method in PricingMethod.objects.order_by('name'))
-    pricing_methods = forms.MultipleChoiceField(label='Pricing methods',
-                                                required=False,
-                                                choices=PRICING_METHODS_CHOICES,
-                                                widget=Select2MultipleWidget(
-                                                    attrs={'data-placeholder': 'All pricing methods'}
-                                                ),
-                                                help_text='<a id="pricing-methods-select-all" href="#">Select all</a>')
 
     GOVERNMENT_VALUE_FROM_CHOICES = [
         (None, 'Any'),

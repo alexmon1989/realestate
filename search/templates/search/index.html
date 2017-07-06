@@ -24,7 +24,7 @@
         <div class="box-body">
             <form action="{% url 'search:search_index' %}" method="get" class="form">
                 <div class="form-group" style="max-height: 250px; overflow-y: scroll">
-                    <label class="control-label" for="id_suburbs">Area selection</label>
+                    <label class="control-label" for="id_suburbs" data-toggle="tooltip" data-placement="bottom" title="Click on + to see a list of cities to select or tick the box to select all cities from a certain region. Use 'Select All' on the right to select all regions">Area selection</label>
                     <select name="suburbs" id="id_suburbs" multiple="multiple">
                         {% for choice in form.suburbs.field.choices %}
                             {% get_full_suburb_path choice.0 as full_path %}
@@ -37,6 +37,11 @@
 
                 <div class="row form-horizontal">
                     <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.pricing_methods layout='horizontal' %}
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 {% bootstrap_field form.price_from layout='horizontal' %}
@@ -84,7 +89,6 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        {% bootstrap_field form.pricing_methods layout='horizontal' %}
                         {% bootstrap_field form.property_type layout='horizontal' %}
                         {% bootstrap_field form.show_only_open_homes layout='horizontal' %}
                         {% bootstrap_field form.show_only_properties_with_address layout='horizontal' %}

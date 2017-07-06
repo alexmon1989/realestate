@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.db.models import Q
 
 from datetime import datetime, date, timedelta
 import json
@@ -252,12 +253,20 @@ class VHousesForTables(models.Model):
                 house_id__in=excluded_pks
             )
 
-            if filter_data.get('price_from') and filter_data['price_from'][0]:
-                houses = houses.filter(price__gte=filter_data['price_from'][0])
-            if (filter_data.get('price_to') and
-                    filter_data['price_to'][0] and
-                    int(filter_data['price_to'][0]) != 999999999):
-                houses = houses.filter(price__lte=filter_data['price_to'][0])
+            if not filter_data.get('pricing_methods') or filter_data.get('pricing_methods') == ['1']:
+                if filter_data.get('price_from') and filter_data['price_from'][0]:
+                    houses = houses.filter(price__gte=filter_data['price_from'][0])
+                if (filter_data.get('price_to') and
+                        filter_data['price_to'][0] and
+                            int(filter_data['price_to'][0]) != 999999999):
+                    houses = houses.filter(price__lte=filter_data['price_to'][0])
+            else:
+                if filter_data.get('price_from') and filter_data['price_from'][0]:
+                    houses = houses.filter(Q(price__gte=filter_data['price_from'][0]) | Q(price=0))
+                if (filter_data.get('price_to') and
+                        filter_data['price_to'][0] and
+                            int(filter_data['price_to'][0]) != 999999999):
+                    houses = houses.filter(Q(price__lte=filter_data['price_to'][0]) | Q(price=0))
 
             if filter_data.get('government_value_from') and filter_data['government_value_from'][0]:
                 houses = houses.filter(government_value__gte=filter_data['government_value_from'][0])
@@ -365,10 +374,16 @@ class VHousesForTables(models.Model):
                 date.today()
             ],
         )
-        if filters.get('price_from'):
-            houses = houses.filter(price__gte=filters['price_from'])
-        if filters.get('price_to') and int(filters['price_to']) != 999999999:
-            houses = houses.filter(price__lte=filters['price_to'])
+        if not filters.get('pricing_methods') or filters.getlist('pricing_methods') == ['1']:
+            if filters.get('price_from'):
+                houses = houses.filter(price__gte=filters['price_from'])
+            if filters.get('price_to'):
+                houses = houses.filter(price__lte=filters['price_to'])
+        else:
+            if filters.get('price_from') and filters['price_from']:
+                houses = houses.filter(Q(price__gte=filters['price_from']) | Q(price=0))
+            if filters.get('price_to') and int(filters['price_to']) != 999999999:
+                houses = houses.filter(Q(price__lte=filters['price_to']) | Q(price=0))
 
         if filters.get('bedrooms_from'):
             houses = houses.filter(bedrooms__gte=filters['bedrooms_from'])
