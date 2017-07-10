@@ -3,6 +3,7 @@
 {% load bootstrap3 %}
 {% load account_extras %}
 {% load render_table from django_tables2 %}
+{% load auth_extras %}
 
 {% block content-h1 %}
     Search
@@ -93,6 +94,12 @@
                         {% bootstrap_field form.show_only_open_homes layout='horizontal' %}
                         {% bootstrap_field form.show_only_properties_with_address layout='horizontal' %}
                         {% bootstrap_field form.keywords layout='horizontal' %}
+                        {% if request.user|has_group:"Self" %}
+                            {% bootstrap_field form.agent_name layout='horizontal' %}
+                            {% bootstrap_field form.agent_email layout='horizontal' %}
+                            {% bootstrap_field form.agent_phone layout='horizontal' %}
+                            {% bootstrap_field form.agency layout='horizontal' %}
+                        {% endif %}
                     </div>
                 </div>
 

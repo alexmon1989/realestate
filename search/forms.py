@@ -259,6 +259,10 @@ class SearchForm(forms.Form):
         initial=14,
         min_value=0
     )
+    agent_name = forms.CharField(label='Agent name', required=False)
+    agent_email = forms.CharField(label='Agent email', required=False)
+    agent_phone = forms.CharField(label='Agent phone', required=False)
+    agency = forms.CharField(label='Agency name', required=False)
 
     def __init__(self, *args, **kwargs):
         suburbs = [(suburb['id'], suburb['name'])

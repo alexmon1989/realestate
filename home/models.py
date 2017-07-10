@@ -191,6 +191,45 @@ class OpenHomes(models.Model):
         unique_together = (('house', 'date_from', 'date_to'),)
 
 
+class Agency(models.Model):
+    agency_id = models.AutoField(primary_key=True)
+    agency_name = models.CharField(unique=True, max_length=255)
+    city = models.ForeignKey('City', models.DO_NOTHING)
+    email = models.CharField(blank=True, null=True, max_length=255)
+    work_phone = models.CharField(blank=True, null=True, max_length=255)
+    houses = models.ManyToManyField(House, db_table='agencyhouse')
+
+    def __str__(self):
+        return self.agency_name
+
+    class Meta:
+        managed = False
+        db_table = 'agency'
+        verbose_name = 'Agency'
+        verbose_name_plural = 'Agencies'
+
+
+class Agent(models.Model):
+    agent_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    mobile_phone = models.CharField(blank=True, null=True, max_length=255)
+    ddi_phone = models.CharField(blank=True, null=True, max_length=255)
+    work_phone = models.CharField(blank=True, null=True, max_length=255)
+    email = models.CharField(blank=True, null=True, max_length=255)
+    agency = models.ForeignKey(Agency, models.DO_NOTHING)
+    houses = models.ManyToManyField(House, db_table='agenthouse', db_column='agent_id')
+
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.email)
+
+    class Meta:
+        managed = False
+        db_table = 'agent'
+        verbose_name = 'Agent'
+        verbose_name_plural = 'Agents'
+        unique_together = (('name', 'agency'),)
+
+
 class VHousesForTables(models.Model):
     """Model for v_houses_for_tables view."""
     house_id = models.BigIntegerField(primary_key=True)
@@ -219,6 +258,14 @@ class VHousesForTables(models.Model):
     photos = models.CharField(max_length=16384, blank=True, null=True)
     open_homes_from = models.DateTimeField()
     open_homes_to = models.DateTimeField()
+    agent_name = models.CharField(max_length=255)
+    agent_ddi_phone = models.CharField(max_length=255)
+    agent_email = models.CharField(max_length=255)
+    agent_mobile_phone = models.CharField(max_length=255)
+    agent_work_phone = models.CharField(max_length=255)
+    agency_name = models.CharField(max_length=255)
+    agency_email = models.CharField(max_length=255)
+    agency_work_phone = models.CharField(max_length=255)
 
     class Meta:
         managed = False
@@ -432,46 +479,21 @@ class VHousesForTables(models.Model):
         if filters.get('keywords'):
             houses = houses.filter(description__contains=filters['keywords'])
 
+        if filters.get('agent_name'):
+            houses = houses.filter(agent_phone__contains=filters['agent_name'])
+
+        if filters.get('agent_email'):
+            houses = houses.filter(agent_email__contains=filters['agent_email'])
+
+        if filters.get('agent_phone'):
+            houses = houses.filter(Q(agent_mobile_phone=filters['agent_phone'])
+                                   | Q(agent_ddi_phone=filters['agent_phone'])
+                                   | Q(agent_work_phone=filters['agent_phone']))
+
+        if filters.get('agency'):
+            houses = houses.filter(agency_name__contains=filters['agency'])
+
         return houses.distinct()
-
-
-class Agency(models.Model):
-    agency_id = models.AutoField(primary_key=True)
-    agency_name = models.CharField(unique=True, max_length=255)
-    city = models.ForeignKey('City', models.DO_NOTHING)
-    email = models.CharField(blank=True, null=True, max_length=255)
-    work_phone = models.CharField(blank=True, null=True, max_length=255)
-    houses = models.ManyToManyField(House, db_table='agencyhouse')
-
-    def __str__(self):
-        return self.agency_name
-
-    class Meta:
-        managed = False
-        db_table = 'agency'
-        verbose_name = 'Agency'
-        verbose_name_plural = 'Agencies'
-
-
-class Agent(models.Model):
-    agent_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    mobile_phone = models.CharField(blank=True, null=True, max_length=255)
-    ddi_phone = models.CharField(blank=True, null=True, max_length=255)
-    work_phone = models.CharField(blank=True, null=True, max_length=255)
-    email = models.CharField(blank=True, null=True, max_length=255)
-    agency = models.ForeignKey(Agency, models.DO_NOTHING)
-    houses = models.ManyToManyField(House, db_table='agenthouse')
-
-    def __str__(self):
-        return '{} ({})'.format(self.name, self.email)
-
-    class Meta:
-        managed = False
-        db_table = 'agent'
-        verbose_name = 'Agent'
-        verbose_name_plural = 'Agents'
-        unique_together = (('name', 'agency'),)
 
 
 class SalesPrices(models.Model):
