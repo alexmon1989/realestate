@@ -21,6 +21,8 @@
             <h3 class="box-title">Still thinking list</h3>
         </div>
         <div class="box-body">
+            {% include 'listings/_partial/form_keywords.html' %}
+
             <p><strong>Total:</strong> {{ total }}</p>
             {% render_table table %}
         </div>

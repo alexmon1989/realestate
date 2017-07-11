@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
-from django.db.models import Sum
+from django.db.models import Sum, Q
 
 import json
 import datetime
@@ -38,6 +38,11 @@ def new_listings(request):
     # get new houses queryset
     excluded_pks = [h.house_id for h in MarkedHouse.objects.filter(user=request.user).only('house_id')]
     houses = VHousesForTables.get_new_houses(filters, excluded_pks)
+
+    # Search by keywords, address
+    if request.GET and request.GET.get('keywords'):
+        houses = houses.filter(Q(description__contains=request.GET['keywords'])
+                               | Q(address__contains=request.GET['keywords']))
 
     # Generating table
     if request.user.profile.show_photos_filters:
@@ -81,12 +86,20 @@ def liked_listings(request):
         'house__price',
         'house__listing_create_date',
         'house__photos',
+        'house__description',
         'address',
         'house__property_type__name',
         'property_type',
         'house__price_type__name',
         'price_with_price_type'
     ).filter(user=request.user, mark_id=1)
+
+    # Search by keywords, address
+    if request.GET and request.GET.get('keywords'):
+        houses = houses.extra(
+            where=["CONCAT_WS(' ', house.street_number,	house.street_name) LIKE %s OR description = %s"],
+            params=['%{}%'.format(request.GET['keywords']), '%{}%'.format(request.GET['keywords'])]
+        )
 
     # Generating table
     if request.user.profile.show_photos_filters:
@@ -136,6 +149,13 @@ def disliked_listings(request):
         'price_with_price_type'
     ).filter(user=request.user, mark_id=2)
 
+    # Search by keywords, address
+    if request.GET and request.GET.get('keywords'):
+        houses = houses.extra(
+            where=["CONCAT_WS(' ', house.street_number,	house.street_name) LIKE %s OR description = %s"],
+            params=['%{}%'.format(request.GET['keywords']), '%{}%'.format(request.GET['keywords'])]
+        )
+
     # Generating table
     if request.user.profile.show_photos_filters:
         table = DislikedListingsTableWithPhoto(houses)
@@ -183,6 +203,13 @@ def still_thinking_listings(request):
         'house__price_type__name',
         'price_with_price_type'
     ).filter(user=request.user, mark_id=3)
+
+    # Search by keywords, address
+    if request.GET and request.GET.get('keywords'):
+        houses = houses.extra(
+            where=["CONCAT_WS(' ', house.street_number,	house.street_name) LIKE %s OR description = %s"],
+            params=['%{}%'.format(request.GET['keywords']), '%{}%'.format(request.GET['keywords'])]
+        )
 
     # Generating table
     if request.user.profile.show_photos_filters:

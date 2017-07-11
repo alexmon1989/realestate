@@ -477,7 +477,8 @@ class VHousesForTables(models.Model):
                 open_homes_to__gte=datetime(now.year, now.month, now.day, 23, 59, 59, tzinfo=pytz.UTC),
             )
         if filters.get('keywords'):
-            houses = houses.filter(description__contains=filters['keywords'])
+            houses = houses.filter(Q(description__contains=filters['keywords'])
+                                   | Q(address__contains=filters['keywords']))
 
         if filters.get('agent_name'):
             houses = houses.filter(agent_phone__contains=filters['agent_name'])
