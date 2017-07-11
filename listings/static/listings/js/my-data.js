@@ -105,4 +105,74 @@ $(function () {
                 $("#user-deposit").html("User's value: " + userDeposit.toFixed(1) + "%").data('value', userDeposit);
             });
     });
+
+    $("#id_flooding_10, #id_flooding_100")
+        .parent()
+        .attr('data-placement', 'bottom')
+        .attr('data-toggle', 'tooltip')
+        .attr('title', 'Tick appropriate box/es if you\'ve checked flooding map for the property and found that it is prone to flooding.');
+
+    $("#id_body_corporate")
+        .prev()
+        .attr('data-placement', 'bottom')
+        .attr('data-toggle', 'tooltip')
+        .attr('title', 'Only for properties that have body corporate on them.');
+
+    $("#id_renovations")
+        .prev()
+        .attr('data-placement', 'bottom')
+        .attr('data-toggle', 'tooltip')
+        .attr('title', 'Optional field. Enter estimate costs of renovations that you want to do on the property.');
+
+    $("#id_other_annual_expenses")
+        .attr('data-placement', 'bottom')
+        .attr('data-toggle', 'tooltip')
+        .attr('title', 'Optional field. Add any other expenses that you want to include in calculations and are not covered by above.');
+
+    $("#id_walk_away_price")
+        .prev()
+        .attr('data-placement', 'bottom')
+        .attr('data-toggle', 'tooltip')
+        .attr('title', 'Maximum price that you are willing to pay for the property.');
+
+    $("#id_revisit_on")
+        .prev()
+        .attr('data-placement', 'bottom')
+        .attr('data-toggle', 'tooltip')
+        .attr('title', 'Optional field to complete if you want to make another offer on this property later.');
+
+
+    var initialFormData = $("#form-my-data").serialize();
+    var isDataChanged = false;
+
+    $("#form-my-data :input").change(function() {
+        //$('#modal-default').modal('show');
+        var $this = $("#form-my-data");
+        var currentFormData = $this.serialize();
+        isDataChanged = (initialFormData !== currentFormData);
+    });
+
+    $(window).on("beforeunload", function() {
+        if (isDataChanged) {
+            $('#modal-default').modal('show');
+            return false;
+        }
+    });
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        if (isDataChanged) {
+            $('#modal-default').modal('show');
+            return false;
+        }
+    });
+
+    $("#btn-dont-save").click(function () {
+        isDataChanged = false;
+    });
+
+    $("#btn-save").click(function () {
+        isDataChanged = false;
+        $("#return_url").val("/" + window.location.pathname.substring(1));
+        $("#form-my-data").submit();
+    });
 });

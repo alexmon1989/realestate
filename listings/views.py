@@ -267,6 +267,8 @@ def show_liked_listing(request, pk):
             return_url = reverse('listings:liked_listing')
             if request.GET.get('return_url'):
                 return_url = request.GET['return_url']
+            if request.POST.get('return_url'):
+                return_url = request.POST['return_url']
             return redirect(return_url)
     else:
         form = HouseUserDataForm(instance=house_user_data, house=marked_house.house)
