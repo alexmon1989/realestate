@@ -179,6 +179,25 @@ class House(models.Model):
         return self.price_type
     get_price.short_description = 'Price'
 
+    def get_full_address(self):
+        """Returns full address (with suburb, city, region)"""
+        address = ''
+        if self.street_number:
+            address += self.street_number
+            address += ' '
+
+        if self.street_name:
+            address += self.street_name
+            address += ' '
+
+        address += self.suburb.name
+        address += ', '
+        address += self.suburb.city.city_name
+        address += ', '
+        address += self.suburb.city.region.name
+
+        return address
+
 
 class OpenHomes(models.Model):
     house = models.ForeignKey(House, models.CASCADE)

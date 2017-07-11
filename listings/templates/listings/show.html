@@ -35,10 +35,7 @@
                 <div class="col-md-8 col-md-offset-2 text-center">
                     <h3>
                         <strong>
-                            {% if house.street_number or house.street_name %}
-                                {{ house.street_number }} {{ house.street_name }},
-                            {% endif %}
-                            {{ house.suburb }}, {{ house.suburb.city }}, {{ house.suburb.city.region }}
+                            {{ house.get_full_address }}
                         </strong>
                     </h3>
 
@@ -202,6 +199,15 @@
                 </ul>
             {% endif %}
 
+            {% if house.get_address %}
+                <h3>Map</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="row">
                 <div class="col-md-12 text-center">
                     {% if request.resolver_match.url_name == "show_new_listing" %}
@@ -272,6 +278,35 @@
     </script>
     <script src="{% static "listings/js/my-data.js" %}"></script>
     <script src="{% static "listings/js/calculator.js" %}"></script>
+
+    {% if house.get_address %}
+        <script>
+            var initMap = function () {
+                var address = '{{ house.get_full_address }}';
+                geocoder = new google.maps.Geocoder();
+                geocoder.geocode( { 'address': address}, function(results, status) {
+                  if (status === 'OK') {
+                      var coords = {
+                          lat: results[0].geometry.location.lat(),
+                          lng: results[0].geometry.location.lng()
+                      };
+                      var map = new google.maps.Map(document.getElementById('map'), {
+                          zoom: 17,
+                          center: coords
+                      });
+                      var marker = new google.maps.Marker({
+                          position: coords,
+                          map: map
+                      });
+                  } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                  }
+                });
+            };
+        </script>
+    {% endif %}
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap" type="text/javascript"></script>
 {% endblock %}
 
 {% block styles %}
@@ -284,5 +319,12 @@
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
         }
+
+       #map {
+           height: 400px;
+           width: 100%;
+           margin-bottom: 20px;
+       }
     </style>
+
 {% endblock %}
