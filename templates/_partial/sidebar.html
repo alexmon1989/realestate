@@ -54,6 +54,12 @@
                 </li>
             {% endwith %}
 
+            <li class="{% if request.resolver_match.url_name == "manager_list" or request.resolver_match.url_name == "manager_create" or request.resolver_match.url_name == "manager_edit"  or request.resolver_match.url_name == "manager_delete" %}active{% endif %}">
+                <a href="{% url 'managers:manager_list' %}">
+                    <i class="fa fa-users"></i> <span>Managers</span>
+                </a>
+            </li>
+
             <li class="{% if request.resolver_match.url_name == "search_index" %}active{% endif %}">
                 <a href="{% url 'search:search_index' %}">
                     <i class="fa fa-search"></i> <span>Search</span>

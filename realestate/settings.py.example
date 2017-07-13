@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'listings',
     'search',
     'settings',
+    'managers',
 ]
 
 MIDDLEWARE = [

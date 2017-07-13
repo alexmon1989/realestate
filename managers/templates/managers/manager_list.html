@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load render_table from django_tables2 %}
+
+{% block content-h1 %}
+    Managers
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="{% url 'managers:manager_list' %}">Managers</a></li>
+        <li class="active">List</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Managers list</h3>
+        </div>
+        <div class="box-body">
+            <p><a href="{% url 'managers:manager_create' %}" class="btn btn-primary"><i class="fa fa-plus"></i> Create</a></p>
+            <p><strong>Total:</strong> {{ total }}</p>
+            {% render_table table %}
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+{% endblock %}
+
+{% block styles %}
+<link href="{% static 'django_tables2/bootstrap.css' %}" rel="stylesheet" />
+<style>
+    table img {
+        max-width: 100px;
+        max-height: 100px;
+    }
+</style>
+{% endblock %}

@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^accounts/', include('accounts.urls')),
     url(r'^listings/', include('listings.urls')),
     url(r'^search/', include('search.urls')),
+    url(r'^managers/', include('managers.urls')),
     url(r'^siberia/', admin.site.urls),
 ]
 

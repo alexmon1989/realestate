@@ -44,6 +44,7 @@ class City(models.Model):
     class Meta:
         managed = False
         db_table = 'city'
+        ordering = ('city_name',)
         verbose_name = 'City'
         verbose_name_plural = 'Cities'
 
