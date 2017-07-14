@@ -1,7 +1,9 @@
 import datetime
 from django import forms
 from django.forms import ModelForm
+from django_select2.forms import Select2MultipleWidget
 from .models import HouseUserData, Calculator, OtherExpense
+from managers.models import Manager
 
 
 class HouseUserDataForm(ModelForm):
@@ -9,9 +11,15 @@ class HouseUserDataForm(ModelForm):
     market_reg_value = forms.CharField(
         label='Market/registered value *',
     )
+    managers = forms.MultipleChoiceField(label='Managers',
+                                         required=False,
+                                         widget=Select2MultipleWidget(
+                                             attrs={'data-placeholder': 'Select managers'}
+                                         ))
 
     def __init__(self, *args, **kwargs):
         house = kwargs.pop('house', None)
+        user = kwargs.pop('user', None)
         super(HouseUserDataForm, self).__init__(*args, **kwargs)
         if house and house.price_type.pk == 1:
             help_text = '<a href="#" id="use-offer-price" class="btn btn-default btn-sm">Use Offer Price</a>&nbsp;' \
@@ -22,6 +30,15 @@ class HouseUserDataForm(ModelForm):
                         '<a href="#" id="use-government-value" class="btn btn-default btn-sm">Use Government Valuation</a>'
 
         self.fields['market_reg_value'].help_text = help_text
+
+        managers_choices = [
+            (manager.id, manager.name)
+            for manager
+            in Manager.objects.filter(user=user).order_by('name')
+        ]
+        self.fields['managers'].choices = managers_choices
+        self.fields['managers'].widget.choices = managers_choices
+        self.initial['managers'] = self.instance.managers.values_list('id', flat=True)
 
     def clean_revisit_on(self):
         revisit_on = self.cleaned_data['revisit_on']

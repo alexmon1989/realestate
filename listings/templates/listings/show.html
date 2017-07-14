@@ -261,6 +261,10 @@
         <!-- /.box-footer-->
     </div>
     <!-- /.box -->
+
+    {% if request.resolver_match.url_name == "show_liked_listing" %}
+        {% include 'listings/_partial/form_add_manager.html' %}
+    {% endif %}
 {% endblock %}
 
 {% block scripts %}
@@ -306,6 +310,26 @@
         </script>
     {% endif %}
 
+    {% if request.resolver_match.url_name == "show_liked_listing" %}
+        {{ form.media.js }}
+        <script src="{% static "AdminLTE/plugins/tree-multiselect/dist/jquery.tree-multiselect.min.js" %}"></script>
+        <script src="{% static "accounts/js/filter-form.js" %}"></script>
+        <script>
+            $(function () {
+                $('#id_managers').djangoSelect2({
+                   "language": {
+                       "noResults": function() {
+                           return "No Results Found. <a href='#' data-toggle='modal' data-target='#modal-add-manager' id='add_manager'>Add manager</a>";
+                       }
+                   },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+
     <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap" type="text/javascript"></script>
 {% endblock %}
 
@@ -326,5 +350,29 @@
            margin-bottom: 20px;
        }
     </style>
+
+    {% if request.resolver_match.url_name == "show_liked_listing" %}
+        {{ form.media.css }}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.6/select2-bootstrap.min.css">
+        <style>
+            .select2 { width: 100% !important; }
+            .select2-container--bootstrap .select2-search__field::-webkit-input-placeholder {
+              color: #555;
+            }
+            .select2-container--bootstrap .select2-search__field::-moz-placeholder {
+              color: #555;
+            }
+            .select2-container--bootstrap .select2-search__field:-ms-input-placeholder {
+              color: #555;
+            }
+            .select2-container--bootstrap .select2-search__field:-moz-placeholder {
+              color: #555;
+            }
+            .select2-container--bootstrap .select2-results__group {
+                font-size: 16px;
+            }
+        </style>
+        <link rel="stylesheet" href="{% static "AdminLTE/plugins/tree-multiselect/dist/jquery.tree-multiselect.min.css" %}">
+    {% endif %}
 
 {% endblock %}

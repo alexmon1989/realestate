@@ -4,7 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 from home.models import House
 from accounts.models import Constants as UserConstants
-
+from managers.models import Manager
 
 class Mark(models.Model):
     """Marks model."""
@@ -94,6 +94,7 @@ class HouseUserData(models.Model):
     renovations = models.FloatField('Renovations', blank=True, null=True)
     revisit_on = models.DateField('Revisit on', blank=True, null=True)
     appraised_on = models.DateField('Appraised on', blank=True, null=True)
+    managers = models.ManyToManyField(Manager, verbose_name='Managers')
 
     def __str__(self):
         return '{} for {}'.format(self.user, self.house)

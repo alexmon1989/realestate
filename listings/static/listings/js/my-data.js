@@ -175,4 +175,58 @@ $(function () {
         $("#return_url").val("/" + window.location.pathname.substring(1));
         $("#form-my-data").submit();
     });
+
+    $("#form-my-data button[type=submit]").click(function () {
+        isDataChanged = false;
+    });
+
+    var showOrHideManagers = function () {
+        var value = $('input[name=rent_type]:checked').val();
+        if (value === '3') {
+            $("#id_managers").parent().show();
+        } else {
+            $("#id_managers").parent().hide();
+        }
+    };
+
+    showOrHideManagers();
+
+    $("input[name=rent_type]").change(function () {
+        showOrHideManagers();
+    });
+
+    $('body').on('click', '#add_manager', function() {
+        $("#id_managers").select2('close');
+    });
+
+    $("#save-manager").click(function (e) {
+        e.preventDefault();
+
+        $.post( "/managers/create-manager-ajax/", {
+            name: $("#id_name").val(),
+            agency: $("#id_agency").val(),
+            phone_numbers: $("#id_phone_numbers").val(),
+            email: $("#id_email").val(),
+            rate: $("#id_rate").val(),
+            city: $("#id_city").val()
+        }).done(function(data) {
+            $("#id_name").val('').parent().removeClass('has-error').find(".help-block").remove();
+            $("#id_agency").val('').parent().removeClass('has-error').find(".help-block").remove();
+            $("#id_phone_numbers").val('').parent().removeClass('has-error').find(".help-block").remove();
+            $("#id_email").val('').parent().removeClass('has-error').find(".help-block").remove();
+            $("#id_rate").val('').parent().removeClass('has-error').find(".help-block").remove();
+            $("#id_city").val('').parent().removeClass('has-error').find(".help-block").remove();
+
+            $('#modal-add-manager').modal('hide');
+            $("#id_managers").append("<option value='"+data.pk+"' selected>"+data.name+"</option>").trigger('change');
+        }).fail(function (data) {
+            var errors = data.responseJSON.errors;
+            for (var i in errors) {
+                $item = $('#id_' + i);
+                $item.parent().addClass('has-error').find(".help-block").remove();
+                $item.after('<span class="help-block">' + errors[i] + '</span>');
+            }
+        });
+    });
+
 });

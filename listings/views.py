@@ -26,6 +26,7 @@ from .tables import (NewListingsTable, NewListingsTableWithPhoto, LikedListingsT
 from decorators import group_required
 
 from .forms import HouseUserDataForm, CalculatorForm, OtherExpenseForm
+from managers.forms import ManagerForm
 
 
 @login_required
@@ -260,7 +261,7 @@ def show_liked_listing(request, pk):
 
     # Save user data for house.
     if request.method == 'POST':
-        form = HouseUserDataForm(request.POST, instance=house_user_data)
+        form = HouseUserDataForm(request.POST, instance=house_user_data, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Your data for house #{} has been saved.'.format(pk))
@@ -271,7 +272,7 @@ def show_liked_listing(request, pk):
                 return_url = request.POST['return_url']
             return redirect(return_url)
     else:
-        form = HouseUserDataForm(instance=house_user_data, house=marked_house.house)
+        form = HouseUserDataForm(instance=house_user_data, house=marked_house.house, user=request.user)
 
     # Field addons
     global_constants = GlobalConstants.objects.first()
@@ -298,6 +299,8 @@ def show_liked_listing(request, pk):
         property_type_id=marked_house.house.property_type_id
     ).first()
 
+    manager_form = ManagerForm()
+
     return render(request, 'listings/show.html', {
         'house': marked_house.house,
         'photos': photos,
@@ -314,6 +317,7 @@ def show_liked_listing(request, pk):
         ),
         'rental_analysis': rental_analysis,
         'sales_prices': sales_prices,
+        'manager_form': manager_form,
     })
 
 
