@@ -2,6 +2,12 @@
     <form class="form-group" action="" method="get">
         <div class="col-sm-12">
             <input class="form-control" id="keywords" name="keywords" value="{% if request.GET %}{{ request.GET.keywords }}{% endif %}" placeholder="Search by keyword" type="text">
+
+            {% for key, value in request.GET.items  %}
+                {% if key != 'keywords' %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                {% endif %}
+            {% endfor %}
         </div>
     </form>
 </div>

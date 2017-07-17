@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load render_table from django_tables2 %}
+{% load listings_extras %}
 
 {% block content-h1 %}
     Disliked houses
@@ -22,13 +22,138 @@
         </div>
         <div class="box-body">
             {% include 'listings/_partial/form_keywords.html' %}
+            {% include 'listings/_partial/list_params.html' %}
 
             <p><strong>Total:</strong> {{ total }}</p>
-            {% render_table table %}
+
+            {% if view_mode == 'list-view' %}
+                <div class="row">
+                    <div class="col-md-12">
+                        {% for house in houses %}
+                            <div class="row list-view-house-item">
+                                <div class="col-md-4">
+                                    <div id="carousel-{{ house.house_id }}" data-interval="0" class="carousel slide" data-ride="carousel">
+                                        <!-- Wrapper for slides -->
+                                        <div class="carousel-inner" role="listbox">
+                                            {% for photo in house.house__photos|split:';' %}
+                                            <div class="item {% if forloop.first %}active{% endif %}">
+                                                <img src="{{ photo }}">
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+
+                                        <!-- Controls -->
+                                        <a class="left carousel-control" href="#carousel-{{ house.house_id }}" role="button" data-slide="prev">
+                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="right carousel-control" href="#carousel-{{ house.house_id }}" role="button" data-slide="next">
+                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="lead"><a href="{% url 'listings:show_disliked_listing' pk=house.house_id %}"><strong>{{ house.address }}</strong></a></p>
+
+                                    <p>{{ house.house__description|truncatechars:120 }}</p>
+
+                                    <p class="lead"><strong>{{ house.price_with_price_type }}</strong></p>
+
+                                    {% if house.house__bedrooms or house.house__bathrooms %}
+                                        <p>
+                                            {% if house.house__bedrooms %}
+                                                <i class="fa fa-bed" aria-hidden="true"></i> {{ house.house__bedrooms }}&nbsp;
+                                            {% endif %}
+                                            {% if house.house__bathrooms %}
+                                                <i class="fa fa-bath" aria-hidden="true"></i> {{ house.house__bathrooms }}
+                                            {% endif %}
+                                        </p>
+                                    {% endif %}
+                                    <p><strong>Listed</strong> {{ house.house__listing_create_date|timesince }} ago</p>
+
+                                    <div class="btn-group">
+                                        <a href="{% url 'listings:mark_as_liked' pk=house.house_id %}?return_url={% url 'listings:new_listing' %}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                                        <a href="{% url 'listings:mark_as_still_thinking' pk=house.house_id %}" class="btn btn-warning"><i class="fa fa-hourglass"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% elif view_mode == 'gallery-view' %}
+                {% for house in houses %}
+                    {% if forloop.first %}<div class="row">{% endif %}
+                        <div class="col-md-3 gallery-view-house-item">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="carousel-{{ house.house_id }}" data-interval="0" class="carousel slide" data-ride="carousel">
+                                        <!-- Wrapper for slides -->
+                                        <div class="carousel-inner" role="listbox">
+                                            {% for photo in house.house__photos|split:';' %}
+                                            <div class="item {% if forloop.first %}active{% endif %}">
+                                                <img src="{{ photo }}">
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+
+                                        <!-- Controls -->
+                                        <a class="left carousel-control" href="#carousel-{{ house.house_id }}" role="button" data-slide="prev">
+                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="right carousel-control" href="#carousel-{{ house.house_id }}" role="button" data-slide="next">
+                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </div>
+
+                                    <p class="lead"><a href="{% url 'listings:show_disliked_listing' pk=house.house_id %}"><strong>{{ house.address }}</strong></a></p>
+
+                                    <p>{{ house.house__description|truncatechars:200 }}</p>
+
+                                    <p class="lead"><strong>{{ house.price_with_price_type }}</strong></p>
+
+                                    {% if house.house__bedrooms or house.house__bathrooms %}
+                                        <p>
+                                            {% if house.house__bedrooms %}
+                                                <i class="fa fa-bed" aria-hidden="true"></i> {{ house.house__bedrooms }}&nbsp;
+                                            {% endif %}
+                                            {% if house.house__bathrooms %}
+                                                <i class="fa fa-bath" aria-hidden="true"></i> {{ house.house__bathrooms }}
+                                            {% endif %}
+                                        </p>
+                                    {% endif %}
+                                    <p><strong>Listed</strong> {{ house.house__listing_create_date|timesince }} ago</p>
+
+                                    <div class="text-center">
+                                        <div class="btn-group">
+                                            <a href="{% url 'listings:mark_as_liked' pk=house.house_id %}?return_url={% url 'listings:new_listing' %}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                                             <a href="{% url 'listings:mark_as_still_thinking' pk=house.house_id %}" class="btn btn-warning"><i class="fa fa-hourglass"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
+                    {% if forloop.last %}</div>{% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
         <!-- /.box-body -->
         <div class="box-footer">
-
+            {% if houses.paginator.num_pages > 0 %}
+                <div class="text-center">
+                    <ul class="pagination">
+                        {% for page_num in pages %}
+                            <li class="paginate_button {% if request.GET.page == page_num|stringformat:"i" %}active{% endif %} {% if not request.GET.page and page_num == 1 %}active{% endif %}">
+                                <a href="?page={{ page_num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ page_num }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         </div>
         <!-- /.box-footer-->
     </div>
@@ -42,5 +167,30 @@
         max-width:100px;
         max-height: 100px;
     }
+
+    .gallery-view-house-item {
+        width: 24%;
+        background-color: #fefde3;
+        margin:7px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border: 2px solid #fc0;
+    }
+
+    .list-view-house-item {
+        background-color: #fefde3;
+        margin-right:7px;
+        margin-left:7px;
+        margin-bottom:7px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border: 2px solid #fc0;
+        width: 99%;
+    }
 </style>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'AdminLTE/plugins/jquery.parseparams.js' %}"></script>
+    <script src="{% static 'listings/js/list-params.js' %}"></script>
 {% endblock %}

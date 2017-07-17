@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.forms.models import model_to_dict
 from django.db.models import Sum, Q
 
@@ -38,24 +39,33 @@ def new_listings(request):
 
     # get new houses queryset
     excluded_pks = [h.house_id for h in MarkedHouse.objects.filter(user=request.user).only('house_id')]
-    houses = VHousesForTables.get_new_houses(filters, excluded_pks)
+    houses_list = VHousesForTables.get_new_houses(filters, excluded_pks)
 
     # Search by keywords, address
     if request.GET and request.GET.get('keywords'):
-        houses = houses.filter(Q(description__contains=request.GET['keywords'])
+        houses_list = houses_list.filter(Q(description__contains=request.GET['keywords'])
                                | Q(address__contains=request.GET['keywords']))
 
-    # Generating table
-    if request.user.profile.show_photos_filters:
-        table = NewListingsTableWithPhoto(houses)
-    else:
-        table = NewListingsTable(houses)
+    # Pagination
+    paginator = Paginator(houses_list, request.GET.get('per_page', 20))
+    page = request.GET.get('page')
+    try:
+        houses = paginator.page(page)
+    except PageNotAnInteger:
+        houses = paginator.page(1)
+    except EmptyPage:
+        houses = paginator.page(paginator.num_pages)
 
-    RequestConfig(request).configure(table)
+    if request.GET.get('view_mode'):
+        request.session['view_mode'] = request.GET['view_mode']
+    elif not request.session.get('view_mode'):
+        request.session['view_mode'] = 'list-view'
 
     return render(request, 'listings/new.html', {
-        'table': table,
-        'total': len(table.rows)
+        'houses': houses,
+        'total': len(houses_list),
+        'pages': range(1, paginator.num_pages + 1),
+        'view_mode': request.session['view_mode'],
     })
 
 
@@ -63,7 +73,7 @@ def new_listings(request):
 @group_required(('Users', 'Self'))
 def liked_listings(request):
     """Shows page with liked listings."""
-    houses = MarkedHouse.objects.extra(
+    houses_list = MarkedHouse.objects.extra(
         select={
             "address": "CASE WHEN (house.street_number <> '' AND house.street_name <> '') "
                        "THEN CONCAT_WS(' ', house.street_number, house.street_name) "
@@ -87,6 +97,8 @@ def liked_listings(request):
         'house__price',
         'house__listing_create_date',
         'house__photos',
+        'house__bedrooms',
+        'house__bathrooms',
         'house__description',
         'address',
         'house__property_type__name',
@@ -97,21 +109,36 @@ def liked_listings(request):
 
     # Search by keywords, address
     if request.GET and request.GET.get('keywords'):
-        houses = houses.extra(
+        houses_list = houses_list.extra(
             where=["CONCAT_WS(' ', house.street_number,	house.street_name) LIKE %s OR description = %s"],
             params=['%{}%'.format(request.GET['keywords']), '%{}%'.format(request.GET['keywords'])]
         )
 
-    # Generating table
-    if request.user.profile.show_photos_filters:
-        table = LikedListingsTableWithPhoto(houses)
-    else:
-        table = LikedListingsTable(houses)
-    RequestConfig(request).configure(table)
+    # Pagination
+    paginator = Paginator(houses_list, request.GET.get('per_page', 20))
+    page = request.GET.get('page')
+    try:
+        houses = paginator.page(page)
+    except PageNotAnInteger:
+        houses = paginator.page(1)
+    except EmptyPage:
+        houses = paginator.page(paginator.num_pages)
+
+    if request.GET.get('view_mode'):
+        request.session['view_mode'] = request.GET['view_mode']
+    elif not request.session.get('view_mode'):
+        request.session['view_mode'] = 'list-view'
+
+    if request.GET.get('view_mode'):
+        request.session['view_mode'] = request.GET['view_mode']
+    elif not request.session.get('view_mode'):
+        request.session['view_mode'] = 'list-view'
 
     return render(request, 'listings/liked.html', {
-        'table': table,
-        'total': len(table.rows)
+        'houses': houses,
+        'total': len(houses_list),
+        'pages': range(1, paginator.num_pages + 1),
+        'view_mode': request.session['view_mode'],
     })
 
 
@@ -119,7 +146,7 @@ def liked_listings(request):
 @group_required(('Users', 'Self'))
 def disliked_listings(request):
     """Shows page with disliked listings."""
-    houses = MarkedHouse.objects.extra(
+    houses_list = MarkedHouse.objects.extra(
         select={
             "address": "CASE WHEN (house.street_number <> '' AND house.street_name <> '') "
                        "THEN CONCAT_WS(' ', house.street_number, house.street_name) "
@@ -143,6 +170,9 @@ def disliked_listings(request):
         'house__price',
         'house__listing_create_date',
         'house__photos',
+        'house__bedrooms',
+        'house__bathrooms',
+        'house__description',
         'address',
         'house__property_type__name',
         'property_type',
@@ -152,21 +182,36 @@ def disliked_listings(request):
 
     # Search by keywords, address
     if request.GET and request.GET.get('keywords'):
-        houses = houses.extra(
+        houses_list = houses_list.extra(
             where=["CONCAT_WS(' ', house.street_number,	house.street_name) LIKE %s OR description = %s"],
             params=['%{}%'.format(request.GET['keywords']), '%{}%'.format(request.GET['keywords'])]
         )
 
-    # Generating table
-    if request.user.profile.show_photos_filters:
-        table = DislikedListingsTableWithPhoto(houses)
-    else:
-        table = DislikedListingsTable(houses)
-    RequestConfig(request).configure(table)
+    # Pagination
+    paginator = Paginator(houses_list, request.GET.get('per_page', 20))
+    page = request.GET.get('page')
+    try:
+        houses = paginator.page(page)
+    except PageNotAnInteger:
+        houses = paginator.page(1)
+    except EmptyPage:
+        houses = paginator.page(paginator.num_pages)
+
+    if request.GET.get('view_mode'):
+        request.session['view_mode'] = request.GET['view_mode']
+    elif not request.session.get('view_mode'):
+        request.session['view_mode'] = 'list-view'
+
+    if request.GET.get('view_mode'):
+        request.session['view_mode'] = request.GET['view_mode']
+    elif not request.session.get('view_mode'):
+        request.session['view_mode'] = 'list-view'
 
     return render(request, 'listings/disliked.html', {
-        'table': table,
-        'total': len(table.rows)
+        'houses': houses,
+        'total': len(houses_list),
+        'pages': range(1, paginator.num_pages + 1),
+        'view_mode': request.session['view_mode'],
     })
 
 
@@ -174,7 +219,7 @@ def disliked_listings(request):
 @group_required(('Users', 'Self'))
 def still_thinking_listings(request):
     """Shows page with still thinking listings."""
-    houses = MarkedHouse.objects.extra(
+    houses_list = MarkedHouse.objects.extra(
         select={
             "address": "CASE WHEN (house.street_number <> '' AND house.street_name <> '') "
                        "THEN CONCAT_WS(' ', house.street_number, house.street_name) "
@@ -198,6 +243,9 @@ def still_thinking_listings(request):
         'house__price',
         'house__listing_create_date',
         'house__photos',
+        'house__bedrooms',
+        'house__bathrooms',
+        'house__description',
         'address',
         'house__property_type__name',
         'property_type',
@@ -207,21 +255,43 @@ def still_thinking_listings(request):
 
     # Search by keywords, address
     if request.GET and request.GET.get('keywords'):
-        houses = houses.extra(
+        houses_list = houses_list.extra(
             where=["CONCAT_WS(' ', house.street_number,	house.street_name) LIKE %s OR description = %s"],
             params=['%{}%'.format(request.GET['keywords']), '%{}%'.format(request.GET['keywords'])]
         )
 
-    # Generating table
-    if request.user.profile.show_photos_filters:
-        table = StillThinkingListingsTableWithPhoto(houses)
-    else:
-        table = StillThinkingListingsTable(houses)
-    RequestConfig(request).configure(table)
+    # Search by keywords, address
+    if request.GET and request.GET.get('keywords'):
+        houses_list = houses_list.extra(
+            where=["CONCAT_WS(' ', house.street_number,	house.street_name) LIKE %s OR description = %s"],
+            params=['%{}%'.format(request.GET['keywords']), '%{}%'.format(request.GET['keywords'])]
+        )
+
+    # Pagination
+    paginator = Paginator(houses_list, request.GET.get('per_page', 20))
+    page = request.GET.get('page')
+    try:
+        houses = paginator.page(page)
+    except PageNotAnInteger:
+        houses = paginator.page(1)
+    except EmptyPage:
+        houses = paginator.page(paginator.num_pages)
+
+    if request.GET.get('view_mode'):
+        request.session['view_mode'] = request.GET['view_mode']
+    elif not request.session.get('view_mode'):
+        request.session['view_mode'] = 'list-view'
+
+    if request.GET.get('view_mode'):
+        request.session['view_mode'] = request.GET['view_mode']
+    elif not request.session.get('view_mode'):
+        request.session['view_mode'] = 'list-view'
 
     return render(request, 'listings/still_thinking.html', {
-        'table': table,
-        'total': len(table.rows)
+        'houses': houses,
+        'total': len(houses_list),
+        'pages': range(1, paginator.num_pages + 1),
+        'view_mode': request.session['view_mode'],
     })
 
 

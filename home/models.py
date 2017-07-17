@@ -311,6 +311,10 @@ class VHousesForTables(models.Model):
                 'photos',
                 'address',
                 'property_type_full',
+                'description',
+                'bedrooms',
+                'bathrooms',
+                'listing_create_date',
             ).filter(
                 suburb__in=filter_data['suburbs'],
                 listing_create_date__range=[
