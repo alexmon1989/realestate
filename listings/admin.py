@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HouseUserData
+from .models import HouseUserData, UserHouse
 
 
 class HouseUserDataAdmin(admin.ModelAdmin):
@@ -14,4 +14,16 @@ class HouseUserDataAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+
+class UserHouseAdmin(admin.ModelAdmin):
+    """Admin model for user's House objects."""
+    list_display = ('id', 'house_link', 'user_link')
+    list_display_links = None
+
+    readonly_fields = ('house', 'user')
+
+    def has_add_permission(self, request):
+        return False
+
 admin.site.register(HouseUserData, HouseUserDataAdmin)
+admin.site.register(UserHouse, UserHouseAdmin)

@@ -9,24 +9,25 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.forms.models import model_to_dict
 from django.db.models import Sum, Q
+from django.views.generic.list import ListView
+from django.utils.decorators import method_decorator
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponseRedirect
+from django.conf import settings
 
 import json
 import datetime
+import os
 
-from django_tables2 import RequestConfig
-
-from home.models import House, VHousesForTables, RentalAnalysis, SalesPrices
-from .models import MarkedHouse, Calculator, OtherExpense
+from home.models import House, VHousesForTables, Region, City
+from .models import MarkedHouse, Calculator, OtherExpense, UserHouse
 from settings.models import Global as GlobalConstants
 from accounts.models import CitiesConstants
-
-from .tables import (NewListingsTable, NewListingsTableWithPhoto, LikedListingsTable, LikedListingsTableWithPhoto,
-                     DislikedListingsTable, DislikedListingsTableWithPhoto, StillThinkingListingsTable,
-                     StillThinkingListingsTableWithPhoto)
-
 from decorators import group_required
 
-from .forms import HouseUserDataForm, CalculatorForm, OtherExpenseForm
+from .forms import HouseUserDataForm, CalculatorForm, OtherExpenseForm, HouseForm
 from managers.forms import ManagerForm
 
 
@@ -622,3 +623,194 @@ def get_deposit_values(request):
         }
 
     return JsonResponse(res)
+
+
+class UsersHousesListView(ListView):
+    """Shows page with houses of current user."""
+    model = UserHouse
+
+    template_name = 'listings/my.html'
+    context_object_name = 'houses'
+
+    def get_queryset(self):
+        houses_list = UserHouse.objects.filter(user=self.request.user)
+
+        # Search by keywords, address
+        if self.request.GET and self.request.GET.get('keywords'):
+            houses_list = houses_list.extra(
+                tables=['house'],
+                where=["CONCAT_WS(' ', house.street_number,	house.street_name) LIKE %s OR description = %s"],
+                params=['%{}%'.format(self.request.GET['keywords']), '%{}%'.format(self.request.GET['keywords'])]
+            )
+
+        return houses_list.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super(UsersHousesListView, self).get_context_data(**kwargs)
+        if self.request.GET.get('view_mode'):
+            self.request.session['view_mode'] = self.request.GET['view_mode']
+        elif not self.request.session.get('view_mode'):
+            self.request.session['view_mode'] = 'list-view'
+
+        context['view_mode'] = self.request.session['view_mode']
+        context['total'] = len(self.object_list)
+
+        return context
+
+    def get_paginate_by(self, queryset):
+        return self.request.GET.get('per_page', 20)
+
+    @method_decorator(login_required)
+    @method_decorator(group_required(('Users', 'Self')))
+    def dispatch(self, *args, **kwargs):
+        return super(UsersHousesListView, self).dispatch(*args, **kwargs)
+
+
+class HouseCreateView(SuccessMessageMixin, CreateView):
+    """Shows page for house create"""
+    template_name = 'listings/create_house.html'
+    form_class = HouseForm
+    success_message = 'House has been successfully created.'
+
+    def form_valid(self, form):
+        form.instance.create_time = datetime.datetime.now()
+        form.instance.listing_create_date = datetime.datetime.now()
+        self.object = form.save()
+
+        user_house = UserHouse(user=self.request.user, house_id=self.object.house_id)
+        user_house.save()
+
+        marked_house = MarkedHouse(
+            house_id=self.object.house_id,
+            mark_id=self.request.POST.get('mark'),
+            user=self.request.user
+        )
+        marked_house.save()
+
+        # Images
+        images_db = []
+        for file in self.request.FILES:
+            myfile = self.request.FILES[file]
+            fs = FileSystemStorage()
+            filename = fs.save(os.path.join('houses', str(self.object.house_id), myfile.name), myfile)
+            uploaded_file_url = fs.url(filename)
+            images_db.append(uploaded_file_url)
+
+        self.object.photos = ';'.join(images_db)
+        self.object.save()
+
+        return super(HouseCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('listings:my_listing')
+
+    @method_decorator(login_required)
+    @method_decorator(group_required(('Users', 'Self')))
+    def dispatch(self, *args, **kwargs):
+        return super(HouseCreateView, self).dispatch(*args, **kwargs)
+
+
+class HouseDeleteView(SuccessMessageMixin, DeleteView):
+    """Deletes house."""
+    template_name = 'listings/delete_house.html'
+    success_message = 'House has been successfully deleted.'
+    model = House
+
+    def get_queryset(self):
+        qs = super(HouseDeleteView, self).get_queryset()
+        return qs.filter(userhouse__user=self.request.user)
+
+    def get_success_url(self):
+        return reverse('listings:my_listing')
+
+    @method_decorator(login_required)
+    @method_decorator(group_required(('Users', 'Self')))
+    def dispatch(self, *args, **kwargs):
+        return super(HouseDeleteView, self).dispatch(*args, **kwargs)
+
+
+class HouseUpdateView(SuccessMessageMixin, UpdateView):
+    """Shows page for update user's house."""
+    template_name = 'listings/update_house.html'
+    success_message = 'House data has been successfully saved.'
+    form_class = HouseForm
+    model = House
+
+    def get_queryset(self):
+        qs = super(HouseUpdateView, self).get_queryset()
+        return qs.filter(userhouse__user=self.request.user)
+
+    def form_valid(self, form):
+        self.object = form.save()
+
+        marked_house, created = MarkedHouse.objects.get_or_create(house=self.object, user=self.request.user)
+        marked_house.mark_id = self.request.POST.get('mark')
+        marked_house.save()
+
+        # Images
+        if self.object.photos:
+            images_db = self.object.photos.split(';')
+        else:
+            images_db = []
+        for file in self.request.FILES:
+            myfile = self.request.FILES[file]
+            fs = FileSystemStorage()
+            filename = fs.save(os.path.join('houses', str(self.object.house_id), myfile.name), myfile)
+            uploaded_file_url = fs.url(filename)
+            images_db.append(uploaded_file_url)
+
+        self.object.photos = ';'.join(images_db)
+        self.object.save()
+
+        return super(HouseUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('listings:my_listing')
+
+    def get_context_data(self, **kwargs):
+        context = super(HouseUpdateView, self).get_context_data(**kwargs)
+        if self.object.photos:
+            context['photos'] = self.object.photos.split(';')
+        else:
+            context['photos'] = []
+
+        return context
+
+    @method_decorator(login_required)
+    @method_decorator(group_required(('Users', 'Self')))
+    def dispatch(self, *args, **kwargs):
+        return super(HouseUpdateView, self).dispatch(*args, **kwargs)
+
+
+@login_required
+@group_required(('Users', 'Self'))
+def get_cities_by_region(request, region_id):
+    region = Region.objects.get(id=region_id)
+    cities = region.city_set.extra(select={'id': 'city_id', 'text': 'city_name'}).values('id', 'text').order_by('city_name')
+    return JsonResponse({'results': list(cities)})
+
+
+@login_required
+@group_required(('Users', 'Self'))
+def get_suburbs_by_city(request, city_id):
+    city = City.objects.get(city_id=city_id)
+    suburbs = city.suburb_set.extra(select={'id': 'id', 'text': 'name'}).values('id', 'text').order_by('name')
+    return JsonResponse({'results': list(suburbs)})
+
+
+@login_required
+@group_required(('Users', 'Self'))
+def delete_house_photo(request, house_id):
+    """Deletes photo of user's house"""
+    house = get_object_or_404(House, pk=house_id, userhouse__user=request.user)
+    photos = house.photos.split(';')
+    photos.remove(request.GET.get('photo_path'))
+    house.photos = ';'.join(photos)
+    house.save()
+
+    photo_path = settings.BASE_DIR + request.GET.get('photo_path')
+    if os.path.exists(photo_path):
+        os.remove(photo_path)
+
+    messages.add_message(request, messages.SUCCESS, 'Photo has been removed.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

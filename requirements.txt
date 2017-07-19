@@ -6,11 +6,12 @@ django-bootstrap3==8.2.2
 django-debug-toolbar==1.7
 Django-Select2==5.8.10
 django-tables2==1.4.2
+olefile==0.44
 packaging==16.8
+Pillow==4.2.1
 PyMySQL==0.7.11
 pyparsing==2.2.0
 pytz==2017.2
 singlemodeladmin==0.7
 six==1.10.0
 sqlparse==0.2.3
-uWSGI==2.0.14

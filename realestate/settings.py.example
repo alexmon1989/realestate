@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'bootstrap3',
     'home',
     'accounts',
@@ -75,6 +76,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'listings.context_processors.global_settings',
+                'django.template.context_processors.media'
             ],
         },
     },
@@ -89,7 +92,7 @@ WSGI_APPLICATION = 'realestate.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'realestate',
+        'NAME': 'realestate3',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
@@ -138,7 +141,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "home"),
     os.path.join(BASE_DIR, "accounts"),
@@ -163,10 +165,7 @@ CACHES = {
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-#SESSION_COOKIE_SECURE = True
-#CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = True
+GOOGLE_MAPS_API_KEY = ''
 
-# Session age
-SESSION_COOKIE_AGE = 60*60*24
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

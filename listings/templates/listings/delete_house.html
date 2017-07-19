@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap3 %}
+{% load account_extras %}
+
+{% block content-h1 %}
+    My houses
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>Listings</li>
+        <li>My</li>
+        <li class="active">Delete</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Delete house</h3>
+        </div>
+        <div class="box-body">
+            <form action="" method="post" class="form">
+                {% csrf_token %}
+                <p>Are you sure you want to delete <strong>"{{ object }}"</strong>?</p>
+                <input class="btn btn-primary" type="submit" value="Confirm" />
+                <a href="{% url 'listings:my_listing' %}" class="btn btn-warning">Cancel</a>
+            </form>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+{% endblock %}

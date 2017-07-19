@@ -7,10 +7,14 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.db.models import Q
+from django.contrib.auth.models import User
+from django.conf import settings
 
 from datetime import datetime, date, timedelta
 import json
 import pytz
+import os
+import shutil
 
 
 class Region(models.Model):
@@ -149,6 +153,15 @@ class House(models.Model):
             house['suburb__city__city_name'],
             house['suburb__city__region__name']
         )
+
+    def delete(self, *args, **kwargs):
+        # Deleting photos
+        if self.photos:
+            directory = os.path.join(settings.MEDIA_ROOT, 'houses', str(self.pk))
+            if os.path.exists(directory):
+                shutil.rmtree(directory)
+
+        super(House, self).delete(*args, **kwargs)
 
     def get_address(self):
         """Returns address of house."""

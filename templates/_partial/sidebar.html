@@ -29,7 +29,7 @@
                 </a>
             </li>
 
-            {% with 'new_listing liked_listing disliked_listing still_thinking_listing show_new_listing show_liked_listing show_disliked_listing show_still_thinking_listing' as url_name_list %}
+            {% with 'new_listing liked_listing disliked_listing still_thinking_listing show_new_listing show_liked_listing show_disliked_listing show_still_thinking_listing my_listing my_listing_create my_listing_delete my_listing_update' as url_name_list %}
                 <li class="treeview {% if request.resolver_match.url_name in url_name_list %}active{% endif %}">
                     <a href="#">
                         <i class="fa fa-list"></i>
@@ -49,6 +49,9 @@
                         </li>
                         <li class="{% if request.resolver_match.url_name == "still_thinking_listing" or request.resolver_match.url_name == "show_still_thinking_listing" %}active{% endif %}">
                             <a href="{% url 'listings:still_thinking_listing' %}"><i class="fa fa-circle-o"></i> Still thinking</a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == "my_listing" or request.resolver_match.url_name == "my_listing" or request.resolver_match.url_name == "my_listing_create" or request.resolver_match.url_name == "my_listing_delete" or request.resolver_match.url_name == "my_listing_update" %}active{% endif %}">
+                            <a href="{% url 'listings:my_listing' %}"><i class="fa fa-circle-o"></i> My listings</a>
                         </li>
                     </ul>
                 </li>

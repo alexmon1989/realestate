@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.template.defaultfilters import escape
+from django.core.urlresolvers import reverse
 
 from home.models import House
 from accounts.models import Constants as UserConstants
@@ -208,3 +210,38 @@ class Calculator(models.Model):
             # saving
             calculator.save()
         return calculator
+
+
+class UserHouse(models.Model):
+    """User's houses model."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
+
+    def __str__(self):
+        """String view of house object"""
+        house = House.objects.values(
+            'street_number',
+            'street_name',
+            'suburb__name',
+            'suburb__city__city_name',
+            'suburb__city__region__name'
+        ).get(house_id=self.house.pk)
+
+        return '{} {}, {}, {}, {}'.format(
+            house['street_number'],
+            house['street_name'],
+            house['suburb__name'],
+            house['suburb__city__city_name'],
+            house['suburb__city__region__name']
+        )
+
+    def user_link(self):
+        return '<a href="%s">%s</a>' % (reverse("admin:auth_user_change", args=(self.user.id,)), escape(self.user))
+
+    def house_link(self):
+        return '<a href="%s">%s</a>' % (reverse("admin:home_house_change", args=(self.house.pk,)), escape(self.house))
+
+    user_link.allow_tags = True
+    user_link.short_description = "User"
+    house_link.allow_tags = True
+    house_link.short_description = "House"

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap3 %}
+{% load account_extras %}
+
+{% block content-h1 %}
+    My houses
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>Listings</li>
+        <li>My</li>
+        <li class="active">Edit</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Edit house</h3>
+        </div>
+        <div class="box-body">
+            <form action="" method="post" class="form" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6">
+                        {% bootstrap_form form exclude='image_1,image_2,image_3,image_4,image_5,image_6,image_7,image_8,image_9,image_10' %}
+                    </div>
+                    <div class="col-md-6">
+                        {% if photos %}
+                            <p><strong>Images</strong></p>
+                        {% endif %}
+                        {% for photo in photos %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div>
+                                        <a href="{{ photo }}" data-lightbox="gallery"><img width="150" src="{{ photo }}" alt="" class="img-thumbnail"></a>
+                                        <a href="{% url 'listings:delete_house_photo' house_id=house.house_id %}?photo_path={{ photo }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure want to delete this photo?')"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        {% if form.image_1 %}
+                            {% bootstrap_field form.image_1 %}
+                        {% endif %}
+
+                        {% if form.image_2 %}
+                            {% bootstrap_field form.image_2 %}
+                        {% endif %}
+
+                        {% if form.image_3 %}
+                            {% bootstrap_field form.image_3 %}
+                        {% endif %}
+
+                        {% if form.image_4 %}
+                            {% bootstrap_field form.image_4 %}
+                        {% endif %}
+
+                        {% if form.image_5 %}
+                            {% bootstrap_field form.image_5 %}
+                        {% endif %}
+
+                        {% if form.image_6 %}
+                            {% bootstrap_field form.image_6 %}
+                        {% endif %}
+
+                        {% if form.image_7 %}
+                            {% bootstrap_field form.image_7 %}
+                        {% endif %}
+
+                        {% if form.image_8 %}
+                            {% bootstrap_field form.image_8 %}
+                        {% endif %}
+
+                        {% if form.image_9 %}
+                            {% bootstrap_field form.image_9 %}
+                        {% endif %}
+
+                        {% if form.image_10 %}
+                            {% bootstrap_field form.image_10 %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% csrf_token %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                    {% bootstrap_icon "ok" %} Save
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+{% endblock %}
+
+
+{% block styles %}
+    {{ form.media.css }}
+{% endblock %}
+
+{% block scripts %}
+    {{ form.media.js }}
+    <script src="{% static 'listings/js/my-listings-form.js' %}"></script>
+{% endblock %}

@@ -1,9 +1,12 @@
 import datetime
+import string
 from django import forms
 from django.forms import ModelForm
-from django_select2.forms import Select2MultipleWidget
+from django.core.exceptions import ValidationError
+from django_select2.forms import Select2MultipleWidget, Select2Widget
 from .models import HouseUserData, Calculator, OtherExpense
 from managers.models import Manager
+from home.models import House, Region, City, Suburb
 
 
 class HouseUserDataForm(ModelForm):
@@ -118,3 +121,76 @@ class OtherExpenseForm(ModelForm):
     class Meta:
         model = OtherExpense
         exclude = ('user', 'house')
+
+
+def file_size(value):
+    """Validator for file size."""
+    limit = 3 * 1024 * 1024
+    if value.size > limit:
+        raise ValidationError('File too large. Size should not exceed 2 MiB.')
+
+
+class HouseForm(ModelForm):
+    """Form for creating OtherExpenses objects"""
+    region = forms.ModelChoiceField(label='Region', queryset=Region.objects, widget=Select2Widget())
+    city = forms.ModelChoiceField(label='City', widget=Select2Widget(), queryset=City.objects)
+    suburb = forms.ModelChoiceField(label='Suburb', widget=Select2Widget(), queryset=Suburb.objects)
+    url = forms.CharField(required=False)
+    mark = forms.ChoiceField(label='Save to list', choices=((1, 'Liked'), (2, 'Disliked')), widget=forms.RadioSelect())
+    image_1 = forms.ImageField(label='Image 1', validators=[file_size], required=False)
+    image_2 = forms.ImageField(label='Image 2', validators=[file_size], required=False)
+    image_3 = forms.ImageField(label='Image 3', validators=[file_size], required=False)
+    image_4 = forms.ImageField(label='Image 4', validators=[file_size], required=False)
+    image_5 = forms.ImageField(label='Image 5', validators=[file_size], required=False)
+    image_6 = forms.ImageField(label='Image 6', validators=[file_size], required=False)
+    image_7 = forms.ImageField(label='Image 7', validators=[file_size], required=False)
+    image_8 = forms.ImageField(label='Image 8', validators=[file_size], required=False)
+    image_9 = forms.ImageField(label='Image 9', validators=[file_size], required=False)
+    image_10 = forms.ImageField(label='Image 10', validators=[file_size], required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(HouseForm, self).__init__(*args, **kwargs)
+        try:
+            suburb = self.instance.suburb
+            self.fields['region'].initial = suburb.city.region
+            self.fields['city'].initial = suburb.city
+            self.fields['mark'].initial = self.instance.markedhouse_set.first().mark_id
+
+            # Photos
+            if self.instance.photos:
+                photos = self.instance.photos.split(';')
+                i = 1
+                for photo in photos:
+                    del self.fields['image_{}'.format(i)]
+                    i += 1
+        except Suburb.DoesNotExist:
+            pass
+
+    class Meta:
+        model = House
+        fields = (
+            'region',
+            'city',
+            'suburb',
+            'street_name',
+            'street_number',
+            'bedrooms',
+            'bathrooms',
+            'ensuite',
+            'land',
+            'floor',
+            'car_spaces',
+            'property_type',
+            'price',
+            'price_type',
+            'auction_time',
+            'description',
+            'government_value',
+            'government_rates',
+            'url',
+            'source_id',
+            'additional_data',
+            'property_id',
+            'agency_link',
+            'mark',
+        )
