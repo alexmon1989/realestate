@@ -6,11 +6,13 @@ from decorators import group_required
 from listings.models import MarkedHouse
 from home.models import VHousesForTables
 
+import subprocess
 
 @login_required
 @group_required(('Users', 'Self'))
 def dashboard(request):
     """Shows dashboard page."""
+    print(subprocess.check_output(['git', 'describe', '--abbrev=0', '--tags']))
     filters = request.user.housesfilter_set.filter(disabled=False).all()
 
     # get new houses queryset
