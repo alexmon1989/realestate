@@ -14,6 +14,8 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             '''
+            ALTER TABLE `pricing_method`
+            MODIFY COLUMN `name`  varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER `id`;
             DROP VIEW IF EXISTS `v_houses_for_tables`;
             CREATE VIEW `v_houses_for_tables` AS SELECT
                 `house`.`house_id` AS `house_id`,
