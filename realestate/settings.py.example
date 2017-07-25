@@ -173,8 +173,14 @@ GOOGLE_MAPS_API_KEY = ''
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+
+def subprocess_cmd(command):
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    proc_stdout = process.communicate()[0].strip()
+    return proc_stdout
+
 ADMIN_FOOTER_DATA = {
-  'version': subprocess.check_output('cd {} & git describe --abbrev=0 --tags'.format(BASE_DIR), shell=True)
+    'version': subprocess_cmd('cd {} && /usr/bin/git describe --abbrev=0 --tags'.format(BASE_DIR))
 }
 
 #SESSION_COOKIE_SECURE = True
