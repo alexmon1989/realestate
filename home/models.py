@@ -288,6 +288,7 @@ class VHousesForTables(models.Model):
     car_spaces = models.IntegerField()
     ensuite = models.BooleanField()
     listing_create_date = models.DateField()
+    create_time = models.DateField()
     photos = models.CharField(max_length=16384, blank=True, null=True)
     open_homes_from = models.DateTimeField()
     open_homes_to = models.DateTimeField()
@@ -321,13 +322,13 @@ class VHousesForTables(models.Model):
                 'price',
                 'price_with_price_type',
                 'listing_create_date',
+                'create_time',
                 'photos',
                 'address',
                 'property_type_full',
                 'description',
                 'bedrooms',
                 'bathrooms',
-                'listing_create_date',
             ).filter(
                 suburb__in=filter_data['suburbs'],
                 listing_create_date__range=[

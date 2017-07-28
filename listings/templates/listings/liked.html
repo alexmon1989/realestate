@@ -32,7 +32,7 @@
                     <div class="col-md-12">
                         {% for house in houses %}
                             <div class="row list-view-house-item">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     {% if house.house__photos %}
                                         <div id="carousel-{{ house.house_id }}" data-interval="0" class="carousel slide" data-ride="carousel">
                                             <!-- Wrapper for slides -->
@@ -59,7 +59,7 @@
                                     {% endif %}
                                 </div>
 
-                                <div class="col-md-8">
+                                <div class="col-md-9">
                                     <p class="lead"><a href="{% url 'listings:show_liked_listing' pk=house.house_id %}"><strong>{{ house.address }}</strong></a></p>
 
                                     <p>{{ house.house__description|truncatechars:120 }}</p>
@@ -76,7 +76,7 @@
                                             {% endif %}
                                         </p>
                                     {% endif %}
-                                    <p><strong>Listed</strong> {{ house.house.create_time|naturaltime }} ago</p>
+                                    <p><strong>Listed</strong> {{ house.house__create_time|naturaltime }}</p>
 
                                     <div class="btn-group">
                                         <a href="{% url 'listings:mark_as_disliked' pk=house.house_id %}" class="btn btn-danger"><i class="fa fa-minus"></i></a>
@@ -134,7 +134,7 @@
                                             {% endif %}
                                         </p>
                                     {% endif %}
-                                    <p><strong>Listed</strong> {{ house.house.create_time|naturaltime }} ago</p>
+                                    <p><strong>Listed</strong> {{ house.house__create_time|naturaltime }}</p>
 
                                     <div class="text-center">
                                         <div class="btn-group">

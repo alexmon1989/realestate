@@ -34,7 +34,7 @@
                 <div class="col-md-12">
                     {% for house in houses %}
                         <div class="row list-view-house-item">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 {% if house.house.photos %}
                                     <div id="carousel-{{ house.house.pk }}" data-interval="0" class="carousel slide" data-ride="carousel">
                                         <!-- Wrapper for slides -->
@@ -61,7 +61,7 @@
                                 {% endif %}
                             </div>
 
-                            <div class="col-md-8">
+                            <div class="col-md-9">
 
                                 <p class="lead"><a href="{% url 'listings:my_listing_update' pk=house.house.house_id %}">{{ house.house.get_address }}</a></p>
 
@@ -79,7 +79,7 @@
                                         {% endif %}
                                     </p>
                                 {% endif %}
-                                <p><strong>Listed</strong> {{ house.house.create_time|naturaltime }} ago</p>
+                                <p><strong>Listed</strong> {{ house.house.create_time|naturaltime }}</p>
 
                                 <p><a href="{% url 'listings:my_listing_delete' pk=house.house.house_id %}" class="btn btn-danger">Delete</a></p>
                             </div>

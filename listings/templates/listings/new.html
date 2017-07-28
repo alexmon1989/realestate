@@ -32,7 +32,7 @@
                 <div class="col-md-12">
                     {% for house in houses %}
                         <div class="row list-view-house-item">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 {% if house.photos %}
                                     <div id="carousel-{{ house.house_id }}" data-interval="0" class="carousel slide" data-ride="carousel">
                                         <!-- Wrapper for slides -->
@@ -59,7 +59,7 @@
                                 {% endif %}
                             </div>
 
-                            <div class="col-md-8">
+                            <div class="col-md-9">
 
                                 <p class="lead"><a href="{% url 'listings:show_new_listing' pk=house.house_id %}">{{ house.address }}</a></p>
 
@@ -77,7 +77,7 @@
                                         {% endif %}
                                     </p>
                                 {% endif %}
-                                <p><strong>Listed</strong> {{ house.house.create_time|naturaltime }} ago</p>
+                                <p><strong>Listed</strong> {{ house.create_time|naturaltime }}</p>
 
                                 <div class="btn-group">
                                     <a href="{% url 'listings:mark_as_liked' pk=house.house_id %}?return_url={% url 'listings:new_listing' %}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
@@ -136,7 +136,7 @@
                                             {% endif %}
                                         </p>
                                     {% endif %}
-                                    <p><strong>Listed</strong> {{ house.house.create_time|naturaltime }} ago</p>
+                                    <p><strong>Listed</strong> {{ house.create_time|naturaltime }}</p>
 
                                     <div class="text-center">
                                         <div class="btn-group">
