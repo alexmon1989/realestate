@@ -11,9 +11,9 @@ class Global(models.Model):
             MinValueValidator(5)
         ]
     )
-    qv_growth = models.CharField('QV Growth', max_length=255, null=True, blank=True)
-    qv_rental = models.CharField('QV Rental', max_length=255, null=True, blank=True)
-    qv_sales = models.CharField('QV Sales', max_length=255, null=True, blank=True)
+    qv_growth = models.CharField('QV Growth link', max_length=255, null=True, blank=True)
+    qv_rental = models.CharField('QV Rental link', max_length=255, null=True, blank=True)
+    qv_sales = models.CharField('QV Sales link', max_length=255, null=True, blank=True)
     loan_deposit = models.FloatField(
         'Loan deposit, %',
         null=True,
