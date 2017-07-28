@@ -200,10 +200,12 @@
             {% endif %}
 
             {% if house.get_address %}
-                <h3>Map</h3>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="map"></div>
+                <div id="map-div" style="display: none">
+                    <h3>Map</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="map"></div>
+                        </div>
                     </div>
                 </div>
             {% endif %}
@@ -302,8 +304,7 @@
                           position: coords,
                           map: map
                       });
-                  } else {
-                    alert('Geocode was not successful for the following reason: ' + status);
+                      $("#map-div").show();
                   }
                 });
             };
