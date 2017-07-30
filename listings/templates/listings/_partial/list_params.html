@@ -9,13 +9,13 @@
         <!-- Single button -->
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Per page <span class="caret"></span>
+                {% if not request.GET.per_page %}20{% else %}{{ request.GET.per_page }}{% endif %} per page <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#" class="per-page" data-per-page="20">{% if not request.GET.per_page or request.GET.per_page == '20' %}<strong>20</strong>{% else %}20{% endif %}</a></li>
-                <li><a href="#" class="per-page" data-per-page="40">{% if request.GET.per_page == '40' %}<strong>40</strong>{% else %}40{% endif %}</a></li>
-                <li><a href="#" class="per-page" data-per-page="60">{% if request.GET.per_page == '60' %}<strong>60</strong>{% else %}60{% endif %}</a></li>
-                <li><a href="#" class="per-page" data-per-page="80">{% if request.GET.per_page == '80' %}<strong>80</strong>{% else %}80{% endif %}</a></li>
+                <li><a href="#" class="per-page" data-per-page="20">{% if not request.GET.per_page or request.GET.per_page == '20' %}<strong>20 per page</strong>{% else %}20 per page{% endif %}</a></li>
+                <li><a href="#" class="per-page" data-per-page="40">{% if request.GET.per_page == '40' %}<strong>40 per page</strong>{% else %}40 per page{% endif %}</a></li>
+                <li><a href="#" class="per-page" data-per-page="60">{% if request.GET.per_page == '60' %}<strong>60 per page</strong>{% else %}60 per page{% endif %}</a></li>
+                <li><a href="#" class="per-page" data-per-page="80">{% if request.GET.per_page == '80' %}<strong>80 per page</strong>{% else %}80 per page{% endif %}</a></li>
             </ul>
         </div>
     </div>
