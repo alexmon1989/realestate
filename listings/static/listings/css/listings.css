@@ -1,0 +1,36 @@
+table img {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+.gallery-view-house-item {
+    width: 24%;
+    background-color: #fefde3;
+    margin:7px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 2px solid #fc0;
+}
+
+.list-view-house-item {
+    background-color: #fefde3;
+    margin-right:7px;
+    margin-left:7px;
+    margin-bottom:0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 2px solid #fc0;
+    width: 99%;
+}
+
+.list-view-house-item:not(:first-child) {
+    border-top: none;
+}
+
+.list-view-house-item .lead {
+    margin-bottom: 10px;
+}
+
+.list-view-house-item p:last-child {
+    margin-bottom: 0;
+}

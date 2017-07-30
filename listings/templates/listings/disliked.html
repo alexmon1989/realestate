@@ -32,7 +32,7 @@
                     <div class="col-md-12">
                         {% for house in houses %}
                             <div class="row list-view-house-item">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     {% if house.house__photos %}
                                         {% if house.house__photos|split:';'|length > 1 %}
                                             <div id="carousel-{{ house.house_id }}" data-interval="0" class="carousel slide" data-ride="carousel">
@@ -63,7 +63,7 @@
                                     {% endif %}
                                 </div>
 
-                                <div class="col-md-9">
+                                <div class="col-md-8">
                                     <p class="lead"><a href="{% url 'listings:show_disliked_listing' pk=house.house_id %}"><strong>{{ house.address }}</strong></a></p>
 
                                     <p>{{ house.house__description|truncatechars:120 }}</p>
@@ -81,7 +81,9 @@
                                         </p>
                                     {% endif %}
                                     <p><strong>Listed</strong> {{ house.house__create_time|naturaltime }}</p>
+                                </div>
 
+                                <div class="col-md-2">
                                     <div class="btn-group">
                                         <a href="{% url 'listings:mark_as_liked' pk=house.house_id %}?return_url={% url 'listings:new_listing' %}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
                                         <a href="{% url 'listings:mark_as_still_thinking' pk=house.house_id %}" class="btn btn-warning"><i class="fa fa-hourglass"></i></a>
@@ -178,33 +180,8 @@
 {% endblock %}
 
 {% block styles %}
-<link href="{% static 'django_tables2/bootstrap.css' %}" rel="stylesheet" />
-<style>
-    table img {
-        max-width:100px;
-        max-height: 100px;
-    }
-
-    .gallery-view-house-item {
-        width: 24%;
-        background-color: #fefde3;
-        margin:7px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        border: 2px solid #fc0;
-    }
-
-    .list-view-house-item {
-        background-color: #fefde3;
-        margin-right:7px;
-        margin-left:7px;
-        margin-bottom:7px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        border: 2px solid #fc0;
-        width: 99%;
-    }
-</style>
+    <link href="{% static 'django_tables2/bootstrap.css' %}" rel="stylesheet" />
+    <link href="{% static 'listings/css/listings.css' %}" rel="stylesheet" />
 {% endblock %}
 
 {% block scripts %}
