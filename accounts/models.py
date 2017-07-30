@@ -25,7 +25,7 @@ class HousesFilter(models.Model):
 class Profile(models.Model):
     """Profile model for extending User model fields."""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    show_photos_filters = models.BooleanField('Show title photo', default=False)
+    show_photos_filters = models.BooleanField('Show title photo', default=True)
     font_ratio = models.FloatField('Font size', default=1)
     telephone = models.CharField('Telephone', max_length=255, blank=True, null=True)
 
